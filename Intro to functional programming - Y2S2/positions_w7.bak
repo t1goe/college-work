@@ -1,0 +1,7 @@
+#lang racket
+(define positions(lambda (N A L)(cond
+                                  ((null? L) '())
+                                  (()())
+                                  )
+                   )
+  )

@@ -1,0 +1,9 @@
+#lang racket
+(define merge (lambda (F L R) (cond
+                          ((null? L) R)
+                          ((null? R) L)
+                          ((> (F (car R)) (F (car L)))(cons (car L) (merge F (cdr L) R)))
+                          ((<= (F (car R)) (F (car L)))(cons (car R) (merge F (cdr R) L)))
+                          )
+                 )
+  )

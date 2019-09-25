@@ -1,0 +1,17 @@
+#lang racket
+(define removeMinKey (lambda (F L) (cond
+                          ((null? L) '())
+                          ((= (car L) (minKey L)) (cdr L))
+                          (#t (append(car L)(removeMinKey (cdr L))))
+                          )
+                 )
+  ) 
+
+
+(define minKey (lambda (F L) (cond
+                          ((null? (cdr L)) (car L))
+                          ((> (F (car L)) (F (minKey F (cdr L)))) (minKey F (cdr L)))
+                          (#t  (car L))
+                          )
+                 )
+  ) 

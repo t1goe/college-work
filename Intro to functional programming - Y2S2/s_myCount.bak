@@ -1,0 +1,11 @@
+#lang racket
+(define myCount(lambda (A L Fn)(cond
+                                 ((null? L) '())
+                                 ((list? (car L))(+ (myCount A (car L) Fn) (myCount A (cdr L) Fn)));;First element is a sublist
+                                 (#t (cond
+                                       ((Fn A (car L))());;First element is true
+                                       (#t());;First element is not true
+                                       ))
+                                 )
+                 )
+  )

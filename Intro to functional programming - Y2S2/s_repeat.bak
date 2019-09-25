@@ -1,0 +1,14 @@
+#lang racket
+(define repeat(lambda (L) (cond
+                           ((null? L) '())
+                           ((#t)(cons))
+                           )
+                )
+  )
+
+;;Takes number and element and returns a list of those two items
+(define makeList(lambda (N E)(cond
+                               (()())
+                               )
+                  )
+  )

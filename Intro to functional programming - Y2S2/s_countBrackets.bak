@@ -1,0 +1,8 @@
+#lang racket
+(define countBrackets(lambda (L) (cond
+                                   ((null? L) '())
+                                   (((list? (car L))(+ (countBrackets (car L)) (countBrackets (cdr L)))));;First element sublist
+                                   ((#t)());;First element atom
+                                   )
+                       )
+  )
