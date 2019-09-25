@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1517571621 source:c:\users\tomig\desktop\cb_projects\lab2_2\sortandshuffle.c
+	<stdio.h>
+	<string.h>
+	"sortAndShuffle.h"
+
+1517571784 c:\users\tomig\desktop\cb_projects\lab2_2\sortandshuffle.h
+
+1517575326 source:c:\users\tomig\desktop\cb_projects\lab2_2\main.c
+	<stdio.h>
+	<string.h>
+	"sortAndShuffle.h"
+
+1518782060 source:c:\users\tomig\desktop\cb_projects\project1\main.c
+	<stdio.h>
+	<string.h>
+	"sortAndShuffle.h"
+
+1517571784 c:\users\tomig\desktop\cb_projects\project1\sortandshuffle.h
+
+1518782203 source:c:\users\tomig\desktop\cb_projects\project1\sortandshuffle.c
+	<stdio.h>
+	<string.h>
+	"sortAndShuffle.h"
+
