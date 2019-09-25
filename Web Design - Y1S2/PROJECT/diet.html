@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="main.css">
+		<meta charset="utf-8">
+		<title>Jim's Gym | Diet</title>
+		<link rel="icon" type="image/png" sizes="32x32" href="media/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="media/favicon-16x16.png">
+	</head>
+	<body>
+		<!--Navigation begin-->
+		<!--Sidebar-->
+		<div id="mySidebar" class="sidebar">
+			<a href="javascript:void(0)" class="closebutton" onclick="closeBar()">&times;</a>
+			<a href="home.html">Home</a>
+			<a href="diet.html">Diet</a>
+			<a href="workout.html">Workout Plans</a>
+			<a href="tweet.html">Recommended blogs</a>
+			<a href="contact.html">Contact us</a>
+			<a href="location.html">Find us</a>
+		</div>
+		<span class="hamburger" onclick="openBar()">&#9776;</span>
+		<!--Sidebar end-->
+		
+		<div class="header">
+			<a href="home.html"><img src="media/logo2.jpg" alt="logo" class="imagelogo"></a>
+		</div>
+		
+		<h1>Diet</h1>
+		<p>Diet is an important part of any good workout regimen, and as such, we offer professional dietitians to work with our members to really crack down on any bad eating habits to make it easy to achieve a healthy lifestyle.</p>
+		<p>We offer personal consultations for our silver members and up, to really allow our nutritionists to create a truly personalized plan for your specific circumstances and diet. And by using our built in BMI calculator, you can see if our friendly professionals are right for you.</p>
+		
+		<div class="bmi">
+		<form>
+			<br>
+			Height(Meters)
+			<input type="text" name ="height" id="height" class="formin">
+			<br><br>Weight(KGs)
+			<input type="text" name ="weight" id ="weight" class="formin">
+			<br><br>
+			<button type ="button" onclick ="bmicalc('height','weight','bmi')">Calculate</button>
+			<br><br>BMI(KG/M<sup>2</sup>)
+			<input type="text" name ="bmi" id ="bmi" class="formout">
+		</form>
+		<p id="bmiclass"><br></p>
+		</div>
+		
+		<script src="main.js"></script>
+		
+		<div class="footer" style="margin:0">
+			<br>
+			<em><b>
+			<p class="footertext">Jim's Gym</p>
+			<p class="footertext">2018&copy;</p>
+			</b></em>
+		</div>
+	</body>
+</html> 

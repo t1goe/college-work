@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Practical 4</title>
+	</head>
+	<body>
+		<h1>JavaScript Test</h1>
+		<script type="text/javascript">
+			var monkey_love = prompt("Do you love the monkey?", "Type yes or no");
+			if (monkey_love === "yes")
+			{
+				alert("Welcome! I'm so glad you came! Please, read on!");
+			}
+			
+			var name = prompt("Enter name: ");
+			var age = prompt("Enter age: ");
+			if ((age > 18) && (age < 21))
+			{
+				document.writeln(name + ": can vote, but can't drink.");
+			}
+			
+			var something = prompt("Enter something to give the monkey", "Javascript or bananas")
+			if ((something === "bananas") || (something === "JavaScript"))
+			{
+				document.writeln("The monkey is happy because it has " + something);
+			}
+		</script>
+	</body>
+</html>

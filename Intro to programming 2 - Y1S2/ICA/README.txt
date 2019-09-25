@@ -1,0 +1,1 @@
+I used the terminal command GCC 17372013.c -o a.exe to compile my programs

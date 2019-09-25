@@ -1,0 +1,9 @@
+1 151D32190   AUDI    A4        Saloon     Grey            156041    20000   25000 1
+2 161D9531    AUDI    A4        Saloon     Blue            99954     21500   26000 2
+3 151D16352   AUDI    A5        Hatchback  Black           225283    21850   28450 2
+4 182D15187   AUDI    A6        Saloon     Grey            162868    30150   38000 2
+5 172D11390   AUDI    Q7        SUV        Black           33104     45000   58000 1
+6 132D11952   BMW     320D      Saloon     Blue            184856    20050   25450 5
+7 12D4521     FORD    Galaxy    MPV        Silver          115884    14000   18200 5
+8 152D1392    FORD    MONDEO    Hatchback  Ruby            150481    18000   22000 4
+9 141D8268    FORD    Focus     Saloon     White           112241    15500   18000 1

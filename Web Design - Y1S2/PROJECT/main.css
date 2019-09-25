@@ -1,0 +1,220 @@
+body{
+    font-family:Arial, sans-serif;
+	padding:16px;
+	margin:0 5%;
+	font-size:125%;	
+}
+
+h1{
+	font-style:italic;
+	margin-left:42px;
+}
+
+h2{
+	margin-bottom:5px;
+	font-style:italic;
+}
+
+.header{
+	margin:10px 0 0 0;
+	display:block;
+	top:1;
+	min-height:100px;
+	background-color:white;
+	color:grey;
+}
+
+.textleft{
+	margin-right:40%;
+}
+
+.textright{
+	margin-left:40%;
+	text-align:right;
+}
+
+.imagecolumn{
+	column-count:4;
+	margin:0 5%;
+}
+
+.tweets{
+    column-count:3;
+	float:center;
+	background-color:grey;
+	border:solid;
+	border-radius:3px;
+}
+
+.imagelogo{
+	width:100px;
+	height:100px;
+	display:block;
+    margin-left:55px;
+}
+
+/*Sidebar stuff*/
+/*Open button*/
+.hamburger{
+	position:fixed;
+	top:10px;
+	left:25px;
+	font-size:40px;
+	cursor:pointer;
+}
+
+/*Sidebar base*/
+.sidebar{
+    height:100%;
+    width:0;
+    position:fixed;
+    z-index:1;
+    top:0;
+    left:0;
+    background-color:#383838;
+    overflow-x:hidden;
+    transition:0.5s;
+    padding-top:60px;
+}
+
+/*Text in sidebar*/
+.sidebar a {
+    padding:8px 8px 8px 32px;
+    text-decoration:none;
+    font-size:25px;
+	font-style:italic;
+    color:#818181;
+    display:block;
+    transition:0.3s;
+}
+
+/*Sidebar text highlighting*/
+.sidebar a:hover {
+    color:#D6D6D6;
+}
+
+/*Sidebar close button text only*/
+.sidebar .closebutton {
+    position:absolute;
+    top:0;
+    right:25px;
+    font-size:36px;
+    margin-left:50px;
+}
+
+.bmi{
+	margin:10px 30%;
+	text-align:center;
+	border:2px;
+	border-style:solid;
+	border-radius:20px;
+}
+
+.formin{
+	border:2px;
+	border-style:solid;
+	border-radius:5px;
+}
+
+.formout{
+	border:2px;
+	border-style:solid;
+	border-radius:5px;
+}
+
+#contactus{
+	text-align:center;
+	margin:10% 0;
+	line-height:40%;
+}
+
+#opentime{
+	font-size:90%;
+	text-align:center;
+	margin-top:1px;
+}
+
+#schedual{
+	border:1px solid #000000;
+	border-radius:3px;
+	border-collapse:collapse;
+}
+
+#membership{
+	border: 3px solid black;
+	text-align:center;
+	font-style:italic;
+}
+
+.bronze{
+	background-color:#a86d2a;
+}
+
+.silver{
+	background-color:#adacab;
+}
+
+.gold{
+	background-color:#dbd82b;
+}
+
+.plat{
+	background-color:#efefea;
+}
+
+td, th{
+	border:1px solid #000000;
+}
+
+sup{
+	font-size:50%;
+}
+
+/*Table*/
+.funk{
+	background-color:#FFFD98;
+}
+
+.soccer{
+	background-color:#BDE4A7;
+}
+
+.yoga{
+	background-color:#FFAFAF;
+}
+
+.zumba{
+	background-color:#4286f4;
+}
+
+.spinning{
+	background-color:#C297B8;
+}
+
+.art{
+	background-color:#55DBD6;
+}
+
+.pilates{
+	background-color:#ED715E;
+}
+
+#maps{
+	margin:0 auto;
+	display:block;
+}
+
+.footer{
+	margin:10px 0 0 0;
+	display:block;
+	bottom:1;
+	min-height:100px;
+	background-color:#17191f;
+	color:grey;
+}
+
+.footertext{
+	font-size:80%;
+	margin:10px;
+	text-align:center;
+}

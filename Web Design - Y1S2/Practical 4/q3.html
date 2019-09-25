@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Practical 4</title>
+	</head>
+	<body>
+		<h1>JavaScript Test</h1>
+		<canvas height="300" width="300" id="thisCanvas" style="border:1px solid #000000;"> This text is displayed if your browser does not support HTML5 Canvas.</canvas>	
+		<button onclick="drawTheLine()">Draw line</button>
+		<button onclick="drawTheRect()">Draw rectangle</button>
+		<button onclick="clearRect()">Clear</button>
+		<script type="text/javascript">
+			var c = document.getElementById("thisCanvas");
+			function drawTheLine(){
+				var ctx = c.getContext("2d");
+				ctx.moveTo(0,300);
+				ctx.lineTo(300,0);
+				ctx.stroke();
+			}
+			
+			function drawTheRect(){
+				var c = document.getElementById("thisCanvas");
+				var ctx = c.getContext("2d");
+				ctx.fillStyle = "#000000";
+				ctx.fillRect(50,50,100,100);
+			}
+			
+			function clearRect(){
+				var c = document.getElementById("thisCanvas");
+				var cxt = c.getContext("2d");
+				cxt.fillStyle = "#FF0000";
+				cxt.fillRect(0,0, 300,300);
+				cxt.strokeStyle = "#0000FF";
+				cxt.strokeRect(0,0, 300, 300);
+				cxt.clearRect(0, 0, 300, 300);
+			}
+		</script>
+	</body>
+</html>

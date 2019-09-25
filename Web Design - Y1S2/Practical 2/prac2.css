@@ -1,0 +1,51 @@
+/*Q1*/
+.my-blog{
+	background-color:#FFE5E5;
+	font-size:110%;
+}
+
+i{
+	font-style: normal;
+}
+
+.my-blog div{
+	box-shadow:-5px -5px grey;
+	border:1px solid black;
+}
+
+/*Q2*/
+#menu ul{list-style:none;}
+
+h1{text-align:center}
+
+#menu li ul{
+	display:none;
+}
+
+#menu li:hover ul{
+	display:block;
+}
+
+/*Q3*/
+.course-table{
+border-collapse:collapse;
+text-align:center;
+}
+
+tr:nth-child(even){
+	background-color:#A3B6FF;
+}
+
+.small-letters{
+	text-transform:lowercase;
+}
+table, th, td {
+	border:1px solid black;
+}
+
+/*Q4*/
+.column{
+	width:320px;
+	float:left;	
+	padding:5px;
+}
