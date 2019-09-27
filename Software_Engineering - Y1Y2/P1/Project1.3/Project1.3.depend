@@ -1,9 +1,0 @@
-# depslib dependency file v1.0
-1519073943 source:c:\users\tomig\desktop\cb_projects\project1.3\main.c
-	<stdio.h>
-	<string.h>
-	<stdlib.h>
-	"sorts.h"
-
-1519072818 c:\users\tomig\desktop\cb_projects\project1.3\sorts.h
-
