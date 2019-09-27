@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1519389483 source:c:\users\tomig\desktop\cb_projects\project1-final\main.c
+	<stdio.h>
+	<string.h>
+	"func.h"
+
+1519388572 c:\users\tomig\desktop\cb_projects\project1-final\head1.h
+
+1519389160 c:\users\tomig\desktop\cb_projects\project1-final\func.h
+

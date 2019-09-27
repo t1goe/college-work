@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1517571157 source:c:\users\tomig\desktop\cb_projects\lab_2\library.c
+	<stdio.h>
+	"library.h"
+
+1517571179 c:\users\tomig\desktop\cb_projects\lab_2\library.h
+
+1517570920 source:c:\users\tomig\desktop\cb_projects\lab_2\main.c
+	<stdio.h>
+	<stdlib.h>
+	"library.h"
+
