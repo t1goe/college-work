@@ -1,0 +1,74 @@
+Gemma - 30/01/19 
+	- designed game board 
+	- segmented frame into three panels and added gameboard image 
+
+Damien - 1/02/19
+	- Added information panel
+	- Added command panel
+	- User can now exit from the command panel and echos what is typed into information panel
+
+
+Gemma - 07-02-19
+	- Addded pip class
+	- Added diskColor enum
+
+Tom - 08/02/19
+	- Added barAndBear class
+
+Gemma - 08/02/19
+	- Edited methods for initialising pips and disks
+
+Gemma - 10/02/19
+	- Edited Damien's methods for pip initialisation and board initialisation
+
+Tom - 10/02/19
+	- Added method in board.java to initialize the bearing zones and bar
+	- Added moveDiskImage method in GUI
+	- Made a white piece that moves from bar to bearing zone
+		-Ditto, but with a black piece
+
+Tom - 15/02/19
+	- Animated disk movement
+	- Removed commented out code
+
+Tom - 16/02/19
+	- Implemented 'move' command to make moves
+
+Tom - 23/02/19
+	- Implemented redrawPip() to keep the disks within the bounds of the pip
+Damien - 20/02/19	
+	- Added player class
+	- Added class for infoPanel
+	- Removed redundant code
+	- Allow user to input username (NOT FULLY IMPLEMENTED)
+
+Damien - 21/02/19
+	- Cleaned up code
+	- Put methods into respectable classes
+
+Gemma - 21/02/19
+	- Removed numbers from the gameBoard image
+
+Damien - 21/02/19
+	- Pushed renamed classes
+
+Gemma - 23/02/2019
+	- Fixed dice roll repaint and started dice roll animation
+
+Damien - 23/02/19
+	- Added announce game, echo user details
+	- Changed GUI class/ Game class and the way we input user details
+
+Damien - 24/02/19
+	- Added method to change pip numbers depending on player turn
+
+Tom - 24/02/19
+	- Added redrawPip function to redraw a pip within it's bounds
+	- Fixed a bug with makeMove where moving to a pip already occupied by your own color was invalid
+	- Made it so the players could take turns, after the names have been entered with "play"
+
+Tom - 25/02/19
+	- Fixed bug caused by switching the pip numbers on the board to remain consistant with the "move x y" command
+
+Tom - 2/3/19
+	-Added printValidNormalMoves()
