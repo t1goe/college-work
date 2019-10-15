@@ -1,0 +1,4 @@
+----PROJECT REPORT----
+We individually worked on parts of the file for the majority of the collaboration.
+Tom worked on the players and discs implementation using struct type variables. We used structs as it makes it easier to keep track of each player's information.
+Ronan worked on printing the board
