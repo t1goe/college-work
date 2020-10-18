@@ -1,0 +1,35 @@
+version: '3'
+services:
+    broker:
+        build: broker
+        ports:
+            - 9000:9000
+        environment: 
+            container_name: broker
+    auldfellas:
+        build: auldfellas
+        ports:
+            - 9001:9001
+        environment: 
+            container_name: auldfellas
+    dodgydrivers:
+        build: dodgydrivers
+        ports:
+            - 9002:9002
+        environment: 
+            container_name: dodgydrivers
+    girlpower:
+        build: girlpower
+        ports:
+            - 9003:9003
+        environment: 
+            container_name: girlpower
+    client:
+        build: client
+        environment: 
+            container_name: client
+        depends_on: 
+            - broker
+            - auldfellas
+            - girlpower
+            - dodgydrivers
