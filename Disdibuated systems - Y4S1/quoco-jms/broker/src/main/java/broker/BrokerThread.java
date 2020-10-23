@@ -51,7 +51,6 @@ public class BrokerThread implements Runnable {
             ConnectionFactory factory = new ActiveMQConnectionFactory("failover://tcp://" + this.host + ":61616");
             Connection connection = factory.createConnection();
 
-            // Maybe should be broker so you can acknowledge the message from the "same" location?
             // If it needs to be unique, set it as brokerThread + (requestMessage.id) AKA brokerThread1 etc
             String brokerName = "broker" + Long.toString(requestMessage.id);
             System.out.println(brokerName);
@@ -59,7 +58,6 @@ public class BrokerThread implements Runnable {
 
             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-            // Queue queue = session.createQueue("QUOTATIONS");
             Topic quotationsTopic = session.createTopic("QUOTATIONS");
             Topic applicationsTopic = session.createTopic("APPLICATIONS");
 
@@ -75,7 +73,7 @@ public class BrokerThread implements Runnable {
             Message request = session.createObjectMessage(requestMessage);
             producer.send(request);
 
-            Thread.sleep(5000);
+            Thread.sleep(3000);
 
             while(true){
                 Message message = consumer.receive(15000);
@@ -101,18 +99,11 @@ public class BrokerThread implements Runnable {
             
             connection.stop();
 
-            // factory = new ActiveMQConnectionFactory("failover://tcp://" + host + ":61616");
-            // connection = factory.createConnection();
-
-            // Maybe should be broker so you can acknowledge the message from the "same" location?
-            // If it needs to be unique, set it as brokerThread + (requestMessage.id) AKA brokerThread1 etc
-            // connection.setClientID("broker");
-
-            Queue requestQueue = session.createQueue("REQUESTS");
+            // Queue requestQueue = session.createQueue("REQUESTS");
             Queue responseQueue = session.createQueue("RESPONSES");
 
             producer = session.createProducer(responseQueue);
-            consumer = session.createConsumer(requestQueue);
+            // consumer = session.createConsumer(requestQueue);
 
             connection.start();
 
