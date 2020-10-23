@@ -19,6 +19,7 @@ import javax.jms.Message;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import service.core.ClientApplicationMessage;
 import service.core.ClientInfo;
 import service.core.Quotation;
 import service.core.QuotationRequestMessage;
@@ -47,32 +48,47 @@ public class Main {
  		connection.setClientID("client");
 		Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 		 
-		Queue queue = session.createQueue("QUOTATIONS");
- 		Topic topic = session.createTopic("APPLICATIONS");
- 		MessageProducer producer = session.createProducer(topic);
-		MessageConsumer consumer = session.createConsumer(queue); 
+		Queue responseQueue = session.createQueue("RESPONSES");
+ 		Queue requestQueue = session.createQueue("REQUESTS");
+		 
+ 		MessageProducer producer = session.createProducer(requestQueue);
+		MessageConsumer consumer = session.createConsumer(responseQueue); 
 
 		connection.start();
 		
-		QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, clients[0]);
-		Message request = session.createObjectMessage(quotationRequest);
-		cache.put(quotationRequest.id, quotationRequest.info);
-		producer.send(request);
+		int i = 0;
+		for(ClientInfo client : clients){
+			QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, client);
+			Message request = session.createObjectMessage(quotationRequest);
+			cache.put(quotationRequest.id, quotationRequest.info);
+			producer.send(request);
+			System.out.println("DEBUG: Client request " + Integer.toString(i) + " made");
+		}
 
-		Message message = consumer.receive();
-		if (message instanceof ObjectMessage) {
- 			Object content = ((ObjectMessage) message).getObject();
- 			if (content instanceof QuotationResponseMessage) {
- 				QuotationResponseMessage response = (QuotationResponseMessage) content;
-				ClientInfo info = cache.get(response.id);
- 				displayProfile(info);
- 				displayQuotation(response.quotation);
- 				System.out.println("\n");
- 			}
- 			message.acknowledge();
-		} else {
- 			System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
-		} 
+		while(true){
+			Message message = consumer.receive(20000);
+			if(message == null){
+				break;
+			}
+			System.out.println("DEBUG: Response recieved");
+
+			if (message instanceof ObjectMessage) {
+				Object content = ((ObjectMessage) message).getObject();
+				if (content instanceof ClientApplicationMessage) {
+					ClientApplicationMessage response = (ClientApplicationMessage) content;
+
+					displayProfile(response.clientinfo);
+					for(Quotation quote : response.quotations){
+						displayQuotation(quote);
+					}
+					System.out.println("\n");
+				}
+				message.acknowledge();
+			} else {
+				System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
+			}
+		}
+		System.out.println("DEBUG: Client concluded");
 	}
 	
 	/**

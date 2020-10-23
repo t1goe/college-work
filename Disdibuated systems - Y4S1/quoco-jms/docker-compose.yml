@@ -17,13 +17,13 @@ services:
             - mynet
         environment:
             SERVER_HOST: broker
-        depends_on:broker
+        depends_on: broker
 
     dodgydrivers:
         build: dodgydrivers
         networks: 
             mynet
-        environment: :
+        environment:
             SERVER_HOST: broker
         depends_on: 
             broker
