@@ -51,7 +51,7 @@ public class BrokerThread implements Runnable {
             ConnectionFactory factory = new ActiveMQConnectionFactory("failover://tcp://" + this.host + ":61616");
             Connection connection = factory.createConnection();
 
-            // If it needs to be unique, set it as brokerThread + (requestMessage.id) AKA brokerThread1 etc
+            // it needs to be unique, set it as brokerThread + (requestMessage.id) AKA brokerThread1 etc
             String brokerName = "broker" + Long.toString(requestMessage.id);
             System.out.println(brokerName);
             connection.setClientID(brokerName);
@@ -78,7 +78,7 @@ public class BrokerThread implements Runnable {
             while(true){
                 Message message = consumer.receive(15000);
                 if (message instanceof ObjectMessage) {
-                    System.out.println("DEBUG: " + brokerName + " Message recieved");
+                    System.out.println("DEBUG: Thread " + brokerName + " Message recieved");
                     Object content = ((ObjectMessage) message).getObject();
                     if (content instanceof QuotationResponseMessage) {
                         QuotationResponseMessage response = (QuotationResponseMessage) content;
@@ -88,7 +88,6 @@ public class BrokerThread implements Runnable {
                         }
                     }
                 } else if (message == null){
-                    // Idea; if null then leave loop and return stuff
                     break;
                 } else {
                     System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
@@ -99,11 +98,8 @@ public class BrokerThread implements Runnable {
             
             connection.stop();
 
-            // Queue requestQueue = session.createQueue("REQUESTS");
             Queue responseQueue = session.createQueue("RESPONSES");
-
             producer = session.createProducer(responseQueue);
-            // consumer = session.createConsumer(requestQueue);
 
             connection.start();
 

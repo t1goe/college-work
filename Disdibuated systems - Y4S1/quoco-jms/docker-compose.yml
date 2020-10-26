@@ -1,48 +1,34 @@
 version: '3'
-networks:
-    mynet:
 services:
-    broker:
-        build: broker
-        networks:
-            mynet:
-                aliases:
-                    -broker
-        ports:
-            -1099:1099
-
+    activemq:
+        image: rmohr/activemq:latest
+        ports: 
+            - 8161:8161
+            - 61616:61616
     auldfellas:
         build: auldfellas
-        networks:
-            - mynet
-        environment:
-            SERVER_HOST: broker
-        depends_on: broker
-
-    dodgydrivers:
-        build: dodgydrivers
-        networks: 
-            mynet
-        environment:
-            SERVER_HOST: broker
-        depends_on: 
-            broker
-    
+        container_name: auldfellas-service
+        environment: 
+            CONTAINER_NAME: activemq
     girlpower:
         build: girlpower
-        networks:
-            mynet
-        environment:
-            SERVER_HOST: broker
-        depends_on: 
-            broker
-    
+        container_name: girlpower-service
+        environment: 
+            CONTAINER_NAME: activemq
+    dodgydrivers:
+        build: dodgydrivers
+        container_name: dodgydrivers-service
+        environment: 
+            CONTAINER_NAME: activemq
+    broker:
+        build: broker
+        container_name: broker-service
+        environment: 
+            CONTAINER_NAME: activemq
     client:
         build: client
-        networks:
-            mynet
+        container_name: client
         environment: 
-            SERVER_HOST: broker
-        depends_on:
-            broker
-        
+            CONTAINER_NAME: activemq
+        depends_on: 
+                - broker
