@@ -11,7 +11,6 @@ import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
-import javax.jms.Queue;
 import javax.jms.Topic;
 import javax.jms.Message;
 
@@ -33,10 +32,10 @@ public class Receiver{
 		connection.setClientID("dodgydrivers");
 		Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE); 
 		
-		Queue queue = session.createQueue("QUOTATIONS");
-		Topic topic = session.createTopic("APPLICATIONS");
-		MessageConsumer consumer = session.createConsumer(topic);
-		MessageProducer producer = session.createProducer(queue);
+		Topic quotationsTopic = session.createTopic("QUOTATIONS");
+		Topic applicationTopic = session.createTopic("APPLICATIONS");
+		MessageConsumer consumer = session.createConsumer(applicationTopic);
+		MessageProducer producer = session.createProducer(quotationsTopic);
 		
 		connection.start();
 		
