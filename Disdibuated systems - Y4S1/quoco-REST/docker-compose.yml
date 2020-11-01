@@ -1,0 +1,34 @@
+version: '3'
+services:
+    activemq:
+        image: rmohr/activemq:latest
+        ports: 
+            - 8161:8161
+            - 61616:61616
+    auldfellas:
+        build: auldfellas
+        container_name: auldfellas-service
+        environment: 
+            CONTAINER_NAME: activemq
+    girlpower:
+        build: girlpower
+        container_name: girlpower-service
+        environment: 
+            CONTAINER_NAME: activemq
+    dodgydrivers:
+        build: dodgydrivers
+        container_name: dodgydrivers-service
+        environment: 
+            CONTAINER_NAME: activemq
+    broker:
+        build: broker
+        container_name: broker-service
+        environment: 
+            CONTAINER_NAME: activemq
+    client:
+        build: client
+        container_name: client
+        environment: 
+            CONTAINER_NAME: activemq
+        depends_on: 
+                - broker
