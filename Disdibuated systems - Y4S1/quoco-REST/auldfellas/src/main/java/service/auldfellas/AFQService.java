@@ -1,12 +1,23 @@
 package service.auldfellas;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import service.core.AbstractQuotationService;
 import service.core.ClientInfo;
+import service.core.NoSuchQuotationException;
 import service.core.Quotation;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.http.HttpHeaders;
 
 /**
  * Implementation of the AuldFellas insurance quotation service.
@@ -20,16 +31,20 @@ public class AFQService extends AbstractQuotationService {
 	public static final String PREFIX = "AF";
 	public static final String COMPANY = "Auld Fellas Ltd.";
 
-	private Map<String, Quotation> quotations = new HashMap<>(); 
+	private Map<String, Quotation> quotations = new HashMap<>();
 
-	@RequestMapping(value="/quotations",method=RequestMethod.POST)
- 	public ResponseEntity<Quotation> createQuotation(@RequestBody ClientInfo info) {
- 		Quotation quotation = generateQuotation(info);
- 		quotations.put(quotation.getReference(), quotation);
- 		String path = ServletUriComponentsBuilder.fromCurrentContextPath().
-		build().toUriString()+ "/quotations/"+quotation.getReference9();
- 		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(new URI(path));
+	@RequestMapping(value = "/quotations", method = RequestMethod.POST)
+	public ResponseEntity<Quotation> createQuotation(@RequestBody ClientInfo info) {
+		Quotation quotation = generateQuotation(info);
+		quotations.put(quotation.getRefrence(), quotation);
+		String path = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/quotations/"
+				+ quotation.getRefrence();
+		HttpHeaders headers = new HttpHeaders();
+		try {
+			headers.setLocation(new URI(path));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
  		return new ResponseEntity<>(quotation, headers, HttpStatus.CREATED);
 	}
 	 
