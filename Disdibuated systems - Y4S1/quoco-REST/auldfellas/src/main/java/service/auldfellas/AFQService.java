@@ -23,7 +23,7 @@ import org.springframework.http.HttpHeaders;
  * Implementation of the AuldFellas insurance quotation service.
  * 
  * @author Rem
- *
+ * 
  */
 @RestController
 public class AFQService extends AbstractQuotationService {

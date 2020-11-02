@@ -8,22 +8,28 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
 
+import service.core.ClientApplication;
 import service.core.ClientInfo;
 import service.core.Quotation;
 import service.core.Constants;
-// import service.auldfellas.AFQService;
-// import service.dodgydrivers.DDQService;
-// import service.girlpower.GPQService;
+
 
 public class Client {
 	public static void main(String[] args) {
 		RestTemplate restTemplate = new RestTemplate();
- 		HttpEntity<ClientInfo> request = new HttpEntity<>(clients[0]);
- 		Quotation quotation =
-			restTemplate.postForObject("http://localhost:8080/quotations",
- 		request, Quotation.class);
- 		displayProfile(clients[0]);
- 		displayQuotation(quotation);
+		for(ClientInfo client : clients){
+			HttpEntity<ClientInfo> request = new HttpEntity<>(client);
+	 		ClientApplication clientApp =
+				restTemplate.postForObject("http://localhost:8080/applications", request, ClientApplication.class);
+			
+ 			displayProfile(clientApp.getClient());
+	 		for(Quotation quote : clientApp.getQuotations()){
+				displayQuotation(quote);
+			}
+			
+ 			// displayProfile(clients[0]);
+	 		// displayQuotation(quotation);
+		}
 	}
 	
 	/**
