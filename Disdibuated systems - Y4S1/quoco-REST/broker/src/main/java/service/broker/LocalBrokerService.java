@@ -3,9 +3,7 @@ package service.broker;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import service.core.AbstractQuotationService;
 import service.core.ClientApplication;
 import service.core.ClientInfo;
 import service.core.NoSuchQuotationException;
@@ -21,17 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.text.NumberFormat;
-
 import org.springframework.http.HttpEntity;
-import org.springframework.web.client.RestTemplate;
-
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpEntity;
-
-import service.core.ClientInfo;
-import service.core.Quotation;
-import service.core.Constants;
 
 import org.springframework.http.HttpHeaders;
 

@@ -5,14 +5,9 @@ import java.text.NumberFormat;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpEntity;
-
 import service.core.ClientApplication;
 import service.core.ClientInfo;
 import service.core.Quotation;
-import service.core.Constants;
-
 
 public class Client {
 	public static void main(String[] args) {
