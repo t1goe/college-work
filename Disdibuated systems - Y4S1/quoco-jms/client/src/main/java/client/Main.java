@@ -1,33 +1,21 @@
 package client;
 
-import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
 import javax.jms.Connection;
-
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Session;
-
 import javax.jms.Queue;
-import javax.jms.Topic;
 import javax.jms.Message;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import service.core.ClientInfo;
-import service.core.Quotation;
 import service.core.QuotationRequestMessage;
-import service.core.QuotationResponseMessage;
 
 public class Main {
 	
 	private static int SEED_ID = 0;
-	private static Map<Long, ClientInfo> cache = new HashMap<Long, ClientInfo>();
 
 	/**
 	 * This is the starting point for the application. Here, we must
@@ -42,71 +30,34 @@ public class Main {
 	public static void main(String[] args) throws JMSException{
 		String host = args.length > 0 ? args[0] : "localhost";
 
+		// Start up a new ClientThread
+		Thread clientThread = new Thread(new ClientThread(host)); 
+		clientThread.start();
+
 		ConnectionFactory factory = new ActiveMQConnectionFactory("failover://tcp://" + host + ":61616");
  		Connection connection = factory.createConnection();
  		connection.setClientID("client");
 		Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 		 
-		Queue queue = session.createQueue("QUOTATIONS");
- 		Topic topic = session.createTopic("APPLICATIONS");
- 		MessageProducer producer = session.createProducer(topic);
-		MessageConsumer consumer = session.createConsumer(queue); 
+ 		Queue requestQueue = session.createQueue("REQUESTS");
+ 		MessageProducer producer = session.createProducer(requestQueue);
 
 		connection.start();
 		
-		QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, clients[0]);
-		Message request = session.createObjectMessage(quotationRequest);
-		cache.put(quotationRequest.id, quotationRequest.info);
-		producer.send(request);
+		try{
+			Thread.sleep(2000);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
 
-		Message message = consumer.receive();
-		if (message instanceof ObjectMessage) {
- 			Object content = ((ObjectMessage) message).getObject();
- 			if (content instanceof QuotationResponseMessage) {
- 				QuotationResponseMessage response = (QuotationResponseMessage) content;
-				ClientInfo info = cache.get(response.id);
- 				displayProfile(info);
- 				displayQuotation(response.quotation);
- 				System.out.println("\n");
- 			}
- 			message.acknowledge();
-		} else {
- 			System.out.println("Unknown message type: " + message.getClass().getCanonicalName());
-		} 
-	}
-	
-	/**
-	 * Display the client info nicely.
-	 * 
-	 * @param info
-	 */
-	public static void displayProfile(ClientInfo info) {
-		System.out.println("|=================================================================================================================|");
-		System.out.println("|                                     |                                     |                                     |");
-		System.out.println(
-				"| Name: " + String.format("%1$-29s", info.name) + 
-				" | Gender: " + String.format("%1$-27s", (info.gender==ClientInfo.MALE?"Male":"Female")) +
-				" | Age: " + String.format("%1$-30s", info.age)+" |");
-		System.out.println(
-				"| License Number: " + String.format("%1$-19s", info.licenseNumber) + 
-				" | No Claims: " + String.format("%1$-24s", info.noClaims+" years") +
-				" | Penalty Points: " + String.format("%1$-19s", info.points)+" |");
-		System.out.println("|                                     |                                     |                                     |");
-		System.out.println("|=================================================================================================================|");
-	}
-
-	/**
-	 * Display a quotation nicely - note that the assumption is that the quotation will follow
-	 * immediately after the profile (so the top of the quotation box is missing).
-	 * 
-	 * @param quotation
-	 */
-	public static void displayQuotation(Quotation quotation) {
-		System.out.println(
-				"| Company: " + String.format("%1$-26s", quotation.company) + 
-				" | Reference: " + String.format("%1$-24s", quotation.reference) +
-				" | Price: " + String.format("%1$-28s", NumberFormat.getCurrencyInstance().format(quotation.price))+" |");
-		System.out.println("|=================================================================================================================|");
+		int i = 0;
+		for(ClientInfo client : clients){
+			QuotationRequestMessage quotationRequest = new QuotationRequestMessage(SEED_ID++, client);
+			Message request = session.createObjectMessage(quotationRequest);
+			producer.send(request);
+			System.out.println("DEBUG: Client request " + Integer.toString(i++) + " made");
+		}
+		System.out.println("DEBUG: Client concluded");
 	}
 	
 	/**
@@ -118,6 +69,6 @@ public class Main {
 		new ClientInfo("Hannah Montana", ClientInfo.FEMALE, 16, 10, 0, "HMA304/9"),
 		new ClientInfo("Rem Collier", ClientInfo.MALE, 44, 5, 3, "COL123/3"),
 		new ClientInfo("Jim Quinn", ClientInfo.MALE, 55, 4, 7, "QUN987/4"),
-		new ClientInfo("Donald Duck", ClientInfo.MALE, 35, 5, 2, "XYZ567/9")		
+		new ClientInfo("Donald Duck", ClientInfo.MALE, 35, 5, 2, "XYZ567/9")
 	};
 }

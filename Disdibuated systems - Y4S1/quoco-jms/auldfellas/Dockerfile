@@ -1,4 +1,3 @@
-FROM openjdk:8-jre-alpine
-ENV SERVER_HOST=broker
+FROM openjdk:11.0.8-jre
 COPY target/auldfellas-*-jar-with-dependencies.jar /auldfellas.jar
-CMD /usr/bin/java -jar /auldfellas.jar $SERVER_HOST
+CMD java -jar /auldfellas.jar ${CONTAINER_NAME}
