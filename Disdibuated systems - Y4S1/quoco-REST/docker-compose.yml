@@ -4,16 +4,20 @@ services:
         build: broker
         ports:
             - 8080:8080
+        container_name: broker
     auldfellas:
         build: auldfellas
         ports:
             - 8081:8081
+        container_name: auldfellas
     girlpower:
         build: girlpower
         ports:
             - 8083:8083
+        container_name: girlpower
     dodgydrivers:
         build: dodgydrivers
         ports:
             - 8082:8082
+        container_name: dodgydrivers
     

@@ -71,9 +71,11 @@ public class LocalBrokerService {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<ClientInfo> request = new HttpEntity<>(info);
 
+		String[] ports = {"auldfellas:8081", "dodgydrivers:8082", "girlpower:8083"};
+
 		List<Quotation> quotesList  = new ArrayList<Quotation>();
-		for(int i = 8081; i<=8083; i++){
-			String currentURL = "http://localhost:" + Integer.toString(i) + "/quotations";
+		for(String port : ports){
+			String currentURL = "http://" + port + "/quotations";
 			Quotation quotation =
 				restTemplate.postForObject(currentURL, request, Quotation.class);
 			quotesList.add(quotation);
