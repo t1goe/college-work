@@ -1,0 +1,31 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>lab6</groupId>
+	<artifactId>auldfellas</artifactId>
+	<version>0.0.1</version>
+
+	<properties>
+        <akka.version>2.6.0-M3</akka.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>lab6</groupId>
+			<artifactId>core</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.typesafe.akka</groupId>
+			<artifactId>akka-testkit_2.13</artifactId>
+			<version>2.6.0-M6</version>
+		  </dependency>
+	</dependencies>
+</project>
