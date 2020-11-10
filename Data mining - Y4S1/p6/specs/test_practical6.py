@@ -6,9 +6,9 @@ import pandas as pd
 class TestPractical(unittest.TestCase):
 
     def setUp(self):
-        self.df1 = pd.read_csv('./output/question_1.csv')
-        self.df2 = pd.read_csv('./output/question_2.csv')
-        self.df3 = pd.read_csv('./output/question_3.csv')
+        self.df1 = pd.read_csv('../output/question_1.csv')
+        self.df2 = pd.read_csv('../output/question_2.csv')
+        self.df3 = pd.read_csv('../output/question_3.csv')
 
     def tearDown(self):
         self.df1 = None
