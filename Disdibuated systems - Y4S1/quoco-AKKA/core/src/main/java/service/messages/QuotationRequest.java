@@ -1,4 +1,4 @@
-package service.core;
+package service.messages;
 
 import service.core.ClientInfo;
 
