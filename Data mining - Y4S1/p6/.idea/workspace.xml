@@ -48,15 +48,21 @@
       <change beforePath="$PROJECT_DIR$/../p4/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../p4/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../p4/specs/borrower_question2.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../p4/specs/borrower_question2.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../p4/specs/marks_question1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../p4/specs/marks_question1.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/p6.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/p6.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/question_1.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/question_1.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/question_2.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/question_3.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/question_3_1.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/question_3_2.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/question_3_3.pdf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/specs/question_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/specs/question_1.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/specs/question_2.csv" beforeDir="false" afterPath="$PROJECT_DIR$/specs/question_2.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/specs/test_practical6.py" beforeDir="false" afterPath="$PROJECT_DIR$/specs/test_practical6.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Disdibuated systems - Y4S1/activemq/consumer/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/../../Disdibuated systems - Y4S1/activemq/consumer/.classpath" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Disdibuated systems - Y4S1/activemq/consumer/.project" beforeDir="false" afterPath="$PROJECT_DIR$/../../Disdibuated systems - Y4S1/activemq/consumer/.project" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Disdibuated systems - Y4S1/activemq/consumer/.settings/org.eclipse.jdt.apt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Disdibuated systems - Y4S1/activemq/consumer/.settings/org.eclipse.jdt.apt.core.prefs" afterDir="false" />
@@ -706,7 +712,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/run.py" />
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in test_practical6.py">
+  <component name="RunManager" selected="Python.run">
     <configuration name="run" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="p6" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -773,6 +779,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="175" width="1092" height="762" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605023064379">
@@ -783,21 +790,37 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="311" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1605023062224" />
-    <state width="1899" height="266" key="GridCell.Tab.0.bottom" timestamp="1605044297175">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1605225710240">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="266" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605044297175" />
-    <state width="1899" height="266" key="GridCell.Tab.0.center" timestamp="1605044297175">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710240" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1605225710240">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="266" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605044297175" />
-    <state width="1899" height="266" key="GridCell.Tab.0.left" timestamp="1605044297175">
+    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710240" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1605225710240">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="266" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605044297175" />
-    <state width="1899" height="266" key="GridCell.Tab.0.right" timestamp="1605044297175">
+    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710240" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1605225710240">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="266" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605044297175" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710240" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1605225710241">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710241" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1605225710241">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710241" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1605225710240">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710240" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1605225710241">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605225710241" />
   </component>
 </project>
