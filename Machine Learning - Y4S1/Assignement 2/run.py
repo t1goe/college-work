@@ -108,14 +108,17 @@ for x in range(1, 11):
     if f1 > nn_f1:
         nn_e = x * 2
         nn_f1 = f1
-    print("NN BAG Report:\n", metrics.f1_score(y_test, y_pred))
+    print("NN BAG Report:\n", f1)
 
+print("\n\n\ndtc")
 print(dtc_f1)
 print(dtc_e)
 
+print("\n1nn")
 print(knn_f1)
 print(knn_e)
 
+print("\nnn")
 print(nn_f1)
 print(nn_e)
 
