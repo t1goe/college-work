@@ -1,5 +1,8 @@
 package util;
 
+import java.awt.*;
+import java.util.Vector;
+
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
@@ -33,6 +36,11 @@ public class GameObject {
     private String textureLocation;
     private String blanktexture = "res/blankSprite.png";
 
+    // Added
+    private Vector3f velocity = new Vector3f(0, 0, 0);
+    private float maxSpeed = 0;
+    private float friction = 0; //Value < 0 to apply to speed to slow it down
+
     public GameObject() {
 
     }
@@ -43,6 +51,16 @@ public class GameObject {
         this.width = width;
         this.height = height;
         this.centre = centre;
+    }
+
+    public GameObject(String textureLocation, int width, int height, Point3f centre, float maxSpeed, float friction) {
+        hasTextured = true;
+        this.textureLocation = textureLocation;
+        this.width = width;
+        this.height = height;
+        this.centre = centre;
+        this.maxSpeed = maxSpeed;
+        this.friction = friction;
     }
 
     public Point3f getCentre() {
@@ -70,6 +88,44 @@ public class GameObject {
         }
 
         return blanktexture;
+    }
+
+    public Vector3f getVelocity(){
+        return this.velocity;
+    }
+
+    public void setVelocity(Vector3f velocity){
+        this.velocity = velocity;
+    }
+
+    public float getMaxSpeed(){
+      return this.maxSpeed;
+    }
+
+    public void setMaxSpeed(float maxSpeed){
+      this.maxSpeed = maxSpeed;
+    }
+
+    public float getFriction(){
+      return this.friction;
+    }
+
+    public void setFriction(float friction){
+      this.friction = friction;
+    }
+
+    // Moves the object by the current velocity
+    public Point3f applyCurrentVelocity(){
+        Point3f newCentre = this.centre.PlusVector(this.velocity);
+        this.centre = newCentre;
+        return newCentre;
+    }
+
+    //Adds velocity vector to current velocity
+    public Vector3f addVelocity(Vector3f velocity){
+        Vector3f newVelocity = this.velocity.PlusVector(velocity);
+        this.velocity = newVelocity;
+        return newVelocity;
     }
 
 }

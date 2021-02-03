@@ -134,25 +134,85 @@ public class Model {
 
         //check for movement and if you fired a bullet
 
+        //Debug statements
+        System.out.println("position: " + Player.getCentre().getX() + ", " + Player.getCentre().getY());
+        System.out.println("velocity: " + Player.getVelocity().getX() + ", " + Player.getVelocity().getY());
+        System.out.println();
+
+        //Moves by the current velocity
+        Player.applyCurrentVelocity();
+
+        boolean moving = false;
+        float acceleration = (float) 0.3;
+        float maxSpeed = 20;
+
+        float currentZ = Player.getVelocity().getZ();
+
         if (Controller.getInstance().isKeyAPressed()) {
-            Player.getCentre().ApplyVector(new Vector3f(-2, 0, 0));
+            if(Player.getVelocity().getX() - acceleration > -maxSpeed){
+                Player.addVelocity(new Vector3f(-acceleration, 0, 0));
+            }else{
+                Player.setVelocity(new Vector3f(-maxSpeed, Player.getVelocity().getY(), currentZ));
+            }
+            moving = true;
         }
 
         if (Controller.getInstance().isKeyDPressed()) {
-            Player.getCentre().ApplyVector(new Vector3f(2, 0, 0));
+            if(Player.getVelocity().getX() + acceleration < maxSpeed){
+                Player.addVelocity(new Vector3f(acceleration, 0, 0));
+            }else{
+                Player.setVelocity(new Vector3f(maxSpeed, Player.getVelocity().getY(), currentZ));
+            }
+            moving = true;
         }
 
         if (Controller.getInstance().isKeyWPressed()) {
-            Player.getCentre().ApplyVector(new Vector3f(0, 2, 0));
+            if(Player.getVelocity().getY() - acceleration > -maxSpeed){
+                Player.addVelocity(new Vector3f(0, -acceleration, 0));
+            }else{
+                Player.setVelocity(new Vector3f(Player.getVelocity().getX(), -maxSpeed, currentZ));
+            }
+            moving = true;
         }
 
         if (Controller.getInstance().isKeySPressed()) {
-            Player.getCentre().ApplyVector(new Vector3f(0, -2, 0));
+            if(Player.getVelocity().getY() + acceleration < maxSpeed) {
+                Player.addVelocity(new Vector3f(0, acceleration, 0));
+            }else{
+                Player.setVelocity(new Vector3f(Player.getVelocity().getX(), maxSpeed, currentZ));
+            }
+            moving = true;
+
         }
 
         if (Controller.getInstance().isKeySpacePressed()) {
+            Player.setCentre(new Point3f(0,0,0));
             CreateBullet();
             Controller.getInstance().setKeySpacePressed(false);
+        }
+
+        //If not attempting to move, apply friction
+        if(!moving){
+          //Friction
+          Vector3f currentVelocity = Player.getVelocity();
+          float dx = currentVelocity.getX();
+          float dy = currentVelocity.getY();
+
+          //Friction value, lower value slows faster
+          float friction = (float) 0.8;
+          dx *= friction;
+          dy *= friction;
+
+          //Value makes sure you come to a stop at *some* point by rounding down
+          float threshold = (float) 0.1;
+          if(dx < threshold)
+            dx = 0;
+
+          if(dy < threshold)
+            dy = 0;
+
+          // Apply friction
+          Player.setVelocity(new Vector3f(dx, dy, Player.getVelocity().getZ()));
         }
 
     }
