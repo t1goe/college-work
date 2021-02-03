@@ -1,8 +1,5 @@
 package util;
 
-import java.awt.*;
-import java.util.Vector;
-
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
@@ -27,58 +24,132 @@ SOFTWARE.
    
    (MIT LICENSE ) e.g do what you want with this :-) 
  */
-public class GameObject {
-
-    protected Point3f centre = new Point3f(0, 0, 0);            // Centre of object, using 3D as objects may be scaled
-    protected int width = 10;
-    protected int height = 10;
-    protected boolean hasTextured = false;
-    protected String textureLocation;
-    protected String blanktexture = "res/blankSprite.png";
+public class PlayerObject extends GameObject{
 
     // Added
     private Vector3f velocity = new Vector3f(0, 0, 0);
     private float maxSpeed = 0;
     private float friction = 0; //Value < 0 to apply to speed to slow it down
+    private float acceleration = 0;
 
-    public GameObject() {
+    public PlayerObject() {
 
     }
 
-    public GameObject(String textureLocation, int width, int height, Point3f centre) {
+    public PlayerObject(String textureLocation, int width, int height, Point3f centre, float maxSpeed, float friction, float acceleration) {
         hasTextured = true;
         this.textureLocation = textureLocation;
         this.width = width;
         this.height = height;
         this.centre = centre;
+        this.maxSpeed = maxSpeed;
+        this.friction = friction;
+        this.acceleration = acceleration;
     }
 
-    public Point3f getCentre() {
-        return centre;
+    public Vector3f getVelocity(){
+        return this.velocity;
     }
 
-    public void setCentre(Point3f centre) {
-        this.centre = centre;
-
-        //make sure to put boundaries on the gameObject
-
+    public void setVelocity(Vector3f velocity){
+        this.velocity = velocity;
     }
 
-    public int getWidth() {
-        return width;
+    public float getMaxSpeed(){
+      return this.maxSpeed;
     }
 
-    public int getHeight() {
-        return height;
+    public void setMaxSpeed(float maxSpeed){
+      this.maxSpeed = maxSpeed;
     }
 
-    public String getTexture() {
-        if (hasTextured) {
-            return textureLocation;
+    public float getFriction(){
+      return this.friction;
+    }
+
+    public void setFriction(float friction){
+      this.friction = friction;
+    }
+
+    // Moves the object by the current velocity
+    public Point3f applyCurrentVelocity(){
+        Point3f newCentre = this.centre.PlusVector(this.velocity);
+        this.centre = newCentre;
+        return newCentre;
+    }
+
+    //Adds velocity vector to current velocity
+    public Vector3f addVelocity(Vector3f velocity){
+        Vector3f newVelocity = this.velocity.PlusVector(velocity);
+        this.velocity = newVelocity;
+        return newVelocity;
+    }
+
+    // Manually accelerates using acceleration value
+    public void accelerate(int direction){
+        switch (direction){
+            case 0: //UP or -Y
+                if(this.getVelocity().getY() - this.acceleration > -this.maxSpeed){
+                    this.addVelocity(new Vector3f(0, -this.acceleration, 0));
+                }else{
+                    this.setVelocity(new Vector3f(this.getVelocity().getX(), -this.maxSpeed, this.getCentre().getZ()));
+                }
+
+                break;
+            case 1: //RIGHT or +X
+                if(this.getVelocity().getX() + this.acceleration < this.maxSpeed){
+                    this.addVelocity(new Vector3f(this.acceleration, 0, 0));
+                }else{
+                    this.setVelocity(new Vector3f(this.maxSpeed, this.getVelocity().getY(), this.getCentre().getZ()));
+                }
+
+                break;
+            case 2: //DOWN or +Y
+                if(this.getVelocity().getY() + this.acceleration < this.maxSpeed) {
+                    this.addVelocity(new Vector3f(0, this.acceleration, 0));
+                }else{
+                    this.setVelocity(new Vector3f(this.getVelocity().getX(), this.maxSpeed, this.getCentre().getZ()));
+                }
+
+                break;
+            case 3: //LEFT or -X
+
+                if(this.getVelocity().getX() - this.acceleration > -this.maxSpeed){
+                    this.addVelocity(new Vector3f(-this.acceleration, 0, 0));
+                }else{
+                    this.setVelocity(new Vector3f(-this.maxSpeed, this.getVelocity().getY(), this.getCentre().getZ()));
+                }
+
+                break;
+            default:
+                System.out.println("Invalid direction, choose values 0-3");
         }
-
-        return blanktexture;
     }
+
+    // Manually accelerates using acceleration value
+    public void decelerate(){
+
+        //Friction
+        Vector3f currentVelocity = this.velocity;
+        float dx = this.velocity.getX();
+        float dy = this.velocity.getY();
+
+        //Friction value, lower value slows faster
+        dx *= this.friction;
+        dy *= this.friction;
+
+        //Value makes sure you come to a stop at *some* point by rounding down
+        float threshold = (float) 0.1;
+        if(dx < threshold)
+            dx = 0;
+
+        if(dy < threshold)
+            dy = 0;
+
+        // Apply friction
+        this.setVelocity(new Vector3f(dx, dy, this.getVelocity().getZ()));
+    }
+
 }
 
 /*

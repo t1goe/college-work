@@ -3,6 +3,7 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import util.GameObject;
+import util.PlayerObject;
 import util.Point3f;
 import util.Vector3f;
 
@@ -32,7 +33,7 @@ SOFTWARE.
  */
 public class Model {
 
-    private GameObject Player;
+    private PlayerObject Player;
     private Controller controller = Controller.getInstance();
     private CopyOnWriteArrayList<GameObject> EnemiesList = new CopyOnWriteArrayList<GameObject>();
     private CopyOnWriteArrayList<GameObject> BulletList = new CopyOnWriteArrayList<GameObject>();
@@ -41,7 +42,13 @@ public class Model {
     public Model() {
         //setup game world
         //Player
-        Player = new GameObject("res/Lightning.png", 50, 50, new Point3f(500, 500, 0));
+        Player = new PlayerObject("res/Lightning.png",
+            50,
+            50,
+            new Point3f(500, 500, 0),
+            20,
+            0.8f,
+            0.3f);
         //Enemies  starting with four
 
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
@@ -143,48 +150,32 @@ public class Model {
         Player.applyCurrentVelocity();
 
         boolean moving = false;
-        float acceleration = (float) 0.3;
-        float maxSpeed = 20;
 
-        float currentZ = Player.getVelocity().getZ();
-
+        //left
         if (Controller.getInstance().isKeyAPressed()) {
-            if(Player.getVelocity().getX() - acceleration > -maxSpeed){
-                Player.addVelocity(new Vector3f(-acceleration, 0, 0));
-            }else{
-                Player.setVelocity(new Vector3f(-maxSpeed, Player.getVelocity().getY(), currentZ));
-            }
+            Player.accelerate(3);
             moving = true;
         }
 
+        //right
         if (Controller.getInstance().isKeyDPressed()) {
-            if(Player.getVelocity().getX() + acceleration < maxSpeed){
-                Player.addVelocity(new Vector3f(acceleration, 0, 0));
-            }else{
-                Player.setVelocity(new Vector3f(maxSpeed, Player.getVelocity().getY(), currentZ));
-            }
+            Player.accelerate(1);
             moving = true;
         }
 
+        //up
         if (Controller.getInstance().isKeyWPressed()) {
-            if(Player.getVelocity().getY() - acceleration > -maxSpeed){
-                Player.addVelocity(new Vector3f(0, -acceleration, 0));
-            }else{
-                Player.setVelocity(new Vector3f(Player.getVelocity().getX(), -maxSpeed, currentZ));
-            }
+            Player.accelerate(0);
             moving = true;
         }
 
+        //down
         if (Controller.getInstance().isKeySPressed()) {
-            if(Player.getVelocity().getY() + acceleration < maxSpeed) {
-                Player.addVelocity(new Vector3f(0, acceleration, 0));
-            }else{
-                Player.setVelocity(new Vector3f(Player.getVelocity().getX(), maxSpeed, currentZ));
-            }
+            Player.accelerate(2);
             moving = true;
-
         }
 
+        //Space (shoot bullet
         if (Controller.getInstance().isKeySpacePressed()) {
             Player.setCentre(new Point3f(0,0,0));
             CreateBullet();
@@ -193,26 +184,7 @@ public class Model {
 
         //If not attempting to move, apply friction
         if(!moving){
-          //Friction
-          Vector3f currentVelocity = Player.getVelocity();
-          float dx = currentVelocity.getX();
-          float dy = currentVelocity.getY();
-
-          //Friction value, lower value slows faster
-          float friction = (float) 0.8;
-          dx *= friction;
-          dy *= friction;
-
-          //Value makes sure you come to a stop at *some* point by rounding down
-          float threshold = (float) 0.1;
-          if(dx < threshold)
-            dx = 0;
-
-          if(dy < threshold)
-            dy = 0;
-
-          // Apply friction
-          Player.setVelocity(new Vector3f(dx, dy, Player.getVelocity().getZ()));
+          Player.decelerate();
         }
 
     }
