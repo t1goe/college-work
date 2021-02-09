@@ -44,8 +44,8 @@ public class Vector3f {
     }
 
     //implement Vector plus a Vector  and comment what the method does
-    public Vector3f PlusVector(Vector3f Additonal) {
-        return new Vector3f(this.getX() + Additonal.getX(), this.getY() + Additonal.getY(), this.getZ() + Additonal.getZ());
+    public Vector3f PlusVector(Vector3f Additional) {
+        return new Vector3f(this.getX() + Additional.getX(), this.getY() + Additional.getY(), this.getZ() + Additional.getZ());
     }
 
     //implement Vector minus a Vector  and comment what the method does

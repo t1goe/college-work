@@ -36,11 +36,6 @@ public class GameObject {
     protected String textureLocation;
     protected String blanktexture = "res/blankSprite.png";
 
-    // Added
-    private Vector3f velocity = new Vector3f(0, 0, 0);
-    private float maxSpeed = 0;
-    private float friction = 0; //Value < 0 to apply to speed to slow it down
-
     public GameObject() {
 
     }

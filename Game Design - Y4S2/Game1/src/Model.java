@@ -46,9 +46,10 @@ public class Model {
             50,
             50,
             new Point3f(500, 500, 0),
-            20,
-            0.8f,
-            0.3f);
+            7,
+            0.9f,
+            0.6f,
+            30);
         //Enemies  starting with four
 
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
@@ -141,52 +142,80 @@ public class Model {
 
         //check for movement and if you fired a bullet
 
-        //Debug statements
-        System.out.println("position: " + Player.getCentre().getX() + ", " + Player.getCentre().getY());
-        System.out.println("velocity: " + Player.getVelocity().getX() + ", " + Player.getVelocity().getY());
-        System.out.println();
+        //Apply gravity
+        Player.addVelocity(new Vector3f(0, 0.5f, 0));
 
-        //Moves by the current velocity
-        Player.applyCurrentVelocity();
+        System.out.println(Player.toString());
 
-        boolean moving = false;
+        boolean movingX = false;
+        boolean movingY = false;
 
         //left
         if (Controller.getInstance().isKeyAPressed()) {
             Player.accelerate(3);
-            moving = true;
+            movingX = true;
         }
 
         //right
         if (Controller.getInstance().isKeyDPressed()) {
             Player.accelerate(1);
-            moving = true;
+            movingX = true;
         }
 
         //up
         if (Controller.getInstance().isKeyWPressed()) {
             Player.accelerate(0);
-            moving = true;
+            movingY = true;
         }
 
         //down
         if (Controller.getInstance().isKeySPressed()) {
             Player.accelerate(2);
-            moving = true;
+            movingY = true;
         }
 
-        //Space (shoot bullet
+        //Space (jump)
         if (Controller.getInstance().isKeySpacePressed()) {
-            Player.setCentre(new Point3f(0,0,0));
-            CreateBullet();
+            Player.addVelocity(new Vector3f(0, -50, 0));
             Controller.getInstance().setKeySpacePressed(false);
         }
 
-        //If not attempting to move, apply friction
-        if(!moving){
-          Player.decelerate();
+        //Apply friction
+        Player.decelerate();
+
+
+
+        //prevents flying off the screen
+        Vector3f currentVelocity = Player.getVelocity();
+        Point3f currentLocation = Player.getCentre();
+        int xMax = 935;
+        int yMax = 915;
+
+        if(Player.getCentre().getX() < 0){
+            currentVelocity.setX(0);
+            currentLocation.setX(0);
         }
 
+        if(Player.getCentre().getX() > xMax){
+            currentVelocity.setX(0);
+            currentLocation.setX(xMax);
+        }
+
+        if(Player.getCentre().getY() < 0){
+            currentVelocity.setY(0);
+            currentLocation.setY(0);
+        }
+
+        if(Player.getCentre().getY() > yMax){
+            currentVelocity.setY(0);
+            currentLocation.setY(yMax);
+        }
+
+        Player.setVelocity(currentVelocity);
+        Player.setCentre(currentLocation);
+
+        //Moves by the current velocity
+        Player.applyCurrentVelocity();
     }
 
     private void CreateBullet() {
