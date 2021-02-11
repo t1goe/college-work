@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import util.BlockObject;
 import util.GameObject;
 import util.PlayerObject;
 import util.Point3f;
@@ -39,6 +40,8 @@ public class Model {
     private CopyOnWriteArrayList<GameObject> BulletList = new CopyOnWriteArrayList<GameObject>();
     private int Score = 0;
 
+    private BlockObject block = new BlockObject();
+
     public Model() {
         //setup game world
         //Player
@@ -46,10 +49,11 @@ public class Model {
             50,
             50,
             new Point3f(500, 500, 0),
-            7,
-            0.9f,
-            0.6f,
-            30);
+            10,
+            0.8f,
+            20f,
+            20,
+            1.5f);
         //Enemies  starting with four
 
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
@@ -142,13 +146,10 @@ public class Model {
 
         //check for movement and if you fired a bullet
 
-        //Apply gravity
-        Player.addVelocity(new Vector3f(0, 0.5f, 0));
-
         System.out.println(Player.toString());
 
         boolean movingX = false;
-        boolean movingY = false;
+
 
         //left
         if (Controller.getInstance().isKeyAPressed()) {
@@ -165,23 +166,36 @@ public class Model {
         //up
         if (Controller.getInstance().isKeyWPressed()) {
             Player.accelerate(0);
-            movingY = true;
+
         }
 
         //down
         if (Controller.getInstance().isKeySPressed()) {
             Player.accelerate(2);
-            movingY = true;
         }
 
         //Space (jump)
         if (Controller.getInstance().isKeySpacePressed()) {
-            Player.addVelocity(new Vector3f(0, -50, 0));
+            Player.jump();
             Controller.getInstance().setKeySpacePressed(false);
         }
 
         //Apply friction
-        Player.decelerate();
+//        Player.verticallyDecelerate();
+
+        if(!movingX){
+            Player.horizontalDecelerate();
+        }
+
+        // Check if aligned horizontally, if so do top and bottom collisions
+        if(Player.getRight() > block.getLeft() && Player.getLeft() < block.getRight()){
+            if(Player.getBottom() < 0){
+
+            }
+        }
+
+        //Apply gravity
+        Player.applyGravity();
 
 
 

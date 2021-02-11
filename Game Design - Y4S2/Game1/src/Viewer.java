@@ -108,6 +108,8 @@ public class Viewer extends JPanel {
             drawEnemies((int) temp.getCentre().getX(), (int) temp.getCentre().getY(), (int) temp.getWidth(), (int) temp.getHeight(), temp.getTexture(), g);
 
         });
+
+        drawBlock(500, 700, 100, 100, g);
     }
 
     private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
@@ -127,10 +129,10 @@ public class Viewer extends JPanel {
     }
 
     private void drawBackground(Graphics g) {
-        File TextureToLoad = new File("res/spacebackground.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
+        File TextureToLoad = new File("res/jungle/background.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
         try {
             Image myImage = ImageIO.read(TextureToLoad);
-            g.drawImage(myImage, 0, 0, 1000, 1000, 0, 0, 1000, 1000, null);
+            g.drawImage(myImage, 0, 0, 1000, 1000, 0, 20, 383, 216, null);
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -171,6 +173,10 @@ public class Viewer extends JPanel {
         // Bullets from https://opengameart.org/forumtopic/tatermands-art
         // background image from https://www.needpix.com/photo/download/677346/space-stars-nebula-background-galaxy-universe-free-pictures-free-photos-free-images
 
+    }
+
+    private void drawBlock(int x, int y, int width, int height, Graphics g){
+        g.drawRect(x,y,width,height);
     }
 
 

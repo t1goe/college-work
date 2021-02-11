@@ -57,6 +57,7 @@ public class MainWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //If exit // you can modify with your way of quitting , just is a template.
         frame.setLayout(null);
         frame.add(canvas);
+        frame.setResizable(false);
         canvas.setBounds(0, 0, 1000, 1000);
         canvas.setBackground(new Color(255, 255, 255)); //white background  replaced by Space background but if you remove the background method this will draw a white screen
         canvas.setVisible(false);   // this will become visible after you press the key.
@@ -98,7 +99,7 @@ public class MainWindow {
         {
             //swing has timer class to help us time this but I'm writing my own, you can of course use the timer, but I want to set FPS and display it
 
-            int TimeBetweenFrames = 1000 / TargetFPS;
+            int TimeBetweenFrames = 5000 / TargetFPS;
             long FrameCheck = System.currentTimeMillis() + (long) TimeBetweenFrames;
 
             //wait till next time step

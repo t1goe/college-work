@@ -74,6 +74,22 @@ public class GameObject {
 
         return blanktexture;
     }
+
+    public float getLeft(){
+        return this.centre.getX();
+    }
+
+    public float getRight(){
+        return this.centre.getX() + this.width;
+    }
+
+    public float getTop(){
+        return this.centre.getY();
+    }
+
+    public float getBottom(){
+        return this.centre.getY() + this.height;
+    }
 }
 
 /*

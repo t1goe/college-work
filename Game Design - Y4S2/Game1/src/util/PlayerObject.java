@@ -8,10 +8,11 @@ public class PlayerObject extends GameObject{
     private float friction = 0; //Value < 0 to apply to speed to slow it down
     private float acceleration = 0;
     private float jumpAcc = 0;
+    private float gravity = 0;
 
     public PlayerObject() {}
 
-    public PlayerObject(String textureLocation, int width, int height, Point3f centre, float maxSpeed, float friction, float acceleration, float jump) {
+    public PlayerObject(String textureLocation, int width, int height, Point3f centre, float maxSpeed, float friction, float acceleration, float jump, float gravity) {
         hasTextured = true;
         this.textureLocation = textureLocation;
         this.width = width;
@@ -21,6 +22,7 @@ public class PlayerObject extends GameObject{
         this.friction = friction;
         this.acceleration = acceleration;
         this.jumpAcc = jump;
+        this.gravity = gravity;
     }
 
     public Vector3f getVelocity(){
@@ -53,6 +55,14 @@ public class PlayerObject extends GameObject{
 
     public void setJumpAcc(float jump){
       this.jumpAcc = jump;
+    }
+
+    public float getGravity(){
+      return this.gravity;
+    }
+
+    public void setGravity(float gravity){
+      this.gravity = gravity;
     }
 
     // Moves the object by the current velocity
@@ -154,6 +164,10 @@ public class PlayerObject extends GameObject{
 
         // Apply friction
         this.setVelocity(new Vector3f(this.velocity.getX(), dy, this.getVelocity().getZ()));
+    }
+
+    public void applyGravity(){
+      this.velocity = this.velocity.PlusVector(new Vector3f(0, this.gravity, 0));
     }
 
     public String toString(){
