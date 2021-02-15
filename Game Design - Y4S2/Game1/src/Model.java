@@ -1,12 +1,6 @@
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import util.BlockObject;
-import util.GameObject;
-import util.PlayerObject;
-import util.Point3f;
-import util.Vector3f;
+import util.*;
 
 /*
  * Created by Abraham Campbell on 15/01/2020.
@@ -40,26 +34,33 @@ public class Model {
     private CopyOnWriteArrayList<GameObject> BulletList = new CopyOnWriteArrayList<GameObject>();
     private int Score = 0;
 
-    private BlockObject block = new BlockObject();
+    private LevelMap levelMap;
+
+    private TileObject block = new TileObject();
 
     public Model() {
         //setup game world
         //Player
-        Player = new PlayerObject("res/Lightning.png",
-            50,
-            50,
-            new Point3f(500, 500, 0),
-            10,
-            0.8f,
-            20f,
-            20,
-            1.5f);
+        Player = new PlayerObject("res/jungle/man/idle.png",
+                42,
+                68,
+                new Point3f(500, 500, 0),
+                10,
+                0.8f,
+                20f,
+                20,
+                1.5f);
         //Enemies  starting with four
 
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 500), 0, 0)));
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 500), 0, 0)));
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
+
+        levelMap = new LevelMap(40, 40, 52);
+        levelMap.setTile(9, 9, new TileObject(State.BLOCK));
+        levelMap.setTile(5, 5, new TileObject(State.SPIKE));
+
 
     }
 
@@ -155,12 +156,16 @@ public class Model {
         if (Controller.getInstance().isKeyAPressed()) {
             Player.accelerate(3);
             movingX = true;
+
+            Player.setFacingRight(false);
         }
 
         //right
         if (Controller.getInstance().isKeyDPressed()) {
             Player.accelerate(1);
             movingX = true;
+
+            Player.setFacingRight(true);
         }
 
         //up
@@ -180,24 +185,12 @@ public class Model {
             Controller.getInstance().setKeySpacePressed(false);
         }
 
-        //Apply friction
-//        Player.verticallyDecelerate();
-
-        if(!movingX){
+        if (!movingX) {
             Player.horizontalDecelerate();
         }
 
-        // Check if aligned horizontally, if so do top and bottom collisions
-        if(Player.getRight() > block.getLeft() && Player.getLeft() < block.getRight()){
-            if(Player.getBottom() < 0){
-
-            }
-        }
-
         //Apply gravity
-        Player.applyGravity();
-
-
+//        Player.applyGravity();
 
         //prevents flying off the screen
         Vector3f currentVelocity = Player.getVelocity();
@@ -205,22 +198,22 @@ public class Model {
         int xMax = 935;
         int yMax = 915;
 
-        if(Player.getCentre().getX() < 0){
+        if (Player.getCentre().getX() < 0) {
             currentVelocity.setX(0);
             currentLocation.setX(0);
         }
 
-        if(Player.getCentre().getX() > xMax){
+        if (Player.getCentre().getX() > xMax) {
             currentVelocity.setX(0);
             currentLocation.setX(xMax);
         }
 
-        if(Player.getCentre().getY() < 0){
+        if (Player.getCentre().getY() < 0) {
             currentVelocity.setY(0);
             currentLocation.setY(0);
         }
 
-        if(Player.getCentre().getY() > yMax){
+        if (Player.getCentre().getY() > yMax) {
             currentVelocity.setY(0);
             currentLocation.setY(yMax);
         }
@@ -237,7 +230,7 @@ public class Model {
 
     }
 
-    public GameObject getPlayer() {
+    public PlayerObject getPlayer() {
         return Player;
     }
 
@@ -251,6 +244,10 @@ public class Model {
 
     public int getScore() {
         return Score;
+    }
+
+    public LevelMap getLevelMap() {
+        return this.levelMap;
     }
 
 

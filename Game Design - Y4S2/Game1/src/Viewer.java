@@ -89,11 +89,16 @@ public class Viewer extends JPanel {
         int height = (int) gameworld.getPlayer().getHeight();
         String texture = gameworld.getPlayer().getTexture();
 
+        boolean r = gameworld.getPlayer().isFacingRight();
+        boolean grounded = gameworld.getPlayer().isGrounded();
+        float xVel = gameworld.getPlayer().getVelocity().getX();
+        float yVel = gameworld.getPlayer().getVelocity().getY();
+
         //Draw background
         drawBackground(g);
 
         //Draw player
-        drawPlayer(x, y, width, height, texture, g);
+        drawPlayer(x, y, width, height, g, r, grounded, xVel, yVel);
 
         //Draw Bullets
         // change back
@@ -109,7 +114,16 @@ public class Viewer extends JPanel {
 
         });
 
-        drawBlock(500, 700, 100, 100, g);
+        int mapX = gameworld.getLevelMap().getWidth();
+        int mapY = gameworld.getLevelMap().getHeight();
+
+        for (int i = 0; i < mapY; i++) {
+            for (int j = 0; j < mapX; j++) {
+                drawTile(j, i, g);
+            }
+        }
+
+//        drawBlock(500, 700, 100, 100, g);
     }
 
     private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
@@ -154,14 +168,52 @@ public class Viewer extends JPanel {
     }
 
 
-    private void drawPlayer(int x, int y, int width, int height, String texture, Graphics g) {
-        File TextureToLoad = new File(texture);  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
+    private void drawPlayer(
+            int x, int y, int width, int height, Graphics g, boolean facingRight, boolean grounded,float xVel, float yVel) {
+        int trueWidth;
+        int align;
+        if(!facingRight){
+            trueWidth = -width;
+            align = width;
+        }else{
+            trueWidth = width;
+            align = 0;
+        }
+//        File TextureToLoad = new File(texture);
+
+        //Hitbox
+        g.drawRect(x, y, width, height);
+
+        System.out.println(yVel);
         try {
-            Image myImage = ImageIO.read(TextureToLoad);
-            //The spirte is 32x32 pixel wide and 4 of them are placed together so we need to grab a different one each time
-            //remember your training :-) computer science everything starts at 0 so 32 pixels gets us to 31
-            int currentPositionInAnimation = ((int) ((CurrentAnimationTime % 40) / 10)) * 32; //slows down animation so every 10 frames we get another frame so every 100ms
-            g.drawImage(myImage, x, y, x + width, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 31, 32, null);
+            if(!grounded){
+                if(Math.abs(xVel) < 2){//idle
+                    File TextureToLoad = new File("res/jungle/man/idle.png");
+                    Image myImage = ImageIO.read(TextureToLoad);
+                    int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
+                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 21, 34, null);
+                }else{//running
+                    File TextureToLoad = new File("res/jungle/man/run.png");
+                    Image myImage = ImageIO.read(TextureToLoad);
+                    int currentPositionInAnimation = ((int) (CurrentAnimationTime % 8)) * 23;
+                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 22, 34, null);
+                }
+            } else{
+                if(yVel > 5){//falling
+                    File TextureToLoad = new File("res/jungle/man/falling.png");
+                    Image myImage = ImageIO.read(TextureToLoad);
+                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, 0, 0, 21, 34, null);
+                }else if(yVel < -5){//rising
+                    File TextureToLoad = new File("res/jungle/man/rising.png");
+                    Image myImage = ImageIO.read(TextureToLoad);
+                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, 0, 0, 21, 34, null);
+                }else{//Midair
+                    File TextureToLoad = new File("res/jungle/man/midair.png");
+                    Image myImage = ImageIO.read(TextureToLoad);
+                    int currentPositionInAnimation = ((int) ((CurrentAnimationTime/4) % 2)) * 21;
+                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 21, 34, null);
+                }
+            }
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -175,8 +227,24 @@ public class Viewer extends JPanel {
 
     }
 
-    private void drawBlock(int x, int y, int width, int height, Graphics g){
-        g.drawRect(x,y,width,height);
+    private void drawTile(int x, int y, Graphics g) {
+        int size = gameworld.getLevelMap().getTileSize();
+
+        switch (gameworld.getLevelMap().getTile(x, y).getState()) {
+            case EMPTY:
+                g.drawRect(x * size, y * size, size, size);
+                break;
+            case BLOCK:
+                g.fillRect(x * size, y * size, size, size);
+                g.drawRect(x * size, y * size, size, size);
+                break;
+            case SPIKE:
+                g.setColor(Color.red);
+                g.fillRect(x * size, y * size, size, size);
+                g.setColor(Color.BLACK);
+                g.drawRect(x * size, y * size, size, size);
+                break;
+        }
     }
 
 

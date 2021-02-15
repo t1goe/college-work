@@ -9,6 +9,8 @@ public class PlayerObject extends GameObject{
     private float acceleration = 0;
     private float jumpAcc = 0;
     private float gravity = 0;
+    private boolean facingRight = true;
+    private boolean grounded = true;
 
     public PlayerObject() {}
 
@@ -23,6 +25,8 @@ public class PlayerObject extends GameObject{
         this.acceleration = acceleration;
         this.jumpAcc = jump;
         this.gravity = gravity;
+        this.facingRight = true;
+        this.grounded = false;
     }
 
     public Vector3f getVelocity(){
@@ -49,6 +53,14 @@ public class PlayerObject extends GameObject{
       this.friction = friction;
     }
 
+    public float getAcceleration() {
+        return acceleration;
+    }
+
+    public void setAcceleration(float acceleration) {
+        this.acceleration = acceleration;
+    }
+
     public float getJumpAcc(){
       return this.jumpAcc;
     }
@@ -63,6 +75,22 @@ public class PlayerObject extends GameObject{
 
     public void setGravity(float gravity){
       this.gravity = gravity;
+    }
+
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
+    }
+
+    public boolean isGrounded() {
+        return grounded;
+    }
+
+    public void setGrounded(boolean grounded) {
+        this.grounded = grounded;
     }
 
     // Moves the object by the current velocity
