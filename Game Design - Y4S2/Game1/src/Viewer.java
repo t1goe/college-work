@@ -186,7 +186,7 @@ public class Viewer extends JPanel {
 
         System.out.println(yVel);
         try {
-            if(!grounded){
+            if(grounded){
                 if(Math.abs(xVel) < 2){//idle
                     File TextureToLoad = new File("res/jungle/man/idle.png");
                     Image myImage = ImageIO.read(TextureToLoad);
