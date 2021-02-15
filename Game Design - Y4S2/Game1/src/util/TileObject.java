@@ -2,7 +2,7 @@ package util;
 
 public class TileObject extends GameObject{
 
-    // "empty", "block", "spike"
+    // empty, block, spike
     private State state = State.EMPTY;
 
     public TileObject() {}

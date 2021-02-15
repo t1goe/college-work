@@ -211,7 +211,7 @@ public class Viewer extends JPanel {
                     File TextureToLoad = new File("res/jungle/man/midair.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     int currentPositionInAnimation = ((int) ((CurrentAnimationTime/4) % 2)) * 21;
-                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 21, 34, null);
+                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation+1, 0, currentPositionInAnimation + 21, 34, null);
                 }
             }
 
