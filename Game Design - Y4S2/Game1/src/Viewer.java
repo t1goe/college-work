@@ -170,6 +170,7 @@ public class Viewer extends JPanel {
 
     private void drawPlayer(
             int x, int y, int width, int height, Graphics g, boolean facingRight, boolean grounded,float xVel, float yVel) {
+
         int trueWidth;
         int align;
         if(!facingRight){
@@ -179,12 +180,10 @@ public class Viewer extends JPanel {
             trueWidth = width;
             align = 0;
         }
-//        File TextureToLoad = new File(texture);
 
         //Hitbox
         g.drawRect(x, y, width, height);
 
-        System.out.println(yVel);
         try {
             if(grounded){
                 if(Math.abs(xVel) < 2){//idle

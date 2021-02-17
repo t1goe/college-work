@@ -1,6 +1,6 @@
 package util;
 
-public class PlayerObject extends GameObject{
+public class PlayerObject extends GameObject {
 
     // Added
     private Vector3f velocity = new Vector3f(0, 0, 0);
@@ -12,7 +12,8 @@ public class PlayerObject extends GameObject{
     private boolean facingRight = true;
     private boolean grounded = true;
 
-    public PlayerObject() {}
+    public PlayerObject() {
+    }
 
     public PlayerObject(String textureLocation, int width, int height, Point3f centre, float maxSpeed, float friction, float acceleration, float jump, float gravity) {
         hasTextured = true;
@@ -29,28 +30,28 @@ public class PlayerObject extends GameObject{
         this.grounded = false;
     }
 
-    public Vector3f getVelocity(){
+    public Vector3f getVelocity() {
         return this.velocity;
     }
 
-    public void setVelocity(Vector3f velocity){
+    public void setVelocity(Vector3f velocity) {
         this.velocity = velocity;
     }
 
-    public float getMaxSpeed(){
-      return this.maxSpeed;
+    public float getMaxSpeed() {
+        return this.maxSpeed;
     }
 
-    public void setMaxSpeed(float maxSpeed){
-      this.maxSpeed = maxSpeed;
+    public void setMaxSpeed(float maxSpeed) {
+        this.maxSpeed = maxSpeed;
     }
 
-    public float getFriction(){
-      return this.friction;
+    public float getFriction() {
+        return this.friction;
     }
 
-    public void setFriction(float friction){
-      this.friction = friction;
+    public void setFriction(float friction) {
+        this.friction = friction;
     }
 
     public float getAcceleration() {
@@ -61,20 +62,20 @@ public class PlayerObject extends GameObject{
         this.acceleration = acceleration;
     }
 
-    public float getJumpAcc(){
-      return this.jumpAcc;
+    public float getJumpAcc() {
+        return this.jumpAcc;
     }
 
-    public void setJumpAcc(float jump){
-      this.jumpAcc = jump;
+    public void setJumpAcc(float jump) {
+        this.jumpAcc = jump;
     }
 
-    public float getGravity(){
-      return this.gravity;
+    public float getGravity() {
+        return this.gravity;
     }
 
-    public void setGravity(float gravity){
-      this.gravity = gravity;
+    public void setGravity(float gravity) {
+        this.gravity = gravity;
     }
 
     public boolean isFacingRight() {
@@ -94,50 +95,61 @@ public class PlayerObject extends GameObject{
     }
 
     // Moves the object by the current velocity
-    public Point3f applyCurrentVelocity(){
+    public Point3f applyCurrentVelocity() {
         Point3f newCentre = this.centre.PlusVector(this.velocity);
         this.centre = newCentre;
         return newCentre;
     }
 
+    public Point3f applyCurrentVelocity(float ratio) {
+        Vector3f actualV = this.velocity;
+
+        actualV.setX(actualV.getX() * ratio);
+        actualV.setY(actualV.getY() * ratio);
+
+        Point3f newCentre = this.centre.PlusVector(actualV);
+        this.centre = newCentre;
+        return newCentre;
+    }
+
     //Adds velocity vector to current velocity
-    public Vector3f addVelocity(Vector3f velocity){
+    public Vector3f addVelocity(Vector3f velocity) {
         Vector3f newVelocity = this.velocity.PlusVector(velocity);
         this.velocity = newVelocity;
         return newVelocity;
     }
 
     // Manually accelerates using acceleration value
-    public void accelerate(int direction){
-        switch (direction){
+    public void accelerate(int direction) {
+        switch (direction) {
             case 0: //UP or -Y
-                if(this.getVelocity().getY() - this.acceleration > -this.maxSpeed){
+                if (this.getVelocity().getY() - this.acceleration > -this.maxSpeed) {
                     this.addVelocity(new Vector3f(0, -this.acceleration, 0));
-                }else{
+                } else {
                     this.setVelocity(new Vector3f(this.getVelocity().getX(), -this.maxSpeed, this.getCentre().getZ()));
                 }
 
                 break;
             case 1: //RIGHT or +X
-                if(this.getVelocity().getX() + this.acceleration < this.maxSpeed){
+                if (this.getVelocity().getX() + this.acceleration < this.maxSpeed) {
                     this.addVelocity(new Vector3f(this.acceleration, 0, 0));
-                }else{
+                } else {
                     this.setVelocity(new Vector3f(this.maxSpeed, this.getVelocity().getY(), this.getCentre().getZ()));
                 }
 
                 break;
             case 2: //DOWN or +Y
-                if(this.getVelocity().getY() + this.acceleration < this.maxSpeed) {
+                if (this.getVelocity().getY() + this.acceleration < this.maxSpeed) {
                     this.addVelocity(new Vector3f(0, this.acceleration, 0));
-                }else{
+                } else {
                     this.setVelocity(new Vector3f(this.getVelocity().getX(), this.maxSpeed, this.getCentre().getZ()));
                 }
 
                 break;
             case 3: //LEFT or -X
-                if(this.getVelocity().getX() - this.acceleration > -this.maxSpeed){
+                if (this.getVelocity().getX() - this.acceleration > -this.maxSpeed) {
                     this.addVelocity(new Vector3f(-this.acceleration, 0, 0));
-                }else{
+                } else {
                     this.setVelocity(new Vector3f(-this.maxSpeed, this.getVelocity().getY(), this.getCentre().getZ()));
                 }
 
@@ -147,17 +159,17 @@ public class PlayerObject extends GameObject{
         }
     }
 
-    public void jump(){
-      this.addVelocity(new Vector3f(0, -jumpAcc, 0));
+    public void jump() {
+        this.addVelocity(new Vector3f(0, -jumpAcc, 0));
     }
 
     // Manually accelerates using acceleration value
-    public void decelerate(){
+    public void decelerate() {
         this.verticallyDecelerate();
         this.horizontalDecelerate();
     }
 
-    public void horizontalDecelerate(){
+    public void horizontalDecelerate() {
         //Friction
         Vector3f currentVelocity = this.velocity;
         float dx = this.velocity.getX();
@@ -167,7 +179,7 @@ public class PlayerObject extends GameObject{
 
         //Value makes sure you come to a stop at *some* point by rounding down
         float threshold = (float) 0.1;
-        if(Math.abs(dx) < threshold)
+        if (Math.abs(dx) < threshold)
             dx = 0;
 
         // Apply friction
@@ -175,7 +187,7 @@ public class PlayerObject extends GameObject{
     }
 
     // Manually accelerates using acceleration value
-    public void verticallyDecelerate(){
+    public void verticallyDecelerate() {
 
         //Friction
         Vector3f currentVelocity = this.velocity;
@@ -187,18 +199,37 @@ public class PlayerObject extends GameObject{
         //Value makes sure you come to a stop at *some* point by rounding down
         float threshold = (float) 0.1;
 
-        if(Math.abs(dy) < threshold)
+        if (Math.abs(dy) < threshold)
             dy = 0;
 
         // Apply friction
         this.setVelocity(new Vector3f(this.velocity.getX(), dy, this.getVelocity().getZ()));
     }
 
-    public void applyGravity(){
-      this.velocity = this.velocity.PlusVector(new Vector3f(0, this.gravity, 0));
+    public void applyGravity() {
+        this.velocity = this.velocity.PlusVector(new Vector3f(0, this.gravity, 0));
     }
 
-    public String toString(){
+    public float[][] getCollisionPoints() {
+        float[][] output = new float[6][2];
+
+
+        float[] widths = new float[]{this.getCentre().getX(), (this.getCentre().getX() + this.width)};
+        float[] heights = new float[]{this.getCentre().getY(), (this.getCentre().getY() + (this.height / 2)), (this.getCentre().getY() + this.height)};
+
+        int pos = 0;
+        for (int i = 0; i < widths.length; i++) {
+            for (int j = 0; j < heights.length; j++) {
+                output[pos][0] = widths[i];
+                output[pos][1] = heights[j];
+                pos++;
+            }
+        }
+
+        return output;
+    }
+
+    public String toString() {
         String output = "\n";
         output += "position: " + this.getCentre().getX() + ", " + this.getCentre().getY() + "\n";
         output += "velocity: " + this.getVelocity().getX() + ", " + this.getVelocity().getY() + "\n";

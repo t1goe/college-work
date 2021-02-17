@@ -48,7 +48,7 @@ public class Model {
                 10,
                 0.8f,
                 20f,
-                20,
+                50,
                 1.5f);
         //Enemies  starting with four
 
@@ -58,7 +58,12 @@ public class Model {
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
 
         levelMap = new LevelMap(40, 40, 52);
-        levelMap.setTile(9, 9, new TileObject(State.BLOCK));
+        levelMap.setTile(6, 6, new TileObject(State.BLOCK));
+        levelMap.setTile(6, 7, new TileObject(State.BLOCK));
+        levelMap.setTile(7, 6, new TileObject(State.BLOCK));
+        levelMap.setTile(7, 7, new TileObject(State.BLOCK));
+
+
         levelMap.setTile(5, 5, new TileObject(State.SPIKE));
 
 
@@ -147,7 +152,7 @@ public class Model {
 
         //check for movement and if you fired a bullet
 
-        System.out.println(Player.toString());
+//        System.out.println(Player.toString());
 
         boolean movingX = false;
 
@@ -189,8 +194,10 @@ public class Model {
             Player.horizontalDecelerate();
         }
 
+        Player.verticallyDecelerate();
+
         //Apply gravity
-//        Player.applyGravity();
+        Player.applyGravity();
 
         //prevents flying off the screen
         Vector3f currentVelocity = Player.getVelocity();
@@ -221,8 +228,13 @@ public class Model {
         Player.setVelocity(currentVelocity);
         Player.setCentre(currentLocation);
 
+        float r = levelMap.collisionDetection(Player);
+
         //Moves by the current velocity
-        Player.applyCurrentVelocity();
+        Player.applyCurrentVelocity(r);
+
+        //Moves by the current velocity
+//        Player.applyCurrentVelocity();
     }
 
     private void CreateBullet() {
