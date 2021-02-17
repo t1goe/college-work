@@ -228,13 +228,17 @@ public class Model {
         Player.setVelocity(currentVelocity);
         Player.setCentre(currentLocation);
 
-        float r = levelMap.collisionDetection(Player);
+        CollisionInfo c = levelMap.collisionDetection(Player);
 
+        if(c.getState() == State.BLOCK && c.getDirection() == Direction.DOWN){
+            Player.setGrounded(true);
+        }else{
+            Player.setGrounded(false);
+        }
+        
         //Moves by the current velocity
-        Player.applyCurrentVelocity(r);
+        Player.applyCurrentVelocity(c.getRatio());
 
-        //Moves by the current velocity
-//        Player.applyCurrentVelocity();
     }
 
     private void CreateBullet() {

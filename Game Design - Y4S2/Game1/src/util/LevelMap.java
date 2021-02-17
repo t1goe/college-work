@@ -62,7 +62,7 @@ public class LevelMap {
         this.offsetY = offsetY;
     }
 
-    public float collisionDetectionLine(float x1, float y1, float x2, float y2) {
+    public CollisionInfo collisionDetectionLine(float x1, float y1, float x2, float y2) {
         float rise = y2 - y1;
         float run = x2 - x1;
 
@@ -77,13 +77,17 @@ public class LevelMap {
             yIntercept = y1 - (slope * x1);
         }
 
+        CollisionInfo xCollision = new CollisionInfo();
+        xCollision.setRatio(1);
+        xCollision.setState(State.EMPTY);
 
-        float xRatio = 1;
         if (run > 0) {//Moving right
             for (float i = x1; i < x2; i++) {//INCREMENT BY TILE SIZE INSTEAD
                 if (((int) i) % this.tileSize == 0) {
                     if (level[(int) (i / this.tileSize)][(int) (((i * slope) + yIntercept) / this.tileSize)].getState() == State.BLOCK) {
-                        xRatio = (i - x1) / (x2 - x1);
+                        xCollision.setRatio((i - x1) / (x2 - x1));
+                        xCollision.setDirection(Direction.RIGHT);
+                        xCollision.setState(State.BLOCK);
                         break;
                     }
                 }
@@ -92,25 +96,34 @@ public class LevelMap {
             for (float i = x1; i > x2; i--) {
                 if (((int) i) % this.tileSize == 0) {
                     if (level[(int) (i / this.tileSize) - 1][(int) (((i * slope) + yIntercept) / this.tileSize)].getState() == State.BLOCK) {
-                        xRatio = Math.abs((i - x1) / (x2 - x1));
+                        xCollision.setRatio(Math.abs((i - x1) / (x2 - x1)));
+                        xCollision.setDirection(Direction.LEFT);
+                        xCollision.setState(State.BLOCK);
                         break;
                     }
                 }
             }
         }
 
-        float yRatio = 1;
+        CollisionInfo yCollision = new CollisionInfo();
+        yCollision.setRatio(1);
+        yCollision.setState(State.EMPTY);
+
         if (rise > 0) {//Moving down
             for (float i = y1; i < y2; i++) {//INCREMENT BY TILE SIZE INSTEAD
                 if (((int) i) % this.tileSize == 0) {
                     if (run != 0) {//Moving angled up
                         if (level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) (i / this.tileSize)].getState() == State.BLOCK) {
-                            yRatio = (i - y1) / (y2 - y1);
+                            yCollision.setRatio((i - y1) / (y2 - y1));
+                            yCollision.setDirection(Direction.DOWN);
+                            yCollision.setState(State.BLOCK);
                             break;
                         }
                     } else {//Moving straight down
                         if (level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize)].getState() == State.BLOCK) {
-                            yRatio = (i - y1) / (y2 - y1);
+                            yCollision.setRatio((i - y1) / (y2 - y1));
+                            yCollision.setDirection(Direction.DOWN);
+                            yCollision.setState(State.BLOCK);
                             break;
                         }
                     }
@@ -121,12 +134,16 @@ public class LevelMap {
                 if (((int) i) % this.tileSize == 0) {
                     if (run != 0) {//Moving angled up
                         if (level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) ((i / this.tileSize)) - 1].getState() == State.BLOCK) {
-                            yRatio = Math.abs((i - y1) / (y2 - y1));
+                            yCollision.setRatio(Math.abs((i - y1) / (y2 - y1)));
+                            yCollision.setDirection(Direction.UP);
+                            yCollision.setState(State.BLOCK);
                             break;
                         }
                     } else {//Moving straight up
                         if (level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize) - 1].getState() == State.BLOCK) {
-                            yRatio = (i - y1) / (y2 - y1);
+                            yCollision.setRatio((i - y1) / (y2 - y1));
+                            yCollision.setDirection(Direction.UP);
+                            yCollision.setState(State.BLOCK);
                             break;
                         }
                     }
@@ -134,7 +151,13 @@ public class LevelMap {
             }
         }
 
-        float ans = Math.abs(Math.min(xRatio, yRatio));
+        if(xCollision.getRatio() < yCollision.getRatio()){
+            return xCollision;
+        }else{
+            return yCollision;
+        }
+
+//        float ans = Math.abs(Math.min(xRatio, yRatio));
         //!TEST
 //        if (ans != 1) {
 //            System.out.println("xRatio: " + xRatio);
@@ -142,21 +165,21 @@ public class LevelMap {
 //            System.out.println("ans: " + ans);
 //            System.out.println();
 //        }
-        return ans;
+//        return ans;
     }
 
-    public float collisionDetection(PlayerObject p) {
+    public CollisionInfo collisionDetection(PlayerObject p) {
         float[][] points = p.getCollisionPoints();
-        float ratio = Float.MAX_VALUE;
-        for (int i = 0; i < points.length; i++){
-            float tempRatio = collisionDetectionLine(points[i][0], points[i][1], points[i][0] + p.getVelocity().getX(), points[i][1] + p.getVelocity().getY());
-            ratio = Math.min(ratio, tempRatio);
+        CollisionInfo collisionInfo = new CollisionInfo();
+        collisionInfo.setRatio(Float.MAX_VALUE);
+
+        for (int i = 0; i < points.length; i++) {
+            CollisionInfo tempCollision = collisionDetectionLine(points[i][0], points[i][1], points[i][0] + p.getVelocity().getX(), points[i][1] + p.getVelocity().getY());
+            if(collisionInfo.getRatio() > tempCollision.getRatio()){
+                collisionInfo = tempCollision;
+            }
         }
 
-        return ratio;
-
-//        p.applyCurrentVelocity(r);
-//
-//        p.setVelocity(new Vector3f(0, 0, 0));
+        return collisionInfo;
     }
 }
