@@ -87,7 +87,7 @@ public class Viewer extends JPanel {
         drawBackground(g);
 
         //Draw player
-        drawPlayer(gameworld.getPlayer(), g);
+        drawPlayer(gameworld.getPlayer(), gameworld.getLevelMap(), g);
 
         //Draw Bullets
         // change back
@@ -103,7 +103,7 @@ public class Viewer extends JPanel {
 
         });
 
-        drawLevel(gameworld.getLevelMap(), g);
+        drawLevel(gameworld.getPlayer(), gameworld.getLevelMap(), g);
     }
 
     private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
@@ -147,13 +147,12 @@ public class Viewer extends JPanel {
         }
     }
 
-
-    private void drawPlayer(PlayerObject p, Graphics g) {
+    private void drawPlayer(PlayerObject p, LevelMap l, Graphics g) {
 
         int x = (int) p.getCentre().getX();
         int y = (int) p.getCentre().getY();
-        int width = (int) p.getWidth();
-        int height = (int) p.getHeight();
+        int width = p.getWidth();
+        int height = p.getHeight();
 
         boolean facingRight = p.isFacingRight();
         boolean grounded = p.isGrounded();
@@ -161,22 +160,29 @@ public class Viewer extends JPanel {
         float yVel = p.getVelocity().getY();
         float[][] points = p.getCollisionPoints();
 
+//        int xOffset = l.getOffsetX();
+//        int yOffset = l.getOffsetY();
+
+        int xOffset = 100;
+        int yOffset = 100;
+
         int trueWidth;
-        int align;
+        int playerAlign;
         if (!facingRight) {
             trueWidth = -width;
-            align = width;
+            playerAlign = width;
         } else {
             trueWidth = width;
-            align = 0;
+            playerAlign = 0;
         }
 
         //Hitbox
-        g.drawRect(x, y, width, height);
+        g.drawRect(x + xOffset, y + yOffset, width, height);
 
         //Velocity lines
         for (int i = 0; i < points.length; i++) {
-            g.drawLine((int) points[i][0], (int) points[i][1], (int) (points[i][0] + p.getVelocity().getX()), (int) (points[i][1] + p.getVelocity().getY()));
+            g.drawLine((int) points[i][0] + xOffset, (int) points[i][1] + yOffset,
+                    (int) (points[i][0] + p.getVelocity().getX()) + xOffset, (int) (points[i][1] + p.getVelocity().getY()) + yOffset);
         }
 
         try {
@@ -185,27 +191,52 @@ public class Viewer extends JPanel {
                     File TextureToLoad = new File("res/jungle/man/idle.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
-                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 21, 34, null);
+                    g.drawImage(myImage,
+                            x + playerAlign + xOffset, y + yOffset,
+                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                            currentPositionInAnimation, 0,
+                            currentPositionInAnimation + 21, 34,
+                            null);
                 } else {//running
                     File TextureToLoad = new File("res/jungle/man/run.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     int currentPositionInAnimation = ((int) (CurrentAnimationTime % 8)) * 23;
-                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 22, 34, null);
+                    g.drawImage(myImage,
+                            x + playerAlign + xOffset, y + yOffset,
+                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                            currentPositionInAnimation, 0,
+                            currentPositionInAnimation + 22, 34,
+                            null);
                 }
             } else {
                 if (yVel > 5) {//falling
                     File TextureToLoad = new File("res/jungle/man/falling.png");
                     Image myImage = ImageIO.read(TextureToLoad);
-                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, 0, 0, 21, 34, null);
+                    g.drawImage(myImage,
+                            x + playerAlign + xOffset, y + yOffset,
+                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                            0, 0,
+                            21, 34,
+                            null);
                 } else if (yVel < -5) {//rising
                     File TextureToLoad = new File("res/jungle/man/rising.png");
                     Image myImage = ImageIO.read(TextureToLoad);
-                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, 0, 0, 21, 34, null);
+                    g.drawImage(myImage,
+                            x + playerAlign + xOffset, y + yOffset,
+                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                            0, 0,
+                            21, 34,
+                            null);
                 } else {//Midair
                     File TextureToLoad = new File("res/jungle/man/midair.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     int currentPositionInAnimation = ((int) ((CurrentAnimationTime / 4) % 2)) * 21;
-                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation + 1, 0, currentPositionInAnimation + 21, 34, null);
+                    g.drawImage(myImage,
+                            x + playerAlign + xOffset, y + yOffset,
+                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                            currentPositionInAnimation + 1, 0,
+                            currentPositionInAnimation + 21, 34,
+                            null);
                 }
             }
 
@@ -221,42 +252,49 @@ public class Viewer extends JPanel {
 
     }
 
-    private void drawLevel(LevelMap l, Graphics g){
-        int mapX = gameworld.getLevelMap().getWidth();
-        int mapY = gameworld.getLevelMap().getHeight();
+    private void drawLevel(PlayerObject p, LevelMap l, Graphics g) {
+        int mapWidth = l.getWidth();
+        int mapHeight = l.getHeight();
 
-        for (int i = 0; i < mapY; i++) {
-            for (int j = 0; j < mapX; j++) {
-                drawTile(j, i, g);
+        for (int i = 0; i < mapHeight; i++) {
+            for (int j = 0; j < mapWidth; j++) {
+                drawTile(j, i, 100, 100, g);
             }
         }
     }
 
-    private void drawTile(int x, int y, Graphics g) {
+    private void drawTile(int x, int y, int xOffset, int yOffset, Graphics g) {
         int size = gameworld.getLevelMap().getTileSize();
         switch (gameworld.getLevelMap().getTile(x, y).getState()) {
             case BLOCK:
                 g.setColor(Color.black);
-                g.fillRect(x * size, y * size, size, size);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
                 break;
             case SPIKE:
                 g.setColor(Color.red);
-                g.fillRect(x * size, y * size, size, size);
+//                g.fillRect(x * size, y * size, size, size);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
                 break;
             case ACTIVE_CHECKPOINT:
                 g.setColor(Color.green);
-                g.fillRect(x * size, y * size, size, size);
+//                g.fillRect(x * size, y * size, size, size);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
                 break;
             case INACTIVE_CHECKPOINT:
                 g.setColor(Color.yellow);
-                g.fillRect(x * size, y * size, size, size);
+//                g.fillRect(x * size, y * size, size, size);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
                 break;
             case EMPTY:
                 break;
         }
 
         g.setColor(Color.BLACK);
-        g.drawRect(x * size, y * size, size, size);
+//        g.drawRect(x * size, y * size, size, size);
+        g.drawRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+
     }
 
 

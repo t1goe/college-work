@@ -214,8 +214,6 @@ public class Model {
         }
 
         levelMap.playerInteraction(Player);
-        System.out.println(Player.toString());
-
     }
 
     private void CreateBullet() {
