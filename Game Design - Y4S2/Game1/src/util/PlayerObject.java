@@ -120,9 +120,9 @@ public class PlayerObject extends GameObject {
     }
 
     // Manually accelerates using acceleration value
-    public void accelerate(int direction) {
+    public void accelerate(Direction direction) {
         switch (direction) {
-            case 0: //UP or -Y
+            case UP: //UP or -Y
                 if (this.getVelocity().getY() - this.acceleration > -this.maxSpeed) {
                     this.addVelocity(new Vector3f(0, -this.acceleration, 0));
                 } else {
@@ -130,7 +130,7 @@ public class PlayerObject extends GameObject {
                 }
 
                 break;
-            case 1: //RIGHT or +X
+            case RIGHT: //RIGHT or +X
                 if (this.getVelocity().getX() + this.acceleration < this.maxSpeed) {
                     this.addVelocity(new Vector3f(this.acceleration, 0, 0));
                 } else {
@@ -138,7 +138,7 @@ public class PlayerObject extends GameObject {
                 }
 
                 break;
-            case 2: //DOWN or +Y
+            case DOWN: //DOWN or +Y
                 if (this.getVelocity().getY() + this.acceleration < this.maxSpeed) {
                     this.addVelocity(new Vector3f(0, this.acceleration, 0));
                 } else {
@@ -146,7 +146,7 @@ public class PlayerObject extends GameObject {
                 }
 
                 break;
-            case 3: //LEFT or -X
+            case LEFT: //LEFT or -X
                 if (this.getVelocity().getX() - this.acceleration > -this.maxSpeed) {
                     this.addVelocity(new Vector3f(-this.acceleration, 0, 0));
                 } else {

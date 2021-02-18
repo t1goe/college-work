@@ -298,6 +298,7 @@ public class Viewer extends JPanel {
     }
 
     private void calculateOffset(PlayerObject p, LevelMap l) {
+        //TODO REWRITE THIS
         int frameWidth = 1000;
         int frameHeight = 1000;
 

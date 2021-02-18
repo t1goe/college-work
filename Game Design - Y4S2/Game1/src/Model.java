@@ -152,7 +152,7 @@ public class Model {
 
         //left
         if (Controller.getInstance().isKeyAPressed()) {
-            Player.accelerate(3);
+            Player.accelerate(Direction.LEFT);
             movingX = true;
 
             Player.setFacingRight(false);
@@ -160,7 +160,7 @@ public class Model {
 
         //right
         if (Controller.getInstance().isKeyDPressed()) {
-            Player.accelerate(1);
+            Player.accelerate(Direction.RIGHT);
             movingX = true;
 
             Player.setFacingRight(true);
@@ -168,13 +168,13 @@ public class Model {
 
         //up
         if (Controller.getInstance().isKeyWPressed()) {
-            Player.accelerate(0);
+            Player.accelerate(Direction.UP);
 
         }
 
         //down
         if (Controller.getInstance().isKeySPressed()) {
-            Player.accelerate(2);
+            Player.accelerate(Direction.DOWN);
         }
 
         //Space (jump)
