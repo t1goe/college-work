@@ -34,7 +34,7 @@ public class GameObject {
     protected int height = 10;
     protected boolean hasTextured = false;
     protected String textureLocation;
-    protected String blanktexture = "res/blankSprite.png";
+    protected String blanktexture = "res/oldTextures/blankSprite.png";
 
     public GameObject() {
 

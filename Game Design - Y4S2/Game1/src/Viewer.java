@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import util.GameObject;
+import util.LevelMap;
 import util.PlayerObject;
 
 
@@ -102,14 +103,7 @@ public class Viewer extends JPanel {
 
         });
 
-        int mapX = gameworld.getLevelMap().getWidth();
-        int mapY = gameworld.getLevelMap().getHeight();
-
-        for (int i = 0; i < mapY; i++) {
-            for (int j = 0; j < mapX; j++) {
-                drawTile(j, i, g);
-            }
-        }
+        drawLevel(gameworld.getLevelMap(), g);
     }
 
     private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
@@ -225,6 +219,17 @@ public class Viewer extends JPanel {
         // Bullets from https://opengameart.org/forumtopic/tatermands-art
         // background image from https://www.needpix.com/photo/download/677346/space-stars-nebula-background-galaxy-universe-free-pictures-free-photos-free-images
 
+    }
+
+    private void drawLevel(LevelMap l, Graphics g){
+        int mapX = gameworld.getLevelMap().getWidth();
+        int mapY = gameworld.getLevelMap().getHeight();
+
+        for (int i = 0; i < mapY; i++) {
+            for (int j = 0; j < mapX; j++) {
+                drawTile(j, i, g);
+            }
+        }
     }
 
     private void drawTile(int x, int y, Graphics g) {

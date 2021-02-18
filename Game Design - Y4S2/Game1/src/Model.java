@@ -53,30 +53,12 @@ public class Model {
                 1.5f);
         //Enemies  starting with four
 
-        EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
-        EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 500), 0, 0)));
-        EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 500), 0, 0)));
-        EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
+        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
+        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 500), 0, 0)));
+        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 500), 0, 0)));
+        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
 
-//        levelMap = new LevelMap(40, 40, 52);
-
-//        levelMap = new LevelMap("levels/lvl1.txt", 52);
-        levelMap = new LevelMap("levels/lvl1.txt", 52);
-
-//
-//        for (int i = 0; i < 20; i++) {
-//            levelMap.setTile(i, 30, new TileObject(State.BLOCK));
-//            levelMap.setTile(i, 15, new TileObject(State.BLOCK));
-//        }
-//
-//        levelMap.setTile(6, 6, new TileObject(State.BLOCK));
-//        levelMap.setTile(6, 7, new TileObject(State.BLOCK));
-//        levelMap.setTile(7, 6, new TileObject(State.BLOCK));
-//        levelMap.setTile(7, 7, new TileObject(State.BLOCK));
-//
-//
-//        levelMap.setTile(5, 5, new TileObject(State.SPIKE));
-
+        levelMap = new LevelMap("res/levels/lvl1.txt", 52);
 
     }
 
@@ -134,7 +116,7 @@ public class Model {
 
         if (EnemiesList.size() < 2) {
             while (EnemiesList.size() < 6) {
-                EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 1000), 0, 0)));
+                EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 1000), 0, 0)));
             }
         }
     }
@@ -240,7 +222,7 @@ public class Model {
     }
 
     private void CreateBullet() {
-        BulletList.add(new GameObject("res/Bullet.png", 32, 64, new Point3f(Player.getCentre().getX(), Player.getCentre().getY(), 0.0f)));
+        BulletList.add(new GameObject("res/oldTextures/Bullet.png", 32, 64, new Point3f(Player.getCentre().getX(), Player.getCentre().getY(), 0.0f)));
 
     }
 
