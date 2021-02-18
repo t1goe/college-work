@@ -234,22 +234,29 @@ public class Viewer extends JPanel {
 
     private void drawTile(int x, int y, Graphics g) {
         int size = gameworld.getLevelMap().getTileSize();
-
         switch (gameworld.getLevelMap().getTile(x, y).getState()) {
-            case EMPTY:
-                g.drawRect(x * size, y * size, size, size);
-                break;
             case BLOCK:
+                g.setColor(Color.black);
                 g.fillRect(x * size, y * size, size, size);
-                g.drawRect(x * size, y * size, size, size);
                 break;
             case SPIKE:
                 g.setColor(Color.red);
                 g.fillRect(x * size, y * size, size, size);
-                g.setColor(Color.BLACK);
-                g.drawRect(x * size, y * size, size, size);
+                break;
+            case ACTIVE_CHECKPOINT:
+                g.setColor(Color.green);
+                g.fillRect(x * size, y * size, size, size);
+                break;
+            case INACTIVE_CHECKPOINT:
+                g.setColor(Color.yellow);
+                g.fillRect(x * size, y * size, size, size);
+                break;
+            case EMPTY:
                 break;
         }
+
+        g.setColor(Color.BLACK);
+        g.drawRect(x * size, y * size, size, size);
     }
 
 

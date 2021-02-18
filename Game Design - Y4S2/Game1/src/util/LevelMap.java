@@ -2,8 +2,9 @@ package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class LevelMap {
 
@@ -192,7 +193,7 @@ public class LevelMap {
         }
     }
 
-    public void loadTileMap(String fileLocation){
+    public void loadTileMap(String fileLocation) {
         this.tileSize = tileSize;
         try {
             //Pass the path to the file as a parameter
@@ -215,10 +216,22 @@ public class LevelMap {
                 String[] row = s.nextLine().split("");
                 int j = 0;
                 for (; j < row.length; j++) {
-                    if (row[j].equals("B")) {
-                        this.level[j][i] = new TileObject(State.BLOCK);
-                    } else {
-                        this.level[j][i] = new TileObject((State.EMPTY));
+                    switch (row[j].toUpperCase()) {
+                        case "B":
+                            this.level[j][i] = new TileObject(State.BLOCK);
+                            break;
+                        case "S":
+                            this.level[j][i] = new TileObject(State.SPIKE);
+                            break;
+                        case "A":
+                            this.level[j][i] = new TileObject(State.ACTIVE_CHECKPOINT);
+                            break;
+                        case "I":
+                            this.level[j][i] = new TileObject(State.INACTIVE_CHECKPOINT);
+                            break;
+                        default:
+                            this.level[j][i] = new TileObject((State.EMPTY));
+                            break;
                     }
                 }
                 for (; j < maxWidth; j++) {
@@ -231,5 +244,45 @@ public class LevelMap {
             e.printStackTrace();
         }
 
+    }
+
+    public void playerInteraction(PlayerObject p) {
+        for (int[] temp : getOccupyingTiles(p)) {
+            switch(level[temp[0]][temp[1]].getState()){
+                case INACTIVE_CHECKPOINT:
+                    changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
+                    level[temp[0]][temp[1]].setState(State.ACTIVE_CHECKPOINT);
+            }
+        }
+    }
+
+    private void changeAllByType(State from, State to){
+        for(TileObject[] row : level){
+            for(TileObject t: row){
+                if(t.getState() == from){
+                    t.setState(to);
+                }
+            }
+        }
+    }
+
+    private Set<int[]> getOccupyingTiles(PlayerObject p) {
+        int[][] tiles = new int[6][2];
+
+        float[][] points = p.getCollisionPoints();
+
+        for (int i = 0; i < points.length; i++) {
+            tiles[i][0] = (int) (points[i][0] / tileSize);
+            tiles[i][1] = (int) (points[i][1] / tileSize);
+        }
+
+        int end = tiles.length;
+        Set<int[]> set = new HashSet<>();
+
+        for(int i = 0; i < end; i++){
+            set.add(tiles[i]);
+        }
+
+        return set;
     }
 }

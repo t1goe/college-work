@@ -218,6 +218,7 @@ public class Model {
             Player.setVelocity(temp);
         }
 
+        levelMap.playerInteraction(Player);
 
     }
 
