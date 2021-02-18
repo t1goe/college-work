@@ -28,45 +28,7 @@ public class LevelMap {
 
     public LevelMap(String mapLocation, int tileSize) {
         this.tileSize = tileSize;
-        try {
-            // pass the path to the file as a parameter
-            File file = new File(mapLocation);
-
-            Scanner s = new Scanner(file);
-
-            int height = 0;
-            int maxWidth = 0;
-            while (s.hasNextLine()) {
-                maxWidth = Math.max(s.nextLine().length(), maxWidth);
-                height++;
-            }
-
-            this.level = new TileObject[maxWidth][height];
-
-            s = new Scanner(file);
-            int i = 0;
-            while (s.hasNextLine()) {
-                String[] row = s.nextLine().split("");
-                System.out.println(Arrays.toString(row));
-                int j = 0;
-                for (; j < row.length; j++) {
-//                    System.out.println(row[j] + ",  " + "B");
-                    if (row[j].equals("B")) {
-                        this.level[j][i] = new TileObject(State.BLOCK);
-                    } else {
-                        this.level[j][i] = new TileObject((State.EMPTY));
-                    }
-                }
-                for (; j < maxWidth; j++) {
-                    this.level[j][i] = new TileObject((State.EMPTY));
-                }
-
-                i++;
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        loadTileMap(mapLocation);
     }
 
     public TileObject getTile(int x, int y) {
@@ -228,5 +190,46 @@ public class LevelMap {
         } else {
             return false;
         }
+    }
+
+    public void loadTileMap(String fileLocation){
+        this.tileSize = tileSize;
+        try {
+            //Pass the path to the file as a parameter
+            File file = new File(fileLocation);
+
+            Scanner s = new Scanner(file);
+
+            //Get the size of the level and create the level object
+            int height = 0;
+            int maxWidth = 0;
+            while (s.hasNextLine()) {
+                maxWidth = Math.max(s.nextLine().length(), maxWidth);
+                height++;
+            }
+            this.level = new TileObject[maxWidth][height];
+
+            s = new Scanner(file);
+            int i = 0;
+            while (s.hasNextLine()) {
+                String[] row = s.nextLine().split("");
+                int j = 0;
+                for (; j < row.length; j++) {
+                    if (row[j].equals("B")) {
+                        this.level[j][i] = new TileObject(State.BLOCK);
+                    } else {
+                        this.level[j][i] = new TileObject((State.EMPTY));
+                    }
+                }
+                for (; j < maxWidth; j++) {
+                    this.level[j][i] = new TileObject((State.EMPTY));
+                }
+
+                i++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 }
