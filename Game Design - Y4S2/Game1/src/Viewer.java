@@ -305,20 +305,43 @@ public class Viewer extends JPanel {
         float moveZoneX = (float) 0.2;
         float moveZoneY = (float) 0.3;
 
-        if (p.getCentre().getX() + l.getOffsetX() > frameWidth * (1 - moveZoneX)) {//Move right
-            l.setOffsetX((int) (l.getOffsetX() - p.getVelocity().getX()));
-        } else if (p.getCentre().getX() + l.getOffsetX() < frameWidth * moveZoneX) {//Move left
-            l.setOffsetX((int) (l.getOffsetX() - p.getVelocity().getX()));
+        float playerScreenX = p.getCentre().getX() + l.getOffsetX();
+        int levelWidthPx = l.getWidth() * l.getTileSize();
+        int updatedOffsetX = (int) (l.getOffsetX() - p.getVelocity().getX());
+
+        if (playerScreenX > frameWidth * (1 - moveZoneX) && p.isFacingRight()) {//Move right
+            if (-updatedOffsetX < levelWidthPx - frameWidth) {
+                l.setOffsetX((updatedOffsetX));
+            } else {
+                l.setOffsetX(-levelWidthPx + frameWidth);
+            }
+        } else if (playerScreenX < frameWidth * moveZoneX && !p.isFacingRight()) {//Move left
+            if (updatedOffsetX < 0) {
+                l.setOffsetX((updatedOffsetX));
+            } else {
+                l.setOffsetX(0);
+            }
         }
 
-        if (p.getCentre().getY() + l.getOffsetY() > frameHeight * (1 - moveZoneY)) {//Move down
-            l.setOffsetY((int) (l.getOffsetY() - p.getVelocity().getY()));
-        } else if (p.getCentre().getY() + l.getOffsetY() < frameHeight * moveZoneY) {//Move up
-            l.setOffsetY((int) (l.getOffsetY() - p.getVelocity().getY()));
+        float playerScreenY = p.getCentre().getY() + l.getOffsetY();
+        int levelHeightPx = l.getHeight() * l.getTileSize();
+        int updatedOffsetY = (int) (l.getOffsetY() - p.getVelocity().getY());
+
+        if (playerScreenY > frameHeight * (1 - moveZoneY) && p.getVelocity().getY() > 0) {//Move down
+            if (updatedOffsetY < -levelHeightPx + frameHeight) {
+                l.setOffsetY(-levelHeightPx + frameHeight);
+            } else {
+                l.setOffsetY(updatedOffsetY);
+            }
+        } else if (playerScreenY < frameHeight * moveZoneY && p.getVelocity().getY() < 0) {//Move up
+
+            if ((updatedOffsetY) < 0) {
+                l.setOffsetY(updatedOffsetY);
+            } else {
+                l.setOffsetY(0);
+            }
         }
     }
-
-
 }
 
 
