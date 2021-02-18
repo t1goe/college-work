@@ -110,8 +110,6 @@ public class Viewer extends JPanel {
                 drawTile(j, i, g);
             }
         }
-
-//        drawBlock(500, 700, 100, 100, g);
     }
 
     private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
@@ -162,7 +160,6 @@ public class Viewer extends JPanel {
         int y = (int) p.getCentre().getY();
         int width = (int) p.getWidth();
         int height = (int) p.getHeight();
-        String texture = p.getTexture();
 
         boolean facingRight = p.isFacingRight();
         boolean grounded = p.isGrounded();
@@ -190,7 +187,7 @@ public class Viewer extends JPanel {
 
         try {
             if (grounded) {
-                if (Math.abs(xVel) < 2) {//idle
+                if (Math.abs(xVel) < 4) {//idle
                     File TextureToLoad = new File("res/jungle/man/idle.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;

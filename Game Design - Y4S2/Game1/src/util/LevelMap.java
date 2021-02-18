@@ -1,5 +1,10 @@
 package util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class LevelMap {
 
     private TileObject[][] level;
@@ -18,8 +23,50 @@ public class LevelMap {
                 this.level[j][i] = new TileObject();
             }
         }
-
         this.tileSize = tileSize;
+    }
+
+    public LevelMap(String mapLocation, int tileSize) {
+        this.tileSize = tileSize;
+        try {
+            // pass the path to the file as a parameter
+            File file = new File(mapLocation);
+
+            Scanner s = new Scanner(file);
+
+            int height = 0;
+            int maxWidth = 0;
+            while (s.hasNextLine()) {
+                maxWidth = Math.max(s.nextLine().length(), maxWidth);
+                height++;
+            }
+
+            this.level = new TileObject[maxWidth][height];
+
+            s = new Scanner(file);
+            int i = 0;
+            while (s.hasNextLine()) {
+                String[] row = s.nextLine().split("");
+                System.out.println(Arrays.toString(row));
+                int j = 0;
+                for (; j < row.length; j++) {
+//                    System.out.println(row[j] + ",  " + "B");
+                    if (row[j].equals("B")) {
+                        this.level[j][i] = new TileObject(State.BLOCK);
+                    } else {
+                        this.level[j][i] = new TileObject((State.EMPTY));
+                    }
+                }
+                for (; j < maxWidth; j++) {
+                    this.level[j][i] = new TileObject((State.EMPTY));
+                }
+
+                i++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public TileObject getTile(int x, int y) {
