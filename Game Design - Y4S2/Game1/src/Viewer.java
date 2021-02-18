@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import util.GameObject;
+import util.PlayerObject;
 
 
 /*
@@ -81,24 +82,11 @@ public class Viewer extends JPanel {
         super.paintComponent(g);
         CurrentAnimationTime++; // runs animation time step
 
-
-        //Draw player Game Object
-        int x = (int) gameworld.getPlayer().getCentre().getX();
-        int y = (int) gameworld.getPlayer().getCentre().getY();
-        int width = (int) gameworld.getPlayer().getWidth();
-        int height = (int) gameworld.getPlayer().getHeight();
-        String texture = gameworld.getPlayer().getTexture();
-
-        boolean r = gameworld.getPlayer().isFacingRight();
-        boolean grounded = gameworld.getPlayer().isGrounded();
-        float xVel = gameworld.getPlayer().getVelocity().getX();
-        float yVel = gameworld.getPlayer().getVelocity().getY();
-
         //Draw background
         drawBackground(g);
 
         //Draw player
-        drawPlayer(x, y, width, height, g, r, grounded, xVel, yVel);
+        drawPlayer(gameworld.getPlayer(), g);
 
         //Draw Bullets
         // change back
@@ -168,15 +156,26 @@ public class Viewer extends JPanel {
     }
 
 
-    private void drawPlayer(
-            int x, int y, int width, int height, Graphics g, boolean facingRight, boolean grounded,float xVel, float yVel) {
+    private void drawPlayer(PlayerObject p, Graphics g) {
+
+        int x = (int) p.getCentre().getX();
+        int y = (int) p.getCentre().getY();
+        int width = (int) p.getWidth();
+        int height = (int) p.getHeight();
+        String texture = p.getTexture();
+
+        boolean facingRight = p.isFacingRight();
+        boolean grounded = p.isGrounded();
+        float xVel = p.getVelocity().getX();
+        float yVel = p.getVelocity().getY();
+        float[][] points = p.getCollisionPoints();
 
         int trueWidth;
         int align;
-        if(!facingRight){
+        if (!facingRight) {
             trueWidth = -width;
             align = width;
-        }else{
+        } else {
             trueWidth = width;
             align = 0;
         }
@@ -184,33 +183,38 @@ public class Viewer extends JPanel {
         //Hitbox
         g.drawRect(x, y, width, height);
 
+        //Velocity lines
+        for (int i = 0; i < points.length; i++) {
+            g.drawLine((int) points[i][0], (int) points[i][1], (int) (points[i][0] + p.getVelocity().getX()), (int) (points[i][1] + p.getVelocity().getY()));
+        }
+
         try {
-            if(grounded){
-                if(Math.abs(xVel) < 2){//idle
+            if (grounded) {
+                if (Math.abs(xVel) < 2) {//idle
                     File TextureToLoad = new File("res/jungle/man/idle.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
                     g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 21, 34, null);
-                }else{//running
+                } else {//running
                     File TextureToLoad = new File("res/jungle/man/run.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     int currentPositionInAnimation = ((int) (CurrentAnimationTime % 8)) * 23;
                     g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 22, 34, null);
                 }
-            } else{
-                if(yVel > 5){//falling
+            } else {
+                if (yVel > 5) {//falling
                     File TextureToLoad = new File("res/jungle/man/falling.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, 0, 0, 21, 34, null);
-                }else if(yVel < -5){//rising
+                } else if (yVel < -5) {//rising
                     File TextureToLoad = new File("res/jungle/man/rising.png");
                     Image myImage = ImageIO.read(TextureToLoad);
                     g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, 0, 0, 21, 34, null);
-                }else{//Midair
+                } else {//Midair
                     File TextureToLoad = new File("res/jungle/man/midair.png");
                     Image myImage = ImageIO.read(TextureToLoad);
-                    int currentPositionInAnimation = ((int) ((CurrentAnimationTime/4) % 2)) * 21;
-                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation+1, 0, currentPositionInAnimation + 21, 34, null);
+                    int currentPositionInAnimation = ((int) ((CurrentAnimationTime / 4) % 2)) * 21;
+                    g.drawImage(myImage, x + align, y, x + trueWidth + align, y + height, currentPositionInAnimation + 1, 0, currentPositionInAnimation + 21, 34, null);
                 }
             }
 

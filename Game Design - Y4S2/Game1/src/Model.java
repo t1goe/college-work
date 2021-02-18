@@ -48,7 +48,7 @@ public class Model {
                 10,
                 0.8f,
                 20f,
-                50,
+                20,
                 1.5f);
         //Enemies  starting with four
 
@@ -58,6 +58,11 @@ public class Model {
         EnemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
 
         levelMap = new LevelMap(40, 40, 52);
+
+        for(int i = 0; i<20; i++){
+            levelMap.setTile(i, 15, new TileObject(State.BLOCK));
+        }
+
         levelMap.setTile(6, 6, new TileObject(State.BLOCK));
         levelMap.setTile(6, 7, new TileObject(State.BLOCK));
         levelMap.setTile(7, 6, new TileObject(State.BLOCK));
@@ -194,50 +199,65 @@ public class Model {
             Player.horizontalDecelerate();
         }
 
-        Player.verticallyDecelerate();
+        //prevents flying off the screen
+//        Vector3f currentVelocity = Player.getVelocity();
+//        Point3f currentLocation = Player.getCentre();
+//        int xMax = 935;
+//        int yMax = 915;
+//
+//        if (Player.getCentre().getX() < 0) {
+//            currentVelocity.setX(0);
+//            currentLocation.setX(0);
+//        }
+//
+//        if (Player.getCentre().getX() > xMax) {
+//            currentVelocity.setX(0);
+//            currentLocation.setX(xMax);
+//        }
+//
+//        if (Player.getCentre().getY() < 0) {
+//            currentVelocity.setY(0);
+//            currentLocation.setY(0);
+//        }
+//
+//        if (Player.getCentre().getY() > yMax) {
+//            currentVelocity.setY(0);
+//            currentLocation.setY(yMax);
+//        }
+//
+//        Player.setVelocity(currentVelocity);
+//        Player.setCentre(currentLocation);
 
         //Apply gravity
-        Player.applyGravity();
+        if(!Player.isGrounded())
+            Player.applyGravity();
 
-        //prevents flying off the screen
-        Vector3f currentVelocity = Player.getVelocity();
-        Point3f currentLocation = Player.getCentre();
-        int xMax = 935;
-        int yMax = 915;
+        //Apply gravity
+//        Player.applyGravity();
 
-        if (Player.getCentre().getX() < 0) {
-            currentVelocity.setX(0);
-            currentLocation.setX(0);
-        }
-
-        if (Player.getCentre().getX() > xMax) {
-            currentVelocity.setX(0);
-            currentLocation.setX(xMax);
-        }
-
-        if (Player.getCentre().getY() < 0) {
-            currentVelocity.setY(0);
-            currentLocation.setY(0);
-        }
-
-        if (Player.getCentre().getY() > yMax) {
-            currentVelocity.setY(0);
-            currentLocation.setY(yMax);
-        }
-
-        Player.setVelocity(currentVelocity);
-        Player.setCentre(currentLocation);
 
         CollisionInfo c = levelMap.collisionDetection(Player);
 
         if(c.getState() == State.BLOCK && c.getDirection() == Direction.DOWN){
             Player.setGrounded(true);
-        }else{
+//            Player.setCentre(Player.getCentre().PlusVector(new Vector3f(0,-1,0)));
+        }else if(!levelMap.isPlayerGrounded(Player)){
             Player.setGrounded(false);
         }
-        
+
         //Moves by the current velocity
         Player.applyCurrentVelocity(c.getRatio());
+
+        //Stop velocity in the x or y direction depending on the collision type
+        if(c.getDirection() == Direction.DOWN || c.getDirection() == Direction.UP) {
+            Vector3f temp = new Vector3f(Player.getVelocity().getX(), 0, Player.getVelocity().getZ());
+            Player.setVelocity(temp);
+        }else if(c.getDirection() == Direction.LEFT || c.getDirection() == Direction.RIGHT){
+            Vector3f temp = new Vector3f(0, Player.getVelocity().getY(), Player.getVelocity().getZ());
+            Player.setVelocity(temp);
+        }
+
+
 
     }
 

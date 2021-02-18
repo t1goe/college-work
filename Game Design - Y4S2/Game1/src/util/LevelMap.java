@@ -67,7 +67,6 @@ public class LevelMap {
         float run = x2 - x1;
 
         float slope = 0;
-        float xIntercept = 0;
         float yIntercept = 0;
         if (rise == 0) { //Horizontal line
             slope = 0;
@@ -112,16 +111,16 @@ public class LevelMap {
         if (rise > 0) {//Moving down
             for (float i = y1; i < y2; i++) {//INCREMENT BY TILE SIZE INSTEAD
                 if (((int) i) % this.tileSize == 0) {
-                    if (run != 0) {//Moving angled up
+                    if (run != 0) {//Moving angled down
                         if (level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) (i / this.tileSize)].getState() == State.BLOCK) {
-                            yCollision.setRatio((i - y1) / (y2 - y1));
+                            yCollision.setRatio((i - y1 - 1) / (y2 - y1));
                             yCollision.setDirection(Direction.DOWN);
                             yCollision.setState(State.BLOCK);
                             break;
                         }
                     } else {//Moving straight down
                         if (level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize)].getState() == State.BLOCK) {
-                            yCollision.setRatio((i - y1) / (y2 - y1));
+                            yCollision.setRatio((i - y1 - 1) / (y2 - y1));
                             yCollision.setDirection(Direction.DOWN);
                             yCollision.setState(State.BLOCK);
                             break;
@@ -151,21 +150,11 @@ public class LevelMap {
             }
         }
 
-        if(xCollision.getRatio() < yCollision.getRatio()){
+        if (xCollision.getRatio() < yCollision.getRatio()) {
             return xCollision;
-        }else{
+        } else {
             return yCollision;
         }
-
-//        float ans = Math.abs(Math.min(xRatio, yRatio));
-        //!TEST
-//        if (ans != 1) {
-//            System.out.println("xRatio: " + xRatio);
-//            System.out.println("yRatio: " + yRatio);
-//            System.out.println("ans: " + ans);
-//            System.out.println();
-//        }
-//        return ans;
     }
 
     public CollisionInfo collisionDetection(PlayerObject p) {
@@ -175,11 +164,22 @@ public class LevelMap {
 
         for (int i = 0; i < points.length; i++) {
             CollisionInfo tempCollision = collisionDetectionLine(points[i][0], points[i][1], points[i][0] + p.getVelocity().getX(), points[i][1] + p.getVelocity().getY());
-            if(collisionInfo.getRatio() > tempCollision.getRatio()){
+            if (collisionInfo.getRatio() > tempCollision.getRatio()) {
                 collisionInfo = tempCollision;
             }
         }
 
         return collisionInfo;
+    }
+
+    public boolean isPlayerGrounded(PlayerObject p) {
+        CollisionInfo collisionLeft = collisionDetectionLine(p.getLeft(), p.getBottom(), p.getLeft(), p.getBottom() + 2);
+        CollisionInfo collisionRight = collisionDetectionLine(p.getRight(), p.getBottom(), p.getRight(), p.getBottom() + 2);
+
+        if (collisionLeft.getState() == State.BLOCK || collisionRight.getState() == State.BLOCK) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

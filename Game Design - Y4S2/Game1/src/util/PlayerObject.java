@@ -207,6 +207,9 @@ public class PlayerObject extends GameObject {
     }
 
     public void applyGravity() {
+//        if(!grounded) {
+//            this.velocity = this.velocity.PlusVector(new Vector3f(0, this.gravity, 0));
+//        }
         this.velocity = this.velocity.PlusVector(new Vector3f(0, this.gravity, 0));
     }
 
