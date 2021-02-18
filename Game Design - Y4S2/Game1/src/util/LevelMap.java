@@ -14,6 +14,8 @@ public class LevelMap {
     private int offsetX = 0;
     private int offsetY = 0;
 
+    private int[] checkPointLocation = new int[2];
+
     public LevelMap() {
     }
 
@@ -22,6 +24,7 @@ public class LevelMap {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 this.level[j][i] = new TileObject();
+                this.level[j][i].setCentre(new Point3f(j*tileSize, i*tileSize, 0));
             }
         }
         this.tileSize = tileSize;
@@ -37,6 +40,10 @@ public class LevelMap {
     }
 
     public void setTile(int x, int y, TileObject t) {
+        if (t.getState() == State.ACTIVE_CHECKPOINT) {
+            checkPointLocation[0] = x;
+            checkPointLocation[1] = y;
+        }
         this.level[x][y] = t;
     }
 
@@ -70,6 +77,14 @@ public class LevelMap {
 
     public void setOffsetY(int offsetY) {
         this.offsetY = offsetY;
+    }
+
+    public int[] getCheckPointLocation() {
+        return checkPointLocation;
+    }
+
+    public void setCheckPointLocation(int[] checkPointLocation) {
+        this.checkPointLocation = checkPointLocation;
     }
 
     public CollisionInfo collisionDetectionLine(float x1, float y1, float x2, float y2) {
@@ -225,6 +240,8 @@ public class LevelMap {
                             break;
                         case "A":
                             this.level[j][i] = new TileObject(State.ACTIVE_CHECKPOINT);
+                            this.checkPointLocation[0] = j;
+                            this.checkPointLocation[1] = i;
                             break;
                         case "I":
                             this.level[j][i] = new TileObject(State.INACTIVE_CHECKPOINT);
@@ -233,6 +250,7 @@ public class LevelMap {
                             this.level[j][i] = new TileObject((State.EMPTY));
                             break;
                     }
+                    this.level[j][i].setCentre(new Point3f(j*tileSize, i*tileSize, 0));
                 }
                 for (; j < maxWidth; j++) {
                     this.level[j][i] = new TileObject((State.EMPTY));
@@ -248,18 +266,28 @@ public class LevelMap {
 
     public void playerInteraction(PlayerObject p) {
         for (int[] temp : getOccupyingTiles(p)) {
-            switch(level[temp[0]][temp[1]].getState()){
+            switch (level[temp[0]][temp[1]].getState()) {
+                case SPIKE:
+                    p.setVelocity(new Vector3f(0, 0, p.getVelocity().getZ()));
+                    Point3f tempPoint = level[checkPointLocation[0]][checkPointLocation[1]].getCentre();
+                    tempPoint.setX(tempPoint.getX() + 5);//Change the offsets to put man in the center of the square
+                    tempPoint.setY(tempPoint.getY() - 17);
+                    p.setCentre(tempPoint);
+                    break;
                 case INACTIVE_CHECKPOINT:
                     changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
                     level[temp[0]][temp[1]].setState(State.ACTIVE_CHECKPOINT);
+                    checkPointLocation[0] = temp[0];
+                    checkPointLocation[1] = temp[1];
+                    break;
             }
         }
     }
 
-    private void changeAllByType(State from, State to){
-        for(TileObject[] row : level){
-            for(TileObject t: row){
-                if(t.getState() == from){
+    private void changeAllByType(State from, State to) {
+        for (TileObject[] row : level) {
+            for (TileObject t : row) {
+                if (t.getState() == from) {
                     t.setState(to);
                 }
             }
@@ -279,7 +307,7 @@ public class LevelMap {
         int end = tiles.length;
         Set<int[]> set = new HashSet<>();
 
-        for(int i = 0; i < end; i++){
+        for (int i = 0; i < end; i++) {
             set.add(tiles[i]);
         }
 

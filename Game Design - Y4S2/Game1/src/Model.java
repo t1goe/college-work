@@ -193,15 +193,10 @@ public class Model {
         if (!Player.isGrounded())
             Player.applyGravity();
 
-        //Apply gravity
-//        Player.applyGravity();
-
-
         CollisionInfo c = levelMap.collisionDetection(Player);
 
         if (c.getState() == State.BLOCK && c.getDirection() == Direction.DOWN) {
             Player.setGrounded(true);
-//            Player.setCentre(Player.getCentre().PlusVector(new Vector3f(0,-1,0)));
         } else if (!levelMap.isPlayerGrounded(Player)) {
             Player.setGrounded(false);
         }
@@ -219,6 +214,7 @@ public class Model {
         }
 
         levelMap.playerInteraction(Player);
+        System.out.println(Player.toString());
 
     }
 
