@@ -86,6 +86,9 @@ public class Viewer extends JPanel {
         //Draw background
         drawBackground(g);
 
+        //Update level's x/y offsets
+        calculateOffset(gameworld.getPlayer(), gameworld.getLevelMap());
+
         //Draw player
         drawPlayer(gameworld.getPlayer(), gameworld.getLevelMap(), g);
 
@@ -160,11 +163,8 @@ public class Viewer extends JPanel {
         float yVel = p.getVelocity().getY();
         float[][] points = p.getCollisionPoints();
 
-//        int xOffset = l.getOffsetX();
-//        int yOffset = l.getOffsetY();
-
-        int xOffset = 100;
-        int yOffset = 100;
+        int xOffset = l.getOffsetX();
+        int yOffset = l.getOffsetY();
 
         int trueWidth;
         int playerAlign;
@@ -258,7 +258,7 @@ public class Viewer extends JPanel {
 
         for (int i = 0; i < mapHeight; i++) {
             for (int j = 0; j < mapWidth; j++) {
-                drawTile(j, i, 100, 100, g);
+                drawTile(j, i, l.getOffsetX(), l.getOffsetY(), g);
             }
         }
     }
@@ -295,6 +295,27 @@ public class Viewer extends JPanel {
         g.drawRect((x * size) + xOffset, (y * size) + yOffset, size, size);
 
 
+    }
+
+    private void calculateOffset(PlayerObject p, LevelMap l) {
+        int frameWidth = 1000;
+        int frameHeight = 1000;
+
+        //Percentage of the screen to move if the player enters that part of the screen
+        float moveZoneX = (float) 0.2;
+        float moveZoneY = (float) 0.3;
+
+        if (p.getCentre().getX() + l.getOffsetX() > frameWidth * (1 - moveZoneX)) {//Move right
+            l.setOffsetX((int) (l.getOffsetX() - p.getVelocity().getX()));
+        } else if (p.getCentre().getX() + l.getOffsetX() < frameWidth * moveZoneX) {//Move left
+            l.setOffsetX((int) (l.getOffsetX() - p.getVelocity().getX()));
+        }
+
+        if (p.getCentre().getY() + l.getOffsetY() > frameHeight * (1 - moveZoneY)) {//Move down
+            l.setOffsetY((int) (l.getOffsetY() - p.getVelocity().getY()));
+        } else if (p.getCentre().getY() + l.getOffsetY() < frameHeight * moveZoneY) {//Move up
+            l.setOffsetY((int) (l.getOffsetY() - p.getVelocity().getY()));
+        }
     }
 
 
