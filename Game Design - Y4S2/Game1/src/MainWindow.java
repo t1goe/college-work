@@ -44,7 +44,7 @@ SOFTWARE.
 
 
 public class MainWindow {
-    private static JFrame frame = new JFrame("Game");   // Change to the name of your game
+    private static JFrame frame = new JFrame("Jungle Game");   // Change to the name of your game
     private static Model gameworld = new Model();
     private static Viewer canvas = new Viewer(gameworld);
     private KeyListener Controller = new Controller();
@@ -53,13 +53,15 @@ public class MainWindow {
     private JLabel BackgroundImageForStartMenu;
 
     public MainWindow() {
-        frame.setSize(1000, 1000);  // you can customise this later and adapt it to change on size.
+        int width = 1000;
+        int height  = 1000;
+        frame.setSize(width, height);  // you can customise this later and adapt it to change on size.
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //If exit // you can modify with your way of quitting , just is a template.
         frame.setLayout(null);
         frame.add(canvas);
         frame.setResizable(false);
-        canvas.setBounds(0, 0, 1000, 1000);
-        canvas.setBackground(new Color(255, 255, 255)); //white background  replaced by Space background but if you remove the background method this will draw a white screen
+        canvas.setBounds(0, 0, width, height);
+        canvas.setBackground(new Color(24, 44, 59)); //white background  replaced by Space background but if you remove the background method this will draw a white screen
         canvas.setVisible(false);   // this will become visible after you press the key.
 
 
@@ -78,12 +80,12 @@ public class MainWindow {
         startMenuButton.setBounds(400, 500, 200, 40);
 
         //loading background image
-        File BackroundToLoad = new File("res/oldTextures/startscreen.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
+        File BackroundToLoad = new File("res/jungle/title.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
         try {
 
             BufferedImage myPicture = ImageIO.read(BackroundToLoad);
             BackgroundImageForStartMenu = new JLabel(new ImageIcon(myPicture));
-            BackgroundImageForStartMenu.setBounds(0, 0, 1000, 1000);
+            BackgroundImageForStartMenu.setBounds((width/2) - (672/2), 40, 672, 356);
             frame.add(BackgroundImageForStartMenu);
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,7 +135,7 @@ public class MainWindow {
 
         // Both these calls could be setup as  a thread but we want to simplify the game logic for you.
         //score update
-        frame.setTitle("Score =  " + gameworld.getScore());
+//        frame.setTitle("Score =  " + gameworld.getScore());
 
 
     }
