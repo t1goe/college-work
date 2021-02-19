@@ -213,7 +213,30 @@ public class Model {
             Player.setVelocity(temp);
         }
 
-        levelMap.playerInteraction(Player);
+        //Interacting with tiles such as spikes, and checkpoints
+        int[] checkPointLocation = levelMap.getCheckPointLocation();
+        tileLoop: for (int[] temp : levelMap.getOccupyingTiles(Player)) {
+            switch (levelMap.getTile(temp[0], temp[1]).getState()) {
+                case SPIKE:
+                    Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
+                    checkPointLocation = levelMap.getCheckPointLocation();
+                    Point3f tempPoint = levelMap.getTile(checkPointLocation[0], checkPointLocation[1]).getCentre();
+                    tempPoint.setX(tempPoint.getX() + 5);//Change the offsets to put man in the center of the square
+                    tempPoint.setY(tempPoint.getY() - 17);
+                    Player.setCentre(tempPoint);
+                    break tileLoop;
+                case INACTIVE_CHECKPOINT:
+                    levelMap.changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
+                    levelMap.getTile(temp[0], temp[1]).setState(State.ACTIVE_CHECKPOINT);
+                    checkPointLocation = levelMap.getCheckPointLocation();
+                    checkPointLocation[0] = temp[0];
+                    checkPointLocation[1] = temp[1];
+                    break;
+            }
+        }
+
+        //        levelMap.playerInteraction(Player);
+
     }
 
     private void CreateBullet() {

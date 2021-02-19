@@ -284,7 +284,7 @@ public class LevelMap {
         }
     }
 
-    private void changeAllByType(State from, State to) {
+    public void changeAllByType(State from, State to) {
         for (TileObject[] row : level) {
             for (TileObject t : row) {
                 if (t.getState() == from) {
@@ -294,7 +294,7 @@ public class LevelMap {
         }
     }
 
-    private Set<int[]> getOccupyingTiles(PlayerObject p) {
+    public Set<int[]> getOccupyingTiles(PlayerObject p) {
         int[][] tiles = new int[6][2];
 
         float[][] points = p.getCollisionPoints();
