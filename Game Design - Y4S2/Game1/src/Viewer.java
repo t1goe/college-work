@@ -8,7 +8,9 @@ import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -50,8 +52,11 @@ public class Viewer extends JPanel {
 
     Model gameworld = new Model();
 
+    private HashMap<String, Image> myImages = new HashMap<>();
+
     public Viewer(Model World) {
         this.gameworld = World;
+        loadImages();
         // TODO Auto-generated constructor stub
     }
 
@@ -109,6 +114,28 @@ public class Viewer extends JPanel {
         drawLevel(gameworld.getPlayer(), gameworld.getLevelMap(), g);
     }
 
+    private void loadImages() {
+        String[] imageLocations = {
+                "res/jungle/man/idle.png",
+                "res/jungle/man/run.png",
+                "res/jungle/man/falling.png",
+                "res/jungle/man/rising.png",
+                "res/jungle/man/midair.png"
+
+        };
+
+        try {
+            for (String s : imageLocations) {
+                File TextureToLoad = new File(s);
+                myImages.put(s, ImageIO.read(TextureToLoad));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        myImages.get
+    }
+
     private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
         File TextureToLoad = new File(texture);  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
         try {
@@ -126,15 +153,7 @@ public class Viewer extends JPanel {
     }
 
     private void drawBackground(Graphics g) {
-        File TextureToLoad = new File("res/jungle/background.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
-        try {
-            Image myImage = ImageIO.read(TextureToLoad);
-            g.drawImage(myImage, 0, 0, 1000, 1000, 0, 20, 383, 216, null);
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        g.drawImage(myImages.get("res/jungle/background.png"), 0, 0, 1000, 1000, 0, 20, 383, 216, null);
     }
 
     private void drawBullet(int x, int y, int width, int height, String texture, Graphics g) {
@@ -185,70 +204,54 @@ public class Viewer extends JPanel {
                     (int) (points[i][0] + p.getVelocity().getX()) + xOffset, (int) (points[i][1] + p.getVelocity().getY()) + yOffset);
         }
 
-        try {
-            if (grounded) {
-                if (Math.abs(xVel) < 4) {//idle
-                    File TextureToLoad = new File("res/jungle/man/idle.png");
-                    Image myImage = ImageIO.read(TextureToLoad);
-                    int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
-                    g.drawImage(myImage,
-                            x + playerAlign + xOffset, y + yOffset,
-                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
-                            currentPositionInAnimation, 0,
-                            currentPositionInAnimation + 21, 34,
-                            null);
-                } else {//running
-                    File TextureToLoad = new File("res/jungle/man/run.png");
-                    Image myImage = ImageIO.read(TextureToLoad);
-                    int currentPositionInAnimation = ((int) (CurrentAnimationTime % 8)) * 23;
-                    g.drawImage(myImage,
-                            x + playerAlign + xOffset, y + yOffset,
-                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
-                            currentPositionInAnimation, 0,
-                            currentPositionInAnimation + 22, 34,
-                            null);
-                }
-            } else {
-                if (yVel > 5) {//falling
-                    File TextureToLoad = new File("res/jungle/man/falling.png");
-                    Image myImage = ImageIO.read(TextureToLoad);
-                    g.drawImage(myImage,
-                            x + playerAlign + xOffset, y + yOffset,
-                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
-                            0, 0,
-                            21, 34,
-                            null);
-                } else if (yVel < -5) {//rising
-                    File TextureToLoad = new File("res/jungle/man/rising.png");
-                    Image myImage = ImageIO.read(TextureToLoad);
-                    g.drawImage(myImage,
-                            x + playerAlign + xOffset, y + yOffset,
-                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
-                            0, 0,
-                            21, 34,
-                            null);
-                } else {//Midair
-                    File TextureToLoad = new File("res/jungle/man/midair.png");
-                    Image myImage = ImageIO.read(TextureToLoad);
-                    int currentPositionInAnimation = ((int) ((CurrentAnimationTime / 4) % 2)) * 21;
-                    g.drawImage(myImage,
-                            x + playerAlign + xOffset, y + yOffset,
-                            x + trueWidth + playerAlign + xOffset, y + height + yOffset,
-                            currentPositionInAnimation + 1, 0,
-                            currentPositionInAnimation + 21, 34,
-                            null);
-                }
+        if (grounded) {
+            if (Math.abs(xVel) < 4) {//idle
+                int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
+                g.drawImage(myImages.get("res/jungle/man/idle.png"),
+                        x + playerAlign + xOffset, y + yOffset,
+                        x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                        currentPositionInAnimation, 0,
+                        currentPositionInAnimation + 21, 34,
+                        null);
+            } else {//running
+                int currentPositionInAnimation = ((int) (CurrentAnimationTime % 8)) * 23;
+                g.drawImage(myImages.get("res/jungle/man/run.png"),
+                        x + playerAlign + xOffset, y + yOffset,
+                        x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                        currentPositionInAnimation, 0,
+                        currentPositionInAnimation + 22, 34,
+                        null);
             }
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } else {
+            if (yVel > 5) {//falling
+                g.drawImage(myImages.get("res/jungle/man/falling.png"),
+                        x + playerAlign + xOffset, y + yOffset,
+                        x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                        0, 0,
+                        21, 34,
+                        null);
+            } else if (yVel < -5) {//rising
+                g.drawImage(myImages.get("res/jungle/man/rising.png"),
+                        x + playerAlign + xOffset, y + yOffset,
+                        x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                        0, 0,
+                        21, 34,
+                        null);
+            } else {//Midair
+                int currentPositionInAnimation = ((int) ((CurrentAnimationTime / 4) % 2)) * 21;
+                g.drawImage(myImages.get("res/jungle/man/midair.png"),
+                        x + playerAlign + xOffset, y + yOffset,
+                        x + trueWidth + playerAlign + xOffset, y + height + yOffset,
+                        currentPositionInAnimation + 1, 0,
+                        currentPositionInAnimation + 21, 34,
+                        null);
+            }
         }
 
-        //g.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer));
-        //Lighnting Png from https://opengameart.org/content/animated-spaceships  its 32x32 thats why I know to increament by 32 each time
-        // Bullets from https://opengameart.org/forumtopic/tatermands-art
-        // background image from https://www.needpix.com/photo/download/677346/space-stars-nebula-background-galaxy-universe-free-pictures-free-photos-free-images
+
+        //All jungle assets from https://jesse-m.itch.io/jungle-pack
+        //Cheers Jesse
+
 
     }
 
@@ -265,30 +268,51 @@ public class Viewer extends JPanel {
 
     private void drawTile(int x, int y, int xOffset, int yOffset, Graphics g) {
         int size = gameworld.getLevelMap().getTileSize();
+
         switch (gameworld.getLevelMap().getTile(x, y).getState()) {
             case BLOCK:
                 g.setColor(Color.black);
                 g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                    File TextureToLoad = new File("res/jungle/jungle tileset.png");
+//                    Image myImage = ImageIO.read(TextureToLoad);
+////                    int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
+//                    g.drawImage(myImage,
+//                            (x * size) + xOffset, (y * size) + yOffset,
+//                            (y * size) + yOffset + size, (y * size) + yOffset + size,
+//                            209, 34,
+//                            222, 45,
+//                            null);
+
                 break;
             case SPIKE:
                 g.setColor(Color.red);
-//                g.fillRect(x * size, y * size, size, size);
                 g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 break;
             case ACTIVE_CHECKPOINT:
                 g.setColor(Color.green);
-//                g.fillRect(x * size, y * size, size, size);
                 g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
                 break;
             case INACTIVE_CHECKPOINT:
                 g.setColor(Color.yellow);
-//                g.fillRect(x * size, y * size, size, size);
                 g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
                 break;
+            case KEY:
+                g.setColor(Color.blue);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+                break;
+            case KEY_COLLECTED:
+                g.setColor(Color.lightGray);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+            case LOCK:
+                g.setColor(Color.PINK);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+            case FINISH:
+                g.setColor(Color.white);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
             case EMPTY:
                 break;
         }
+
 
         g.setColor(Color.BLACK);
 //        g.drawRect(x * size, y * size, size, size);
