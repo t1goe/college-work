@@ -44,25 +44,25 @@ public class Model {
 
     public Model() {
         //setup game world
+        levelMap = new LevelMap("res/levels/lvl1.txt", 52);
+
         //Player
         Player = new PlayerObject("res/jungle/man/idle.png",
                 42,
                 68,
-                new Point3f(500, 500, 0),
+                levelMap.getSpawnLocation(),
                 10,
                 0.8f,
                 20f,
                 20,
                 1.5f);
+
         //Enemies  starting with four
 
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 500), 0, 0)));
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 500), 0, 0)));
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
-
-        levelMap = new LevelMap("res/levels/lvl1.txt", 52);
-
     }
 
     // This is the heart of the game , where the model takes in all the inputs ,decides the outcomes and then changes the model accordingly.
@@ -300,11 +300,7 @@ public class Model {
             switch (levelMap.getTile(temp[0], temp[1]).getState()) {
                 case SPIKE:
                     Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
-                    checkPoint = levelMap.getCheckPointLocation();
-                    Point3f tempPoint = levelMap.getTile(checkPoint[0], checkPoint[1]).getCentre();
-                    tempPoint.setX(tempPoint.getX() + 5);//Change the offsets to put man in the center of the square
-                    tempPoint.setY(tempPoint.getY() - 17);
-                    Player.setCentre(tempPoint);
+                    Player.setCentre(levelMap.getSpawnLocation());
                     break tileLoop;
                 case INACTIVE_CHECKPOINT:
                     levelMap.changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
@@ -320,11 +316,6 @@ public class Model {
                     break;
             }
         }
-//        System.out.println(levelMap.getKeys().toString() + "\t/\t" + levelMap.getCollectedKeys().toString());
-
-
-        //        levelMap.playerInteraction(Player);
-
     }
 
     private void CreateBullet() {

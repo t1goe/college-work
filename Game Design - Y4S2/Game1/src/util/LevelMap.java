@@ -387,4 +387,11 @@ public class LevelMap {
 
         return set;
     }
+
+    public Point3f getSpawnLocation(){
+        Point3f tempPoint = level[checkPointLocation[0]][checkPointLocation[1]].getCentre();
+        tempPoint.setX(tempPoint.getX() + 5);//Change the offsets to put man in the center of the square
+        tempPoint.setY(tempPoint.getY() - 17);
+        return tempPoint;
+    }
 }
