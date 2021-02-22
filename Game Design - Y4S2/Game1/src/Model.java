@@ -156,7 +156,9 @@ public class Model {
 
         //left
         if (Controller.getInstance().isKeyAPressed()) {
-            Player.accelerate(Direction.LEFT);
+            if(levelMap.canPlayerMoveLeft(Player)){
+                Player.accelerate(Direction.LEFT);
+            }
             movingX = true;
 
             Player.setFacingRight(false);
@@ -164,7 +166,9 @@ public class Model {
 
         //right
         if (Controller.getInstance().isKeyDPressed()) {
-            Player.accelerate(Direction.RIGHT);
+            if(levelMap.canPlayerMoveRight(Player)){
+                Player.accelerate(Direction.RIGHT);
+            }
             movingX = true;
 
             Player.setFacingRight(true);

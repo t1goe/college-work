@@ -28,7 +28,7 @@ public class LevelMap {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 this.level[j][i] = new TileObject();
-                this.level[j][i].setCentre(new Point3f(j*tileSize, i*tileSize, 0));
+                this.level[j][i].setCentre(new Point3f(j * tileSize, i * tileSize, 0));
             }
         }
         this.tileSize = tileSize;
@@ -130,7 +130,7 @@ public class LevelMap {
                 if (((int) i) % this.tileSize == 0) {
                     State currentTileState = level[(int) (i / this.tileSize)][(int) (((i * slope) + yIntercept) / this.tileSize)].getState();
                     if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
-                        xCollision.setRatio((i - x1) / (x2 - x1));
+                        xCollision.setRatio((i - x1 - 1) / (x2 - x1));
                         xCollision.setDirection(Direction.RIGHT);
                         xCollision.setState(currentTileState);
                         break;
@@ -142,7 +142,7 @@ public class LevelMap {
                 if (((int) i) % this.tileSize == 0) {
                     State currentTileState = level[(int) (i / this.tileSize) - 1][(int) (((i * slope) + yIntercept) / this.tileSize)].getState();
                     if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
-                        xCollision.setRatio(Math.abs((i - x1) / (x2 - x1)));
+                        xCollision.setRatio(Math.abs((i - x1 + 1) / (x2 - x1)));
                         xCollision.setDirection(Direction.LEFT);
                         xCollision.setState(currentTileState);
                         break;
@@ -182,15 +182,15 @@ public class LevelMap {
                 if (((int) i) % this.tileSize == 0) {
                     if (run != 0) {//Moving angled up
                         State currentTileState = level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) ((i / this.tileSize)) - 1].getState();
-                        if (currentTileState == State.BLOCK  || currentTileState == State.LOCK) {
+                        if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
                             yCollision.setRatio(Math.abs((i - y1) / (y2 - y1)));
                             yCollision.setDirection(Direction.UP);
                             yCollision.setState(currentTileState);
                             break;
                         }
                     } else {//Moving straight up
-                        State currentTileState =level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize) - 1].getState();
-                        if (currentTileState == State.BLOCK || currentTileState==State.LOCK) {
+                        State currentTileState = level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize) - 1].getState();
+                        if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
                             yCollision.setRatio((i - y1) / (y2 - y1));
                             yCollision.setDirection(Direction.UP);
                             yCollision.setState(currentTileState);
@@ -234,6 +234,35 @@ public class LevelMap {
         } else {
             return false;
         }
+    }
+
+    public boolean canPlayerMoveLeft(PlayerObject p) {
+        float[][] collisionPoints = p.getCollisionPoints();
+
+        for (int i = 0; i < 3; i++) {
+            CollisionInfo collision = collisionDetectionLine(
+                    collisionPoints[i][0], collisionPoints[i][1],
+                    collisionPoints[i][0] - 2, collisionPoints[i][1]);
+            if (collision.getState() == State.BLOCK || collision.getState() == State.LOCK) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean canPlayerMoveRight(PlayerObject p) {
+        float[][] collisionPoints = p.getCollisionPoints();
+
+        for (int i = 3; i < 6; i++) {
+            CollisionInfo collision = collisionDetectionLine(
+                    collisionPoints[i][0], collisionPoints[i][1],
+                    collisionPoints[i][0] + 2, collisionPoints[i][1]);
+            if (collision.getState() == State.BLOCK || collision.getState() == State.LOCK) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void loadTileMap(String fileLocation) {
@@ -295,7 +324,7 @@ public class LevelMap {
                             this.level[j][i] = new TileObject((State.EMPTY));
                             break;
                     }
-                    this.level[j][i].setCentre(new Point3f(j*tileSize, i*tileSize, 0));
+                    this.level[j][i].setCentre(new Point3f(j * tileSize, i * tileSize, 0));
                 }
                 for (; j < maxWidth; j++) {
                     this.level[j][i] = new TileObject((State.EMPTY));

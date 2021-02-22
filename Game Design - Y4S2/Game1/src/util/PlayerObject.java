@@ -214,6 +214,10 @@ public class PlayerObject extends GameObject {
     }
 
     public float[][] getCollisionPoints() {
+        //Returns a 2d array of collision points
+        //Each sub-array is length 2, [0]==x and [1]==y
+        //Super array goes in order {top-left, mid-left, bottom-left, top-right, mid-right, bottom-right}
+
         float[][] output = new float[6][2];
 
 
