@@ -232,8 +232,15 @@ public class Model {
                     checkPoint[0] = temp[0];
                     checkPoint[1] = temp[1];
                     break;
+                case KEY:
+                    levelMap.getTile(temp[0], temp[1]).setState(State.KEY_COLLECTED);
+                    levelMap.getKeys().removeIf(i -> i[0] == temp[0] && i[1] == temp[1]);
+                    levelMap.getCollectedKeys().add(new int[]{temp[0], temp[1]});
+                    break;
             }
         }
+//        System.out.println(levelMap.getKeys().toString() + "\t/\t" + levelMap.getCollectedKeys().toString());
+
 
         //        levelMap.playerInteraction(Player);
 

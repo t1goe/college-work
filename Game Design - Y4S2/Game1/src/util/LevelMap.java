@@ -2,6 +2,7 @@ package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -15,6 +16,9 @@ public class LevelMap {
     private int offsetY = 0;
 
     private int[] checkPointLocation = new int[2];
+
+    private ArrayList<int[]> keys = new ArrayList<>();
+    private ArrayList<int[]> collectedKeys = new ArrayList<>();
 
     public LevelMap() {
     }
@@ -85,6 +89,22 @@ public class LevelMap {
 
     public void setCheckPointLocation(int[] checkPointLocation) {
         this.checkPointLocation = checkPointLocation;
+    }
+
+    public ArrayList<int[]> getKeys() {
+        return keys;
+    }
+
+    public void setKeys(ArrayList<int[]> keys) {
+        this.keys = keys;
+    }
+
+    public ArrayList<int[]> getCollectedKeys() {
+        return collectedKeys;
+    }
+
+    public void setCollectedKeys(ArrayList<int[]> collectedKeys) {
+        this.collectedKeys = collectedKeys;
     }
 
     public CollisionInfo collisionDetectionLine(float x1, float y1, float x2, float y2) {
@@ -245,6 +265,20 @@ public class LevelMap {
                             break;
                         case "I":
                             this.level[j][i] = new TileObject(State.INACTIVE_CHECKPOINT);
+                            break;
+                        case "K":
+                            this.level[j][i] = new TileObject(State.KEY);
+                            keys.add(new int[]{j, i});
+                            break;
+                        case "C":
+                            this.level[j][i] = new TileObject(State.KEY_COLLECTED);
+                            collectedKeys.add(new int[]{j, i});
+                            break;
+                        case "L":
+                            this.level[j][i] = new TileObject(State.LOCK);
+                            break;
+                        case "F":
+                            this.level[j][i] = new TileObject(State.FINISH);
                             break;
                         default:
                             this.level[j][i] = new TileObject((State.EMPTY));

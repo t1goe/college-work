@@ -61,7 +61,7 @@ public class MainWindow {
         frame.add(canvas);
         frame.setResizable(false);
         canvas.setBounds(0, 0, width, height);
-        canvas.setBackground(new Color(24, 44, 59)); //white background  replaced by Space background but if you remove the background method this will draw a white screen
+        canvas.setBackground(new Color(24, 44, 59)); //blueish background  replaced by Space background but if you remove the background method this will draw a white screen
         canvas.setVisible(false);   // this will become visible after you press the key.
 
 

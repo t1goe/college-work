@@ -115,13 +115,28 @@ public class Viewer extends JPanel {
     }
 
     private void loadImages() {
+        //All jungle assets from https://jesse-m.itch.io/jungle-pack
+
+        //Key from https://cheekyinkling.itch.io/shikashis-fantasy-icons-pack
+
+        //Flag is homemade
+
+        //Spikes from https://pixelfrog-store.itch.io/pixel-adventure-1
+
         String[] imageLocations = {
                 "res/jungle/man/idle.png",
                 "res/jungle/man/run.png",
                 "res/jungle/man/falling.png",
                 "res/jungle/man/rising.png",
-                "res/jungle/man/midair.png"
-
+                "res/jungle/man/midair.png",
+                "res/jungle/background.png",
+                "res/jungle/jungle_tileset.png",
+                "res/jungle/title.png",
+                "res/jungle/key.png",
+                "res/jungle/key_transparent.png",
+                "res/jungle/flag_up.png",
+                "res/jungle/flag_down.png",
+                "res/jungle/spikes.png"
         };
 
         try {
@@ -132,8 +147,6 @@ public class Viewer extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        myImages.get
     }
 
     private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
@@ -247,12 +260,6 @@ public class Viewer extends JPanel {
                         null);
             }
         }
-
-
-        //All jungle assets from https://jesse-m.itch.io/jungle-pack
-        //Cheers Jesse
-
-
     }
 
     private void drawLevel(PlayerObject p, LevelMap l, Graphics g) {
@@ -268,51 +275,85 @@ public class Viewer extends JPanel {
 
     private void drawTile(int x, int y, int xOffset, int yOffset, Graphics g) {
         int size = gameworld.getLevelMap().getTileSize();
+        int borderSize = 6;//Change the size of empty around the key
 
         switch (gameworld.getLevelMap().getTile(x, y).getState()) {
             case BLOCK:
-                g.setColor(Color.black);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-//                    File TextureToLoad = new File("res/jungle/jungle tileset.png");
-//                    Image myImage = ImageIO.read(TextureToLoad);
-////                    int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
-//                    g.drawImage(myImage,
-//                            (x * size) + xOffset, (y * size) + yOffset,
-//                            (y * size) + yOffset + size, (y * size) + yOffset + size,
-//                            209, 34,
-//                            222, 45,
-//                            null);
+//                g.setColor(Color.black);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+                g.drawImage(myImages.get("res/jungle/jungle_tileset.png"),
+                        (x * size) + xOffset - 5, (y * size) + yOffset - 7,
+                        (x * size) + xOffset + size + 4, (y * size) + yOffset + size + 7,
+                        208, 32,
+                        224, 48,
+                        null);
 
                 break;
             case SPIKE:
-                g.setColor(Color.red);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                g.setColor(Color.red);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+                g.drawImage(myImages.get("res/jungle/spikes.png"),
+                        (x * size) + xOffset, (y * size) + yOffset,
+                        (x * size) + xOffset + size, (y * size) + yOffset + size,
+                        0, 0,
+                        42, 42,
+                        null);
                 break;
             case ACTIVE_CHECKPOINT:
-                g.setColor(Color.green);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                g.setColor(Color.green);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+                g.drawImage(myImages.get("res/jungle/flag_up.png"),
+                        (x * size) + xOffset, (y * size) + yOffset,
+                        (x * size) + xOffset + size, (y * size) + yOffset + size,
+                        0, 0,
+                        26, 26,
+                        null);
                 break;
             case INACTIVE_CHECKPOINT:
-                g.setColor(Color.yellow);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                g.setColor(Color.yellow);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+                g.drawImage(myImages.get("res/jungle/flag_down.png"),
+                        (x * size) + xOffset, (y * size) + yOffset,
+                        (x * size) + xOffset + size, (y * size) + yOffset + size,
+                        0, 0,
+                        26, 26,
+                        null);
                 break;
             case KEY:
-                g.setColor(Color.blue);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                g.setColor(Color.blue);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+                g.drawImage(myImages.get("res/jungle/key.png"),
+                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize,
+                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize,
+                        0, 0,
+                        26, 26,
+                        null);
+
                 break;
             case KEY_COLLECTED:
-                g.setColor(Color.lightGray);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                g.setColor(Color.lightGray);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+                g.drawImage(myImages.get("res/jungle/key_transparent.png"),
+                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize,
+                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize,
+                        0, 0,
+                        26, 26,
+                        null);
+                break;
             case LOCK:
                 g.setColor(Color.PINK);
                 g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
             case FINISH:
-                g.setColor(Color.white);
+                g.setColor(Color.cyan);
                 g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
             case EMPTY:
                 break;
         }
-
 
         g.setColor(Color.BLACK);
 //        g.drawRect(x * size, y * size, size, size);
