@@ -121,7 +121,7 @@ public class Viewer extends JPanel {
 
         //Flag is homemade
 
-        //Spikes from https://pixelfrog-store.itch.io/pixel-adventure-1
+        //Spikes and lock (modified) from https://pixelfrog-store.itch.io/pixel-adventure-1
 
         String[] imageLocations = {
                 "res/jungle/man/idle.png",
@@ -136,7 +136,9 @@ public class Viewer extends JPanel {
                 "res/jungle/key_transparent.png",
                 "res/jungle/flag_up.png",
                 "res/jungle/flag_down.png",
-                "res/jungle/spikes.png"
+                "res/jungle/spikes.png",
+                "res/jungle/lock.png",
+                "res/jungle/lock_transparent.png"
         };
 
         try {
@@ -346,8 +348,27 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case LOCK:
-                g.setColor(Color.PINK);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                g.setColor(Color.PINK);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+                g.drawImage(myImages.get("res/jungle/lock.png"),
+                        (x * size) + xOffset, (y * size) + yOffset,
+                        (x * size) + xOffset + size, (y * size) + yOffset + size,
+                        0, 0,
+                        32, 32,
+                        null);
+
+                break;
+            case UNLOCKED:
+//                g.setColor(Color.PINK);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+                g.drawImage(myImages.get("res/jungle/lock_transparent.png"),
+                        (x * size) + xOffset, (y * size) + yOffset,
+                        (x * size) + xOffset + size, (y * size) + yOffset + size,
+                        0, 0,
+                        32, 32,
+                        null);
+
+                break;
             case FINISH:
                 g.setColor(Color.cyan);
                 g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);

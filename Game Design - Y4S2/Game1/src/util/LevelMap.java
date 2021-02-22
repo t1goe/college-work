@@ -128,10 +128,11 @@ public class LevelMap {
         if (run > 0) {//Moving right
             for (float i = x1; i < x2; i++) {//INCREMENT BY TILE SIZE INSTEAD
                 if (((int) i) % this.tileSize == 0) {
-                    if (level[(int) (i / this.tileSize)][(int) (((i * slope) + yIntercept) / this.tileSize)].getState() == State.BLOCK) {
+                    State currentTileState = level[(int) (i / this.tileSize)][(int) (((i * slope) + yIntercept) / this.tileSize)].getState();
+                    if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
                         xCollision.setRatio((i - x1) / (x2 - x1));
                         xCollision.setDirection(Direction.RIGHT);
-                        xCollision.setState(State.BLOCK);
+                        xCollision.setState(currentTileState);
                         break;
                     }
                 }
@@ -139,10 +140,11 @@ public class LevelMap {
         } else if (run < 0) {//Moving left
             for (float i = x1; i > x2; i--) {
                 if (((int) i) % this.tileSize == 0) {
-                    if (level[(int) (i / this.tileSize) - 1][(int) (((i * slope) + yIntercept) / this.tileSize)].getState() == State.BLOCK) {
+                    State currentTileState = level[(int) (i / this.tileSize) - 1][(int) (((i * slope) + yIntercept) / this.tileSize)].getState();
+                    if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
                         xCollision.setRatio(Math.abs((i - x1) / (x2 - x1)));
                         xCollision.setDirection(Direction.LEFT);
-                        xCollision.setState(State.BLOCK);
+                        xCollision.setState(currentTileState);
                         break;
                     }
                 }
@@ -157,17 +159,19 @@ public class LevelMap {
             for (float i = y1; i < y2; i++) {//INCREMENT BY TILE SIZE INSTEAD
                 if (((int) i) % this.tileSize == 0) {
                     if (run != 0) {//Moving angled down
-                        if (level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) (i / this.tileSize)].getState() == State.BLOCK) {
+                        State currentTileState = level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) (i / this.tileSize)].getState();
+                        if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
                             yCollision.setRatio((i - y1 - 1) / (y2 - y1));
                             yCollision.setDirection(Direction.DOWN);
-                            yCollision.setState(State.BLOCK);
+                            yCollision.setState(currentTileState);
                             break;
                         }
                     } else {//Moving straight down
-                        if (level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize)].getState() == State.BLOCK) {
+                        State currentTileState = level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize)].getState();
+                        if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
                             yCollision.setRatio((i - y1 - 1) / (y2 - y1));
                             yCollision.setDirection(Direction.DOWN);
-                            yCollision.setState(State.BLOCK);
+                            yCollision.setState(currentTileState);
                             break;
                         }
                     }
@@ -177,17 +181,19 @@ public class LevelMap {
             for (float i = y1; i > y2; i--) {
                 if (((int) i) % this.tileSize == 0) {
                     if (run != 0) {//Moving angled up
-                        if (level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) ((i / this.tileSize)) - 1].getState() == State.BLOCK) {
+                        State currentTileState = level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) ((i / this.tileSize)) - 1].getState();
+                        if (currentTileState == State.BLOCK  || currentTileState == State.LOCK) {
                             yCollision.setRatio(Math.abs((i - y1) / (y2 - y1)));
                             yCollision.setDirection(Direction.UP);
-                            yCollision.setState(State.BLOCK);
+                            yCollision.setState(currentTileState);
                             break;
                         }
                     } else {//Moving straight up
-                        if (level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize) - 1].getState() == State.BLOCK) {
+                        State currentTileState =level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize) - 1].getState();
+                        if (currentTileState == State.BLOCK || currentTileState==State.LOCK) {
                             yCollision.setRatio((i - y1) / (y2 - y1));
                             yCollision.setDirection(Direction.UP);
-                            yCollision.setState(State.BLOCK);
+                            yCollision.setState(currentTileState);
                             break;
                         }
                     }
@@ -221,7 +227,9 @@ public class LevelMap {
         CollisionInfo collisionLeft = collisionDetectionLine(p.getLeft(), p.getBottom(), p.getLeft(), p.getBottom() + 2);
         CollisionInfo collisionRight = collisionDetectionLine(p.getRight(), p.getBottom(), p.getRight(), p.getBottom() + 2);
 
-        if (collisionLeft.getState() == State.BLOCK || collisionRight.getState() == State.BLOCK) {
+        if (collisionLeft.getState() == State.BLOCK || collisionRight.getState() == State.BLOCK ||
+                collisionLeft.getState() == State.LOCK || collisionRight.getState() == State.LOCK
+        ) {
             return true;
         } else {
             return false;
@@ -276,6 +284,9 @@ public class LevelMap {
                             break;
                         case "L":
                             this.level[j][i] = new TileObject(State.LOCK);
+                            break;
+                        case "U":
+                            this.level[j][i] = new TileObject(State.UNLOCKED);
                             break;
                         case "F":
                             this.level[j][i] = new TileObject(State.FINISH);

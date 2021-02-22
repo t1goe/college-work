@@ -94,6 +94,10 @@ public class Model {
             }
         }
 
+        if(levelMap.getKeys().size() == 0){
+            levelMap.changeAllByType(State.LOCK, State.UNLOCKED);
+        }
+
     }
 
     private void enemyLogic() {
@@ -193,9 +197,10 @@ public class Model {
         if (!Player.isGrounded())
             Player.applyGravity();
 
+        //Get collision info
         CollisionInfo c = levelMap.collisionDetection(Player);
 
-        if (c.getState() == State.BLOCK && c.getDirection() == Direction.DOWN) {
+        if ((c.getState() == State.BLOCK || c.getState() == State.LOCK) && c.getDirection() == Direction.DOWN) {
             Player.setGrounded(true);
         } else if (!levelMap.isPlayerGrounded(Player)) {
             Player.setGrounded(false);
@@ -214,7 +219,7 @@ public class Model {
         }
 
         //Interacting with tiles such as spikes, and checkpoints
-        int[] checkPoint = levelMap.getCheckPointLocation();
+        int[] checkPoint;
         tileLoop: for (int[] temp : levelMap.getOccupyingTiles(Player)) {
             switch (levelMap.getTile(temp[0], temp[1]).getState()) {
                 case SPIKE:
