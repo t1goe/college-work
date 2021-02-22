@@ -35,6 +35,9 @@ public class Model {
     private CopyOnWriteArrayList<GameObject> BulletList = new CopyOnWriteArrayList<GameObject>();
     private int Score = 0;
 
+    int dashFrames = 0;
+    boolean dashAvailable = false;
+
     private LevelMap levelMap;
 
     private TileObject block = new TileObject();
@@ -94,7 +97,7 @@ public class Model {
             }
         }
 
-        if(levelMap.getKeys().size() == 0){
+        if (levelMap.getKeys().size() == 0) {
             levelMap.changeAllByType(State.LOCK, State.UNLOCKED);
         }
 
@@ -151,12 +154,66 @@ public class Model {
 
 //        System.out.println(Player.toString());
 
+        if (dashFrames > 0) {
+            dashFrames--;
+        }
+
+
         boolean movingX = false;
 
+        //Logic for the airdash
+        float dashSpeed = 50;//X frames of no control/gravity to make the dash feel punchy
+        if (Controller.getInstance().isKeyQPressed() && dashFrames == 0 && dashAvailable) {
+            dashFrames = 5;
+
+            Direction xDirection = Direction.NONE;
+            Direction yDirection = Direction.NONE;
+
+            //Check horizontal input
+            if (Controller.getInstance().isKeyAPressed() && !Controller.getInstance().isKeyDPressed()) {//Left
+                xDirection = Direction.LEFT;
+            } else if (!Controller.getInstance().isKeyAPressed() && Controller.getInstance().isKeyDPressed()) {//Right
+                xDirection = Direction.RIGHT;
+            }
+
+            //Check vertical input
+            if (Controller.getInstance().isKeyWPressed() && !Controller.getInstance().isKeySPressed()) {//Up
+                yDirection = Direction.UP;
+            } else if (!Controller.getInstance().isKeyWPressed() && Controller.getInstance().isKeySPressed()) {//Down
+                yDirection = Direction.DOWN;
+            }
+
+            Vector3f dashVelocity = new Vector3f();
+
+            switch (xDirection) {
+                case RIGHT:
+                    dashVelocity.setX(dashSpeed);
+                    break;
+                case LEFT:
+                    dashVelocity.setX(-dashSpeed);
+                    break;
+            }
+
+            switch (yDirection) {
+                case UP:
+                    dashVelocity.setY(-dashSpeed);
+                    break;
+                case DOWN:
+                    dashVelocity.setY(dashSpeed);
+                    break;
+            }
+
+            //If direction has been input alongside dash then do the dash, otherwise nah
+            if(xDirection != Direction.NONE || yDirection != Direction.NONE){
+                Player.setVelocity(dashVelocity);
+                dashAvailable = false;
+            }
+
+        }
 
         //left
-        if (Controller.getInstance().isKeyAPressed()) {
-            if(levelMap.canPlayerMoveLeft(Player)){
+        if (Controller.getInstance().isKeyAPressed() && dashFrames == 0) {
+            if (levelMap.canPlayerMoveLeft(Player)) {
                 Player.accelerate(Direction.LEFT);
             }
             movingX = true;
@@ -165,28 +222,31 @@ public class Model {
         }
 
         //right
-        if (Controller.getInstance().isKeyDPressed()) {
-            if(levelMap.canPlayerMoveRight(Player)){
+        if (Controller.getInstance().isKeyDPressed() && dashFrames == 0) {
+            if (levelMap.canPlayerMoveRight(Player)) {
                 Player.accelerate(Direction.RIGHT);
             }
             movingX = true;
+//            System.out.println(Player.getVelocity().getX());
+
 
             Player.setFacingRight(true);
         }
 
         //up
-        if (Controller.getInstance().isKeyWPressed()) {
-            Player.accelerate(Direction.UP);
-
-        }
+        //No floating allowed so disabled
+//        if (Controller.getInstance().isKeyWPressed() && dashFrames == 0) {
+//            Player.accelerate(Direction.UP);
+//        }
 
         //down
-        if (Controller.getInstance().isKeySPressed()) {
-            Player.accelerate(Direction.DOWN);
-        }
+        //No fastfalling allowed
+//        if (Controller.getInstance().isKeySPressed() && dashFrames == 0) {
+//            Player.accelerate(Direction.DOWN);
+//        }
 
         //Space (jump)
-        if (Controller.getInstance().isKeySpacePressed()) {
+        if (Controller.getInstance().isKeySpacePressed() && dashFrames == 0) {
             if (Player.isGrounded()) {
                 Player.jump();
             }
@@ -197,17 +257,28 @@ public class Model {
             Player.horizontalDecelerate();
         }
 
+        //Stop the dash vertically having way more range
+        if(dashFrames != 0){
+            Player.verticallyDecelerate();
+        }
+
         //Apply gravity
-        if (!Player.isGrounded())
+        if (!Player.isGrounded() && dashFrames == 0)
             Player.applyGravity();
 
         //Get collision info
         CollisionInfo c = levelMap.collisionDetection(Player);
 
+        //Set grounded
         if ((c.getState() == State.BLOCK || c.getState() == State.LOCK) && c.getDirection() == Direction.DOWN) {
             Player.setGrounded(true);
         } else if (!levelMap.isPlayerGrounded(Player)) {
             Player.setGrounded(false);
+        }
+
+        //Reset dash upon touching the ground
+        if(Player.isGrounded() && dashFrames == 0){
+            dashAvailable = true;
         }
 
         //Moves by the current velocity
@@ -224,7 +295,8 @@ public class Model {
 
         //Interacting with tiles such as spikes, and checkpoints
         int[] checkPoint;
-        tileLoop: for (int[] temp : levelMap.getOccupyingTiles(Player)) {
+        tileLoop:
+        for (int[] temp : levelMap.getOccupyingTiles(Player)) {
             switch (levelMap.getTile(temp[0], temp[1]).getState()) {
                 case SPIKE:
                     Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
