@@ -40,7 +40,7 @@ public class Model {
 
     private LevelMap levelMap;
 
-    private TileObject block = new TileObject();
+    private SoundManager soundManager;
 
     public Model() {
         //setup game world
@@ -58,11 +58,13 @@ public class Model {
                 1.5f);
 
         //Enemies  starting with four
-
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 500), 0, 0)));
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 500), 0, 0)));
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
+
+        //Initialize sound manager
+        soundManager = new SoundManager();
     }
 
     // This is the heart of the game , where the model takes in all the inputs ,decides the outcomes and then changes the model accordingly.
@@ -162,9 +164,9 @@ public class Model {
         boolean movingX = false;
 
         //Logic for the airdash
-        float dashSpeed = 50;//X frames of no control/gravity to make the dash feel punchy
+        float dashSpeed = 50;
         if (Controller.getInstance().isKeyQPressed() && dashFrames == 0 && dashAvailable) {
-            dashFrames = 5;
+            dashFrames = 5;//X frames of no control/gravity to make the dash feel punchy
 
             Direction xDirection = Direction.NONE;
             Direction yDirection = Direction.NONE;
@@ -248,6 +250,7 @@ public class Model {
         //Space (jump)
         if (Controller.getInstance().isKeySpacePressed() && dashFrames == 0) {
             if (Player.isGrounded()) {
+                soundManager.playFile("res/sounds/bump.aiff");
                 Player.jump();
             }
             Controller.getInstance().setKeySpacePressed(false);
@@ -255,6 +258,11 @@ public class Model {
 
         if (!movingX) {
             Player.horizontalDecelerate();
+        }
+
+        //If player is running play moving sound
+        if(movingX && Player.isGrounded()){
+            soundManager.playFile("res/sounds/bump.aiff");
         }
 
         //Stop the dash vertically having way more range
