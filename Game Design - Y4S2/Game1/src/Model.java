@@ -41,11 +41,25 @@ public class Model {
 
     private LevelMap levelMap;
 
+    //What level is the user on and a list of level .txt files
+    private int levelNumber;
+    private String[] levels;
+
     private SoundManager soundManager;
 
     public Model() {
-        //setup game world
-        levelMap = new LevelMap("res/levels/lvl1.txt", 52);
+
+        //Ordered list of levels
+        this.levels = new String[]{
+                "res/levels/lvl1.txt",
+                "res/levels/lvl2.txt"
+        };
+
+        //Level the user is on, start level 0 (1)
+        this.levelNumber = 0;
+
+        //Set up gameworld
+        loadLevel(levels[levelNumber]);
 
         //Player
         Player = new PlayerObject("res/jungle/man/idle.png",
@@ -66,6 +80,11 @@ public class Model {
 
         //Initialize sound manager
         soundManager = new SoundManager(-15);
+    }
+
+    private void loadLevel(String mapLocation) {
+        //setup game world
+        levelMap = new LevelMap(mapLocation, 52);
     }
 
     // This is the heart of the game , where the model takes in all the inputs ,decides the outcomes and then changes the model accordingly.
@@ -161,7 +180,6 @@ public class Model {
             dashFrames--;
         }
 
-
         boolean movingX = false;
 
         //Logic for the airdash
@@ -233,7 +251,6 @@ public class Model {
                 Player.accelerate(Direction.RIGHT);
             }
             movingX = true;
-//            System.out.println(Player.getVelocity().getX());
 
 
             Player.setFacingRight(true);
@@ -260,6 +277,7 @@ public class Model {
             Controller.getInstance().setKeySpacePressed(false);
         }
 
+        //Decelerate if not moving
         if (!movingX) {
             Player.horizontalDecelerate();
         }
@@ -270,6 +288,7 @@ public class Model {
             runningSoundFrames = 4;
         }
 
+        //Reduce runningSoundFrames until 0
         if (runningSoundFrames > 0) {
             runningSoundFrames--;
         }
@@ -332,6 +351,18 @@ public class Model {
                     levelMap.getKeys().removeIf(i -> i[0] == temp[0] && i[1] == temp[1]);
                     levelMap.getCollectedKeys().add(new int[]{temp[0], temp[1]});
                     break;
+                case FINISH:
+                    levelNumber++;
+                    if(levelNumber >= levels.length){
+                        //Run out of levels, print YOU WIN
+                        System.out.println("you win");
+                    }
+                    loadLevel(levels[levelNumber]);
+                    soundManager.playFile("res/sounds/bumper.aiff", 2);
+                    Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
+                    Player.setCentre(levelMap.getSpawnLocation());
+                    break tileLoop;
+                    //Level finish animation
             }
         }
     }

@@ -38,6 +38,7 @@ public class Controller implements KeyListener {
     private static boolean KeySpacePressed = false;
 
     private static boolean KeyQPressed = false;
+    private static boolean KeyPPressed = false;
 
     private static final Controller instance = new Controller();
 
@@ -75,6 +76,9 @@ public class Controller implements KeyListener {
             case 'q':
                 setKeyQPressed(true);
                 break;
+            case 'p':
+                setKeyPPressed(true);
+                break;
             default:
                 //System.out.println("Controller test:  Unknown key pressed");
                 break;
@@ -104,6 +108,9 @@ public class Controller implements KeyListener {
                 break;
             case 'q':
                 setKeyQPressed(false);
+                break;
+            case 'p':
+                setKeyPPressed(false);
                 break;
             default:
                 //System.out.println("Controller test:  Unknown key pressed");
@@ -171,7 +178,13 @@ public class Controller implements KeyListener {
         KeyQPressed = keyQPressed;
     }
 
+    public static boolean isKeyPPressed() {
+        return KeyPPressed;
+    }
 
+    public static void setKeyPPressed(boolean keyPPressed) {
+        KeyPPressed = keyPPressed;
+    }
 }
 
 /*

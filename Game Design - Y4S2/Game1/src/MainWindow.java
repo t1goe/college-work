@@ -1,6 +1,4 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -13,8 +11,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
+import util.GameState;
 import util.UnitTests;
 
 /*
@@ -49,12 +47,12 @@ public class MainWindow {
     private static Viewer canvas = new Viewer(gameworld);
     private KeyListener Controller = new Controller();
     private static int TargetFPS = 100;
-    private static boolean startGame = false;
+    private static GameState gameState = GameState.MENU;
     private JLabel BackgroundImageForStartMenu;
 
     public MainWindow() {
         int width = 1000;
-        int height  = 1000;
+        int height = 1000;
         frame.setSize(width, height);  // you can customise this later and adapt it to change on size.
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //If exit // you can modify with your way of quitting , just is a template.
         frame.setLayout(null);
@@ -78,7 +76,7 @@ public class MainWindow {
                 canvas.setVisible(true);
                 canvas.addKeyListener(Controller);    //adding the controller to the Canvas
                 canvas.requestFocusInWindow();   // making sure that the Canvas is in focus so keyboard input will be taking in .
-                startGame = true;
+                gameState = GameState.PLAY;
             }
         });
         startMenuButton.setBounds(400, 500, 200, 40);
@@ -89,7 +87,7 @@ public class MainWindow {
 
             BufferedImage myPicture = ImageIO.read(BackroundToLoad);
             BackgroundImageForStartMenu = new JLabel(new ImageIcon(myPicture));
-            BackgroundImageForStartMenu.setBounds((width/2) - (672/2), 40, 672, 356);
+            BackgroundImageForStartMenu.setBounds((width / 2) - (672 / 2), 40, 672, 356);
             frame.add(BackgroundImageForStartMenu);
         } catch (IOException e) {
             e.printStackTrace();
@@ -112,9 +110,11 @@ public class MainWindow {
             while (FrameCheck > System.currentTimeMillis()) {
             }
 
-            if (startGame) {
+            if (gameState == GameState.PLAY) {
                 gameloop();
             }
+
+//            if(Controller.getInstance().isKeyPPressed())
 
             //UNIT test to see if framerate matches
             UnitTests.CheckFrameRate(System.currentTimeMillis(), FrameCheck, TargetFPS);

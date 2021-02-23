@@ -287,6 +287,9 @@ public class Viewer extends JPanel {
         int mapWidth = l.getWidth();
         int mapHeight = l.getHeight();
 
+//        System.out.println("mapWidth " + mapWidth);
+//        System.out.println("mapHeight " + mapHeight);
+
         for (int i = 0; i < mapHeight; i++) {
             for (int j = 0; j < mapWidth; j++) {
                 drawTile(j, i, l.getOffsetX(), l.getOffsetY(), g);

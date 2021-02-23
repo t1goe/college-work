@@ -52,11 +52,11 @@ public class LevelMap {
     }
 
     public int getWidth() {
-        return level[0].length;
+        return level.length;
     }
 
     public int getHeight() {
-        return level.length;
+        return level[0].length;
     }
 
     public int getTileSize() {
