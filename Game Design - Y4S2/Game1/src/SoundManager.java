@@ -62,7 +62,7 @@ public class SoundManager {
 
     public void playFile(String s, float volume) {
         loadFile(s);
-        System.out.println(s);
+//        System.out.println(s);
         SoundThread st = new SoundThread(mySounds.get(s), volume + masterVolume);
         st.start();
     }

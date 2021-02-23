@@ -239,7 +239,7 @@ public class PlayerObject extends GameObject {
     public String toString() {
         String output = "\n";
         output += "position: " + this.getCentre().getX() + ", " + this.getCentre().getY() + "\n";
-        output += "velocity: " + this.getVelocity().getX() + ", " + this.getVelocity().getY() + "\n";
+        output += "velocity: " + this.getVelocity().getX() + ", " + this.getVelocity().getY();
 
         return output;
     }

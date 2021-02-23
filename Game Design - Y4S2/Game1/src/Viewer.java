@@ -1,11 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.LayoutManager;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
-import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
@@ -15,9 +11,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
-import util.GameObject;
 import util.LevelMap;
 import util.PlayerObject;
 
@@ -110,8 +104,17 @@ public class Viewer extends JPanel {
         //Draw background
         drawBackground(g);
 
+//        //Recenter camera if player has been sent off to the side
+//        if(!recenterCamera(gameworld.getPlayer(), gameworld.getLevelMap())){
+//            //Update level's x/y offsets
+//            moveCamera(gameworld.getPlayer(), gameworld.getLevelMap());
+//        }
+
+        //If man is offscreen, recenter camera
+        recenterCamera(gameworld.getPlayer(), gameworld.getLevelMap());
+
         //Update level's x/y offsets
-        calculateOffset(gameworld.getPlayer(), gameworld.getLevelMap());
+        moveCamera(gameworld.getPlayer(), gameworld.getLevelMap());
 
         //Draw player
         drawPlayer(gameworld.getPlayer(), gameworld.getLevelMap(), g);
@@ -403,10 +406,56 @@ public class Viewer extends JPanel {
 
     }
 
-    private void calculateOffset(PlayerObject p, LevelMap l) {
+    private boolean recenterCamera(PlayerObject p, LevelMap l) {
+        //If off camera, recenter.
+        int x = (int) p.getCentre().getX();
+        int y = (int) p.getCentre().getY();
+        int width = p.getWidth();
+        int height = p.getHeight();
+
+        int xOffset = l.getOffsetX();
+        int yOffset = l.getOffsetY();
+
+        int trueWidth;
+        int playerAlign;
+        if (!p.isFacingRight()) {
+            trueWidth = -width;
+            playerAlign = width;
+        } else {
+            trueWidth = width;
+            playerAlign = 0;
+        }
+
+        if (!isInFrame(
+                x + playerAlign + xOffset,
+                y + yOffset,
+                x + trueWidth + playerAlign + xOffset,
+                y + height + yOffset)) {
+
+
+            //Recalc x/y offsets
+            int updatedXOffset = x - (frameWidth / 2);
+            int updatedYOffset = y - (frameHeight / 2);
+
+            //Ensure that the x/y values max out so it does not show OOB area
+            updatedXOffset = Math.max(updatedXOffset, 0);
+            updatedXOffset = Math.min(updatedXOffset, l.getWidth() * l.getTileSize() - frameWidth);
+
+            updatedYOffset = Math.max(updatedYOffset, 0);
+            updatedYOffset = Math.min(updatedYOffset, l.getHeight() * l.getTileSize() - frameHeight);
+
+
+            l.setOffsetX(-updatedXOffset);
+            l.setOffsetY(-updatedYOffset);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void moveCamera(PlayerObject p, LevelMap l) {
         //TODO REWRITE THIS
-        int frameWidth = 1000;
-        int frameHeight = 1000;
 
         //Percentage of the screen to move if the player enters that part of the screen
         float moveZoneX = (float) 0.4;
@@ -451,8 +500,8 @@ public class Viewer extends JPanel {
     }
 
     private boolean isInFrame(int dx1, int dy1, int dx2, int dy2) {
-        return (0 <= dx1 && dx1 <= frameWidth) || (0 <= dx2 && dx2 <= frameWidth) && //If either side is within frame and
-                (0 <= dy1 && dy1 <= frameHeight) || (0 <= dy2 && dy2 <= frameHeight);// If top or bottom is within frame
+        return ((0 <= dx1 && dx1 <= frameWidth) || (0 <= dx2 && dx2 <= frameWidth)) && //If either side is within frame and
+                ((0 <= dy1 && dy1 <= frameHeight) || (0 <= dy2 && dy2 <= frameHeight));// If top or bottom is within frame
     }
 
     private boolean optimisedDrawImage(Image image,
@@ -467,19 +516,19 @@ public class Viewer extends JPanel {
     }
 
     private void optimisedDrawRect(int x, int y, int width, int height, Graphics g) {
-        if(isInFrame(x, y, x+width, y+height)){
+        if (isInFrame(x, y, x + width, y + height)) {
             g.drawRect(x, y, height, width);
         }
     }
 
-    private void optimisedFillRect(int x, int y, int width, int height, Graphics g){
-        if(isInFrame(x, y, x+width, y+height)){
+    private void optimisedFillRect(int x, int y, int width, int height, Graphics g) {
+        if (isInFrame(x, y, x + width, y + height)) {
             g.fillRect(x, y, height, width);
         }
     }
 
-    private void optimisedDrawLine(int x1, int y1, int x2, int y2, Graphics g){
-        if(isInFrame(x1, y1, x2, y2)){
+    private void optimisedDrawLine(int x1, int y1, int x2, int y2, Graphics g) {
+        if (isInFrame(x1, y1, x2, y2)) {
             g.fillRect(x1, y1, x2, y2);
         }
     }
