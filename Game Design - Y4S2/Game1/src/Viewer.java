@@ -6,6 +6,7 @@ import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -54,6 +55,9 @@ public class Viewer extends JPanel {
 
     private HashMap<String, Image> myImages = new HashMap<>();
 
+    private int frameWidth = 0;
+    private int frameHeight = 0;
+
     public Viewer(Model World) {
         this.gameworld = World;
         loadImages();
@@ -76,10 +80,25 @@ public class Viewer extends JPanel {
     }
 
     public void updateview() {
-
         this.repaint();
         // TODO Auto-generated method stub
 
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public void setFrameWidth(int frameWidth) {
+        this.frameWidth = frameWidth;
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public void setFrameHeight(int frameHeight) {
+        this.frameHeight = frameHeight;
     }
 
 
@@ -115,7 +134,7 @@ public class Viewer extends JPanel {
     }
 
     private void loadImages() {
-        //All jungle assets from https://jesse-m.itch.io/jungle-pack
+        //All player assets from https://jesse-m.itch.io/jungle-pack (also grass tile/titlescreen)
 
         //Key from https://cheekyinkling.itch.io/shikashis-fantasy-icons-pack
 
@@ -376,9 +395,10 @@ public class Viewer extends JPanel {
                 break;
         }
 
+        //Draw grid
         g.setColor(Color.BLACK);
-//        g.drawRect(x * size, y * size, size, size);
         g.drawRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//        optimisedDrawRect((x * size) + xOffset, (y * size) + yOffset, size, size, g);
 
 
     }
@@ -389,8 +409,8 @@ public class Viewer extends JPanel {
         int frameHeight = 1000;
 
         //Percentage of the screen to move if the player enters that part of the screen
-        float moveZoneX = (float) 0.2;
-        float moveZoneY = (float) 0.3;
+        float moveZoneX = (float) 0.4;
+        float moveZoneY = (float) 0.4;
 
         float playerScreenX = p.getCentre().getX() + l.getOffsetX();
         int levelWidthPx = l.getWidth() * l.getTileSize();
@@ -427,6 +447,40 @@ public class Viewer extends JPanel {
             } else {
                 l.setOffsetY(0);
             }
+        }
+    }
+
+    private boolean isInFrame(int dx1, int dy1, int dx2, int dy2) {
+        return (0 <= dx1 && dx1 <= frameWidth) || (0 <= dx2 && dx2 <= frameWidth) && //If either side is within frame and
+                (0 <= dy1 && dy1 <= frameHeight) || (0 <= dy2 && dy2 <= frameHeight);// If top or bottom is within frame
+    }
+
+    private boolean optimisedDrawImage(Image image,
+                                       int dx1, int dy1, int dx2, int dy2,
+                                       int sx1, int sy1, int sx2, int sy2,
+                                       ImageObserver observer, Graphics g) {
+        if (isInFrame(dx1, dy1, dx2, dy2)) {
+            return g.drawImage(image, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
+        } else {
+            return false;
+        }
+    }
+
+    private void optimisedDrawRect(int x, int y, int width, int height, Graphics g) {
+        if(isInFrame(x, y, x+width, y+height)){
+            g.drawRect(x, y, height, width);
+        }
+    }
+
+    private void optimisedFillRect(int x, int y, int width, int height, Graphics g){
+        if(isInFrame(x, y, x+width, y+height)){
+            g.fillRect(x, y, height, width);
+        }
+    }
+
+    private void optimisedDrawLine(int x1, int y1, int x2, int y2, Graphics g){
+        if(isInFrame(x1, y1, x2, y2)){
+            g.fillRect(x1, y1, x2, y2);
         }
     }
 }

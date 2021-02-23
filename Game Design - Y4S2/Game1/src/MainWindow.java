@@ -64,6 +64,10 @@ public class MainWindow {
         canvas.setBackground(new Color(24, 44, 59)); //blueish background  replaced by Space background but if you remove the background method this will draw a white screen
         canvas.setVisible(false);   // this will become visible after you press the key.
 
+        //Pass in frame width/height for optimisation purposes
+        canvas.setFrameHeight(height);
+        canvas.setFrameWidth(width);
+
 
         JButton startMenuButton = new JButton("Start Game");  // start button
         startMenuButton.addActionListener(new ActionListener() {

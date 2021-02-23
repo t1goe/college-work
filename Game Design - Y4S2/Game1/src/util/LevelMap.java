@@ -15,7 +15,7 @@ public class LevelMap {
     private int offsetX = 0;
     private int offsetY = 0;
 
-    private int[] checkPointLocation = new int[2];
+    private int[] checkPointLocation = new int[]{1, 1};
 
     private ArrayList<int[]> keys = new ArrayList<>();
     private ArrayList<int[]> collectedKeys = new ArrayList<>();
