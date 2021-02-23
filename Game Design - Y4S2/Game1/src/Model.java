@@ -65,7 +65,7 @@ public class Model {
         EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
 
         //Initialize sound manager
-        soundManager = new SoundManager();
+        soundManager = new SoundManager(-15);
     }
 
     // This is the heart of the game , where the model takes in all the inputs ,decides the outcomes and then changes the model accordingly.
@@ -169,6 +169,9 @@ public class Model {
         if (Controller.getInstance().isKeyQPressed() && dashFrames == 0 && dashAvailable) {
             dashFrames = 5;//X frames of no control/gravity to make the dash feel punchy
 
+            soundManager.playFile("res/sounds/bump.aiff", 2);
+
+
             Direction xDirection = Direction.NONE;
             Direction yDirection = Direction.NONE;
 
@@ -251,7 +254,7 @@ public class Model {
         //Space (jump)
         if (Controller.getInstance().isKeySpacePressed() && dashFrames == 0) {
             if (Player.isGrounded()) {
-                soundManager.playFile("res/sounds/bump.aiff");
+                soundManager.playFile("res/sounds/jump.aiff");
                 Player.jump();
             }
             Controller.getInstance().setKeySpacePressed(false);
@@ -263,7 +266,7 @@ public class Model {
 
         //If player is running play moving sound
         if (movingX && Player.isGrounded() && runningSoundFrames <= 0) {
-            soundManager.playFile("res/sounds/bump.aiff", -15);
+            soundManager.playFile("res/sounds/hurt.aiff");
             runningSoundFrames = 4;
         }
 
@@ -313,6 +316,7 @@ public class Model {
         for (int[] temp : levelMap.getOccupyingTiles(Player)) {
             switch (levelMap.getTile(temp[0], temp[1]).getState()) {
                 case SPIKE:
+                    soundManager.playFile("res/sounds/bumper.aiff", 2);
                     Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
                     Player.setCentre(levelMap.getSpawnLocation());
                     break tileLoop;

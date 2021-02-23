@@ -15,18 +15,36 @@ public class SoundManager {
 
     private HashMap<String, AudioInputStream> mySounds = new HashMap<>();
 
-    public SoundManager() {
+    private float masterVolume = 0;
+
+    public SoundManager(float volume) {
+
+        this.masterVolume = volume;
 
         //bump.aiff from https://freesound.org/people/timgormly/sounds/170141/
+        //hurt.aiff from https://freesound.org/people/timgormly/sounds/170148/
+        //jump.aiff from https://freesound.org/people/timgormly/sounds/170163/
+        //bumper.aiff from https://freesound.org/people/timgormly/sounds/170140/
 
         String[] fileLocations = {
-                "res/sounds/bump.aiff"
+                "res/sounds/bump.aiff",
+                "res/sounds/hurt.aiff",
+                "res/sounds/jump.aiff",
+                "res/sounds/bumper.aiff"
         };
 
-        for(String s : fileLocations){
+        for (String s : fileLocations) {
             loadFile(s);
         }
 
+    }
+
+    public float getMasterVolume() {
+        return masterVolume;
+    }
+
+    public void setMasterVolume(float masterVolume) {
+        this.masterVolume = masterVolume;
     }
 
     private void loadFile(String s) {
@@ -38,14 +56,14 @@ public class SoundManager {
         }
     }
 
-    public void playFile(String s){
+    public void playFile(String s) {
         playFile(s, 0);
     }
 
     public void playFile(String s, float volume) {
         loadFile(s);
         System.out.println(s);
-        SoundThread st = new SoundThread(mySounds.get(s), volume);
+        SoundThread st = new SoundThread(mySounds.get(s), volume + masterVolume);
         st.start();
     }
 
