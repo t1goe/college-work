@@ -37,6 +37,7 @@ public class Model {
 
     int dashFrames = 0;
     boolean dashAvailable = false;
+    int runningSoundFrames = 0;
 
     private LevelMap levelMap;
 
@@ -206,7 +207,7 @@ public class Model {
             }
 
             //If direction has been input alongside dash then do the dash, otherwise nah
-            if(xDirection != Direction.NONE || yDirection != Direction.NONE){
+            if (xDirection != Direction.NONE || yDirection != Direction.NONE) {
                 Player.setVelocity(dashVelocity);
                 dashAvailable = false;
             }
@@ -261,12 +262,17 @@ public class Model {
         }
 
         //If player is running play moving sound
-        if(movingX && Player.isGrounded()){
-            soundManager.playFile("res/sounds/bump.aiff");
+        if (movingX && Player.isGrounded() && runningSoundFrames <= 0) {
+            soundManager.playFile("res/sounds/bump.aiff", -15);
+            runningSoundFrames = 4;
+        }
+
+        if (runningSoundFrames > 0) {
+            runningSoundFrames--;
         }
 
         //Stop the dash vertically having way more range
-        if(dashFrames != 0){
+        if (dashFrames != 0) {
             Player.verticallyDecelerate();
         }
 
@@ -285,7 +291,7 @@ public class Model {
         }
 
         //Reset dash upon touching the ground
-        if(Player.isGrounded() && dashFrames == 0){
+        if (Player.isGrounded() && dashFrames == 0) {
             dashAvailable = true;
         }
 

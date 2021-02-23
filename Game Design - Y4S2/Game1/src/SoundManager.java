@@ -38,10 +38,14 @@ public class SoundManager {
         }
     }
 
-    public void playFile(String s) {
+    public void playFile(String s){
+        playFile(s, 0);
+    }
+
+    public void playFile(String s, float volume) {
         loadFile(s);
         System.out.println(s);
-        SoundThread st = new SoundThread(mySounds.get(s));
+        SoundThread st = new SoundThread(mySounds.get(s), volume);
         st.start();
     }
 
