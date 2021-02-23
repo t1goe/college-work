@@ -104,12 +104,6 @@ public class Viewer extends JPanel {
         //Draw background
         drawBackground(g);
 
-//        //Recenter camera if player has been sent off to the side
-//        if(!recenterCamera(gameworld.getPlayer(), gameworld.getLevelMap())){
-//            //Update level's x/y offsets
-//            moveCamera(gameworld.getPlayer(), gameworld.getLevelMap());
-//        }
-
         //If man is offscreen, recenter camera
         recenterCamera(gameworld.getPlayer(), gameworld.getLevelMap());
 
@@ -145,6 +139,8 @@ public class Viewer extends JPanel {
 
         //Spikes and lock (modified) from https://pixelfrog-store.itch.io/pixel-adventure-1
 
+        //Goal gem is from https://ma9ici4n.itch.io/gems
+
         String[] imageLocations = {
                 "res/jungle/man/idle.png",
                 "res/jungle/man/run.png",
@@ -160,7 +156,8 @@ public class Viewer extends JPanel {
                 "res/jungle/flag_down.png",
                 "res/jungle/spikes.png",
                 "res/jungle/lock.png",
-                "res/jungle/lock_transparent.png"
+                "res/jungle/lock_transparent.png",
+                "res/jungle/gem.png"
         };
 
         try {
@@ -301,6 +298,10 @@ public class Viewer extends JPanel {
         int size = gameworld.getLevelMap().getTileSize();
         int borderSize = 6;//Change the size of empty around the key
 
+        //A bunch of offset values to use to make certain objects hover slightly
+        int[] floating = new int[]{-1, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0};
+        int fPos;
+
         switch (gameworld.getLevelMap().getTile(x, y).getState()) {
             case BLOCK:
 //                g.setColor(Color.black);
@@ -351,9 +352,12 @@ public class Viewer extends JPanel {
 //                g.setColor(Color.blue);
 //                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
 
+                //Calculates an offset position for the key so it hovers slightly.
+                fPos = ((int) ((CurrentAnimationTime + 3) / 2 % floating.length));
+
                 g.drawImage(myImages.get("res/jungle/key.png"),
-                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize,
-                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize,
+                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize  + floating[fPos],
+                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize  + floating[fPos],
                         0, 0,
                         26, 26,
                         null);
@@ -362,9 +366,13 @@ public class Viewer extends JPanel {
             case KEY_COLLECTED:
 //                g.setColor(Color.lightGray);
 //                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+                //Calculates an offset position for the key so it hovers slightly.
+                fPos = ((int) ((CurrentAnimationTime + 4) / 2 % floating.length));
+
                 g.drawImage(myImages.get("res/jungle/key_transparent.png"),
-                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize,
-                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize,
+                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize + floating[fPos],
+                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize + floating[fPos],
                         0, 0,
                         26, 26,
                         null);
@@ -392,8 +400,21 @@ public class Viewer extends JPanel {
 
                 break;
             case FINISH:
-                g.setColor(Color.cyan);
-                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+//                g.setColor(Color.cyan);
+//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+
+                int horizontalSpace = 1;
+                int verticalSpace = 5;
+
+                //Calculates an offset position for the gem so it hovers slightly.
+                fPos = ((int) ((CurrentAnimationTime / 2) % floating.length));
+
+                g.drawImage(myImages.get("res/jungle/gem.png"),
+                        (x * size) + xOffset + horizontalSpace, (y * size) + yOffset + verticalSpace + floating[fPos],
+                        (x * size) + xOffset + size - horizontalSpace, (y * size) + yOffset + size - verticalSpace + floating[fPos],
+                        0, 0,
+                        30, 22,
+                        null);
             case EMPTY:
                 break;
         }
