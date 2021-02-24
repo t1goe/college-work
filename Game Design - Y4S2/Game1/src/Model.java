@@ -306,7 +306,18 @@ public class Model {
             Player.applyGravity();
 
         //Get collision info
-        CollisionInfo c = levelMap.collisionDetection(Player);
+        CollisionInfo c;
+        try {
+            c = levelMap.collisionDetection(Player);
+        }catch(ArrayIndexOutOfBoundsException e){
+            //Array out of bounds means player has gone off the map
+            //Shouldn't happen in properly designed levels, but this way if it does, the game keeps running.
+            soundManager.playFile("res/sounds/bumper.aiff", 2);
+            Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
+            Player.setCentre(levelMap.getSpawnLocation());
+            e.printStackTrace();
+            return;
+        }
 
         //Set grounded
         if ((c.getState() == State.BLOCK || c.getState() == State.LOCK) && c.getDirection() == Direction.DOWN) {
