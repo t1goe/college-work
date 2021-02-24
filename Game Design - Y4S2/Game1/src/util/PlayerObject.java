@@ -102,7 +102,7 @@ public class PlayerObject extends GameObject {
     }
 
     public Point3f applyCurrentVelocity(float ratio) {
-        Vector3f actualV = this.velocity;
+        Vector3f actualV = new Vector3f(this.velocity);
 
         actualV.setX(actualV.getX() * ratio);
         actualV.setY(actualV.getY() * ratio);

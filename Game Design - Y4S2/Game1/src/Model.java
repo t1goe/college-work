@@ -271,7 +271,7 @@ public class Model {
             Player.setFacingRight(true);
         }
 
-        //Using mouse to jump
+        //Jumping
         if (Controller.getInstance().isJumpPressed()) {
             if (Player.isGrounded()) {
                 soundManager.playFile("res/sounds/jump.aiff");
@@ -287,7 +287,7 @@ public class Model {
 
         //If player is running play moving sound
         if (movingX && Player.isGrounded() && runningSoundFrames <= 0) {
-            soundManager.playFile("res/sounds/walk.aiff", -2);
+            soundManager.playFile("res/sounds/walk.aiff", -3);
             runningSoundFrames = 4;
         }
 

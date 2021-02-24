@@ -37,6 +37,13 @@ public class Vector3f {
         setZ(0.0f);
     }
 
+    //copy constructor
+    public Vector3f(Vector3f vector){
+        this.x = vector.x;
+        this.y = vector.y;
+        this.z = vector.z;
+    }
+
     public Vector3f(float x, float y, float z) {
         this.setX(x);
         this.setY(y);

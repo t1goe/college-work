@@ -183,7 +183,7 @@ public class LevelMap {
                     if (run != 0) {//Moving angled up
                         State currentTileState = level[(int) (((i - yIntercept) / this.tileSize) / slope)][(int) ((i / this.tileSize)) - 1].getState();
                         if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
-                            yCollision.setRatio(Math.abs((i - y1) / (y2 - y1)));
+                            yCollision.setRatio(Math.abs((i - y1 + 1) / (y2 - y1)));
                             yCollision.setDirection(Direction.UP);
                             yCollision.setState(currentTileState);
                             break;
@@ -191,7 +191,7 @@ public class LevelMap {
                     } else {//Moving straight up
                         State currentTileState = level[(int) (x1 / this.tileSize)][(int) (i / this.tileSize) - 1].getState();
                         if (currentTileState == State.BLOCK || currentTileState == State.LOCK) {
-                            yCollision.setRatio((i - y1) / (y2 - y1));
+                            yCollision.setRatio((i - y1 + 1) / (y2 - y1));
                             yCollision.setDirection(Direction.UP);
                             yCollision.setState(currentTileState);
                             break;
@@ -388,7 +388,7 @@ public class LevelMap {
         return set;
     }
 
-    public Point3f getSpawnLocation(){
+    public Point3f getSpawnLocation() {
         Point3f tempPoint = new Point3f(level[checkPointLocation[0]][checkPointLocation[1]].getCentre());
         tempPoint.setX(tempPoint.getX() + 5);//Change the offsets to put man in the center of the square
         tempPoint.setY(tempPoint.getY() - 17);
