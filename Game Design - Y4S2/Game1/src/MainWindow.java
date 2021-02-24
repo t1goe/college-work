@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -45,10 +47,13 @@ public class MainWindow {
     private static JFrame frame = new JFrame("Jungle Game");   // Change to the name of your game
     private static Model gameworld = new Model();
     private static Viewer canvas = new Viewer(gameworld);
-    private KeyListener Controller = new Controller();
+    private KeyListener Controller = new KeyboardInput();
     private static int TargetFPS = 100;
     private static GameState gameState = GameState.MENU;
     private JLabel BackgroundImageForStartMenu;
+
+    private MouseListener mouse = new MouseInput();
+    private MouseMotionListener mouseMotion = new MouseInput();
 
     public MainWindow() {
         int width = 1000;
@@ -75,6 +80,8 @@ public class MainWindow {
                 BackgroundImageForStartMenu.setVisible(false);
                 canvas.setVisible(true);
                 canvas.addKeyListener(Controller);    //adding the controller to the Canvas
+                canvas.addMouseListener(mouse);
+                canvas.addMouseMotionListener(mouseMotion);
                 canvas.requestFocusInWindow();   // making sure that the Canvas is in focus so keyboard input will be taking in .
                 gameState = GameState.PLAY;
             }
@@ -117,7 +124,7 @@ public class MainWindow {
 //            if(Controller.getInstance().isKeyPPressed())
 
             //UNIT test to see if framerate matches
-            UnitTests.CheckFrameRate(System.currentTimeMillis(), FrameCheck, TargetFPS);
+//            UnitTests.CheckFrameRate(System.currentTimeMillis(), FrameCheck, TargetFPS);
 
         }
 

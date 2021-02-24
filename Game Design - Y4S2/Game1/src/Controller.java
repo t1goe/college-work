@@ -1,44 +1,15 @@
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
+import util.Direction;
+import util.LevelMap;
+import util.PlayerObject;
+import util.Vector3f;
 
-/*
- * Created by Abraham Campbell on 15/01/2020.
- *   Copyright (c) 2020  Abraham Campbell
+public class Controller {
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    private MouseInput mouse = MouseInput.getInstance();
+    private KeyboardInput keyboard = KeyboardInput.getInstance();
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-   
-   (MIT LICENSE ) e.g do what you want with this :-) 
- */
-
-//Singeton pattern
-public class Controller implements KeyListener {
-
-    private static boolean KeyAPressed = false;
-    private static boolean KeySPressed = false;
-    private static boolean KeyDPressed = false;
-    private static boolean KeyWPressed = false;
-    private static boolean KeySpacePressed = false;
-
-    private static boolean KeyQPressed = false;
-    private static boolean KeyPPressed = false;
+    //Dead zone which indicates how far away the mouse must be from the player to be indicated as "that direction"
+    private final int deadZone = 60;
 
     private static final Controller instance = new Controller();
 
@@ -49,190 +20,190 @@ public class Controller implements KeyListener {
         return instance;
     }
 
-    @Override
-    // Key pressed , will keep triggering
-    public void keyTyped(KeyEvent e) {
-
+    public boolean isMoveRightPressed(PlayerObject p, LevelMap l) {
+        return KeyboardInput.getInstance().isKeyDPressed() ||
+                (mousePositionRelativeToPlayerX(p, l) == Direction.RIGHT && MouseInput.isLeftMouseDown());
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyChar()) {
-            case 'a':
-                setKeyAPressed(true);
-                break;
-            case 's':
-                setKeySPressed(true);
-                break;
-            case 'w':
-                setKeyWPressed(true);
-                break;
-            case 'd':
-                setKeyDPressed(true);
-                break;
-            case ' ':
-                setKeySpacePressed(true);
-                break;
-            case 'q':
-                setKeyQPressed(true);
-                break;
-            case 'p':
-                setKeyPPressed(true);
-                break;
-            default:
-                //System.out.println("Controller test:  Unknown key pressed");
-                break;
+    public boolean isMoveLeftPressed(PlayerObject p, LevelMap l) {
+        return KeyboardInput.getInstance().isKeyAPressed() ||
+                (mousePositionRelativeToPlayerX(p, l) == Direction.LEFT && MouseInput.isLeftMouseDown());
+    }
+
+    public boolean isJumpPressed() {
+        return MouseInput.isRightMouseDown()
+                || KeyboardInput.getInstance().isKeySpacePressed();
+    }
+
+    //Returns the direction the player is trying to dash in
+    public Direction isDashPressed(PlayerObject p, LevelMap l) {
+
+        //Keyboard input for dash (takes priority)
+        if (KeyboardInput.getInstance().isKeyQPressed()) {
+
+            Direction xDirection = Direction.NONE;
+            Direction yDirection = Direction.NONE;
+
+            //Check horizontal input
+            if (KeyboardInput.getInstance().isKeyAPressed() && !KeyboardInput.getInstance().isKeyDPressed()) {//Left
+                xDirection = Direction.LEFT;
+
+            } else if (!KeyboardInput.getInstance().isKeyAPressed() && KeyboardInput.getInstance().isKeyDPressed()) {//Right
+                xDirection = Direction.RIGHT;
+
+            }
+
+            //Check vertical input
+            if (KeyboardInput.getInstance().isKeyWPressed() && !KeyboardInput.getInstance().isKeySPressed()) {//Up
+                yDirection = Direction.UP;
+
+            } else if (!KeyboardInput.getInstance().isKeyWPressed() && KeyboardInput.getInstance().isKeySPressed()) {//Down
+                yDirection = Direction.DOWN;
+
+            }
+
+
+            switch (yDirection) {
+                case UP:
+                    System.out.println("up");
+                    switch (xDirection) {
+                        case LEFT:
+                            return Direction.UPLEFT;
+                        case RIGHT:
+                            return Direction.UPRIGHT;
+                        case NONE:
+                            return Direction.UP;
+                    }
+                    break;
+                case DOWN:
+                    switch (xDirection) {
+                        case LEFT:
+                            return Direction.DOWNLEFT;
+                        case RIGHT:
+                            return Direction.DOWNRIGHT;
+                        case NONE:
+                            return Direction.DOWN;
+                    }
+                    break;
+                case NONE:
+                    switch (xDirection) {
+                        case LEFT:
+                            return Direction.LEFT;
+                        case RIGHT:
+                            return Direction.RIGHT;
+                        case NONE:
+                            return Direction.NONE;
+
+                    }
+                    break;
+            }
+
         }
 
-        // You can implement to keep moving while pressing the key here .
+        //Mouse input for dash
+        if (MouseInput.isMiddleMouseDown()) {
 
-    }
+            Direction xDirection = Direction.NONE;
+            Direction yDirection = Direction.NONE;
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        switch (e.getKeyChar()) {
-            case 'a':
-                setKeyAPressed(false);
-                break;
-            case 's':
-                setKeySPressed(false);
-                break;
-            case 'w':
-                setKeyWPressed(false);
-                break;
-            case 'd':
-                setKeyDPressed(false);
-                break;
-            case ' ':
-                setKeySpacePressed(false);
-                break;
-            case 'q':
-                setKeyQPressed(false);
-                break;
-            case 'p':
-                setKeyPPressed(false);
-                break;
-            default:
-                //System.out.println("Controller test:  Unknown key pressed");
-                break;
+            //Check horizontal input
+            switch(mousePositionRelativeToPlayerX(p, l)){
+                case LEFT:
+                    xDirection = Direction.LEFT;
+                    break;
+                case RIGHT:
+                    xDirection = Direction.RIGHT;
+                    break;
+            }
+
+
+            //Check vertical input
+            switch(mousePositionRelativeToPlayerY(p, l)){
+                case UP:
+                    yDirection = Direction.UP;
+                    break;
+                case DOWN:
+                    yDirection = Direction.DOWN;
+                    break;
+            }
+
+
+            switch (yDirection) {
+                case UP:
+                    System.out.println("up");
+                    switch (xDirection) {
+                        case LEFT:
+                            return Direction.UPLEFT;
+                        case RIGHT:
+                            return Direction.UPRIGHT;
+                        case NONE:
+                            return Direction.UP;
+                    }
+                    break;
+                case DOWN:
+                    switch (xDirection) {
+                        case LEFT:
+                            return Direction.DOWNLEFT;
+                        case RIGHT:
+                            return Direction.DOWNRIGHT;
+                        case NONE:
+                            return Direction.DOWN;
+                    }
+                    break;
+                case NONE:
+                    switch (xDirection) {
+                        case LEFT:
+                            return Direction.LEFT;
+                        case RIGHT:
+                            return Direction.RIGHT;
+                        case NONE:
+                            return Direction.NONE;
+
+                    }
+                    break;
+            }
+
         }
-        //upper case
 
+        return Direction.NONE;
     }
 
+    private Direction mousePositionRelativeToPlayerX(PlayerObject p, LevelMap l) {
+        int width = p.getWidth();
 
-    public boolean isKeyAPressed() {
-        return KeyAPressed;
+        int playerAlign;
+        if (!p.isFacingRight()) {
+            playerAlign = width;
+        } else {
+            playerAlign = 0;
+        }
+
+        //Get player position on screen
+        int playerXPos = (int) p.getCentre().getX() + playerAlign + l.getOffsetX();
+
+        if (playerXPos > MouseInput.getMouseX() + deadZone) {
+            return Direction.LEFT;
+        } else if (playerXPos < MouseInput.getMouseX() - deadZone) {
+            return Direction.RIGHT;
+        }
+        return Direction.NONE;
     }
 
+    private Direction mousePositionRelativeToPlayerY(PlayerObject p, LevelMap l) {
+        //Get player position on screen
+        int playerYPos = (int) p.getCentre().getY() + l.getOffsetY();
 
-    public void setKeyAPressed(boolean keyAPressed) {
-        KeyAPressed = keyAPressed;
+        if (playerYPos > MouseInput.getMouseY() + deadZone) {
+            return Direction.UP;
+        } else if (playerYPos < MouseInput.getMouseY() - deadZone) {
+            return Direction.DOWN;
+        }
+        return Direction.NONE;
     }
 
-
-    public boolean isKeySPressed() {
-        return KeySPressed;
-    }
-
-
-    public void setKeySPressed(boolean keySPressed) {
-        KeySPressed = keySPressed;
-    }
-
-
-    public boolean isKeyDPressed() {
-        return KeyDPressed;
-    }
-
-
-    public void setKeyDPressed(boolean keyDPressed) {
-        KeyDPressed = keyDPressed;
-    }
-
-
-    public boolean isKeyWPressed() {
-        return KeyWPressed;
-    }
-
-
-    public void setKeyWPressed(boolean keyWPressed) {
-        KeyWPressed = keyWPressed;
-    }
-
-
-    public boolean isKeySpacePressed() {
-        return KeySpacePressed;
-    }
-
-
-    public void setKeySpacePressed(boolean keySpacePressed) {
-        KeySpacePressed = keySpacePressed;
-    }
-
-    public boolean isKeyQPressed() {
-        return KeyQPressed;
-    }
-
-    public void setKeyQPressed(boolean keyQPressed) {
-        KeyQPressed = keyQPressed;
-    }
-
-    public static boolean isKeyPPressed() {
-        return KeyPPressed;
-    }
-
-    public static void setKeyPPressed(boolean keyPPressed) {
-        KeyPPressed = keyPPressed;
+    //used to ensure that the jump button isn't pressed multiple times
+    public void setJumpPressed(Boolean b) {
+        MouseInput.setRightMouseDown(b);
+        KeyboardInput.getInstance().setKeySpacePressed(b);
     }
 }
-
-/*
- * 
- * KEYBOARD :-) . can you add a mouse or a gamepad 
-
- *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @@@@@@@@@@@@@@@
-
-  @@@     @@@@    @@@@    @@@@    @@@@     @@@     @@@     @@@     @@@     @@@  
-
-  @@@     @@@     @@@     @@@@     @@@     @@@     @@@     @@@     @@@     @@@  
-
-  @@@     @@@     @@@     @@@@    @@@@     @@@     @@@     @@@     @@@     @@@  
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-@     @@@     @@@     @@@      @@      @@@     @@@     @@@     @@@     @@@     @
-
-@     @@@   W   @@@     @@@      @@      @@@     @@@     @@@     @@@     @@@     @
-
-@@    @@@@     @@@@    @@@@    @@@@    @@@@     @@@     @@@     @@@     @@@     @
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@N@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-@@@     @@@      @@      @@      @@      @@@     @@@     @@@     @@@     @@@    
-
-@@@   A   @@@  S     @@  D     @@      @@@     @@@     @@@     @@@     @@@     @@@    
-
-@@@@ @  @@@@@@@@@@@@ @@@@@@@    @@@@@@@@@@@@    @@@@@@@@@@@@     @@@@   @@@@@   
-
-    @@@     @@@@    @@@@    @@@@    $@@@     @@@     @@@     @@@     @@@     @@@
-
-    @@@ $   @@@      @@      @@ /Q   @@ ]M   @@@     @@@     @@@     @@@     @@@
-
-    @@@     @@@      @@      @@      @@      @@@     @@@     @@@     @@@     @@@
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-@       @@@                                                @@@       @@@       @
-
-@       @@@              SPACE KEY       @@@        @@ PQ     
-
-@       @@@                                                @@@        @@        
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
- * 
- * 
- * 
- * 
- * 
- */

@@ -11,8 +11,6 @@ import java.util.HashMap;
 
 
 public class SoundManager {
-    private Controller controller = Controller.getInstance();
-
     private HashMap<String, AudioInputStream> mySounds = new HashMap<>();
 
     private float masterVolume = 0;

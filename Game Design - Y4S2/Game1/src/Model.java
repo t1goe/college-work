@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import util.*;
@@ -30,7 +29,9 @@ SOFTWARE.
 public class Model {
 
     private PlayerObject Player;
-    private Controller controller = Controller.getInstance();
+    private KeyboardInput controller = KeyboardInput.getInstance();
+    private MouseInput mouse = MouseInput.getInstance();
+    private Controller cont = Controller.getInstance();
     private CopyOnWriteArrayList<GameObject> EnemiesList = new CopyOnWriteArrayList<GameObject>();
     private CopyOnWriteArrayList<GameObject> BulletList = new CopyOnWriteArrayList<GameObject>();
     private int Score = 0;
@@ -184,59 +185,73 @@ public class Model {
 
         //Logic for the airdash
         float dashSpeed = 50;
-        if (Controller.getInstance().isKeyQPressed() && dashFrames == 0 && dashAvailable) {
+//        if (KeyboardInput.getInstance().isKeyQPressed() && dashFrames == 0 && dashAvailable) {
+        Direction dashDirection = Controller.getInstance().isDashPressed(Player, levelMap);
+        if (dashDirection != Direction.NONE && dashFrames == 0 && dashAvailable) {
             dashFrames = 5;//X frames of no control/gravity to make the dash feel punchy
 
             soundManager.playFile("res/sounds/bump.aiff", 2);
 
 
-            Direction xDirection = Direction.NONE;
-            Direction yDirection = Direction.NONE;
-
-            //Check horizontal input
-            if (Controller.getInstance().isKeyAPressed() && !Controller.getInstance().isKeyDPressed()) {//Left
-                xDirection = Direction.LEFT;
-            } else if (!Controller.getInstance().isKeyAPressed() && Controller.getInstance().isKeyDPressed()) {//Right
-                xDirection = Direction.RIGHT;
-            }
-
-            //Check vertical input
-            if (Controller.getInstance().isKeyWPressed() && !Controller.getInstance().isKeySPressed()) {//Up
-                yDirection = Direction.UP;
-            } else if (!Controller.getInstance().isKeyWPressed() && Controller.getInstance().isKeySPressed()) {//Down
-                yDirection = Direction.DOWN;
-            }
+//            Direction xDirection = Direction.NONE;
+//            Direction yDirection = Direction.NONE;
 
             Vector3f dashVelocity = new Vector3f();
 
-            switch (xDirection) {
-                case RIGHT:
-                    dashVelocity.setX(dashSpeed);
-                    break;
-                case LEFT:
-                    dashVelocity.setX(-dashSpeed);
-                    break;
-            }
-
-            switch (yDirection) {
+            switch (dashDirection) {
                 case UP:
-                    dashVelocity.setY(-dashSpeed);
+                    dashVelocity = new Vector3f(0, -dashSpeed, 0);
                     break;
                 case DOWN:
-                    dashVelocity.setY(dashSpeed);
+                    dashVelocity = new Vector3f(0, dashSpeed, 0);
+                    break;
+                case LEFT:
+                    dashVelocity = new Vector3f(-dashSpeed, 0, 0);
+                    break;
+                case RIGHT:
+                    dashVelocity = new Vector3f(dashSpeed, 0, 0);
+                    break;
+                case UPLEFT:
+                    dashVelocity = new Vector3f(-dashSpeed, -dashSpeed, 0);
+                    break;
+                case UPRIGHT:
+                    dashVelocity = new Vector3f(dashSpeed, -dashSpeed, 0);
+                    break;
+                case DOWNLEFT:
+                    dashVelocity = new Vector3f(-dashSpeed, dashSpeed, 0);
+                    break;
+                case DOWNRIGHT:
+                    dashVelocity = new Vector3f(dashSpeed, dashSpeed, 0);
                     break;
             }
 
+
+//            switch (xDirection) {
+//                case RIGHT:
+//                    dashVelocity.setX(dashSpeed);
+//                    break;
+//                case LEFT:
+//                    dashVelocity.setX(-dashSpeed);
+//                    break;
+//            }
+//
+//            switch (yDirection) {
+//                case UP:
+//                    dashVelocity.setY(-dashSpeed);
+//                    break;
+//                case DOWN:
+//                    dashVelocity.setY(dashSpeed);
+//                    break;
+//            }
+
             //If direction has been input alongside dash then do the dash, otherwise nah
-            if (xDirection != Direction.NONE || yDirection != Direction.NONE) {
-                Player.setVelocity(dashVelocity);
-                dashAvailable = false;
-            }
+            Player.setVelocity(dashVelocity);
+            dashAvailable = false;
 
         }
 
         //left
-        if (Controller.getInstance().isKeyAPressed() && dashFrames == 0) {
+        if (Controller.getInstance().isMoveLeftPressed(Player, levelMap) && dashFrames == 0) {
             if (levelMap.canPlayerMoveLeft(Player)) {
                 Player.accelerate(Direction.LEFT);
             }
@@ -246,7 +261,7 @@ public class Model {
         }
 
         //right
-        if (Controller.getInstance().isKeyDPressed() && dashFrames == 0) {
+        if (Controller.getInstance().isMoveRightPressed(Player, levelMap) && dashFrames == 0) {
             if (levelMap.canPlayerMoveRight(Player)) {
                 Player.accelerate(Direction.RIGHT);
             }
@@ -269,12 +284,30 @@ public class Model {
 //        }
 
         //Space (jump)
-        if (Controller.getInstance().isKeySpacePressed() && dashFrames == 0) {
+//        if (KeyboardInput.getInstance().isKeySpacePressed() && dashFrames == 0) {
+//            if (Player.isGrounded()) {
+//                soundManager.playFile("res/sounds/jump.aiff");
+//                Player.jump();
+//            }
+//            KeyboardInput.getInstance().setKeySpacePressed(false);
+//        }
+
+//        //Using mouse to jump
+//        if (MouseInput.getInstance().isMouseDown()) {
+//            if (Player.isGrounded()) {
+//                soundManager.playFile("res/sounds/jump.aiff");
+//                Player.jump();
+//            }
+//            KeyboardInput.getInstance().setKeySpacePressed(false);
+//        }
+
+        //Using mouse to jump
+        if (Controller.getInstance().isJumpPressed()) {
             if (Player.isGrounded()) {
                 soundManager.playFile("res/sounds/jump.aiff");
                 Player.jump();
             }
-            Controller.getInstance().setKeySpacePressed(false);
+            Controller.getInstance().setJumpPressed(false);
         }
 
         //Decelerate if not moving
@@ -353,7 +386,7 @@ public class Model {
                     break;
                 case FINISH:
                     levelNumber++;
-                    if(levelNumber >= levels.length){
+                    if (levelNumber >= levels.length) {
                         //Run out of levels, print YOU WIN
                         System.out.println("you win");
                     }
@@ -362,7 +395,7 @@ public class Model {
                     Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
                     Player.setCentre(levelMap.getSpawnLocation());
                     break tileLoop;
-                    //Level finish animation
+                //Level finish animation
             }
         }
     }
