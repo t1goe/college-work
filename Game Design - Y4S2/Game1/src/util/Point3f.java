@@ -42,6 +42,14 @@ public class Point3f {
         setZ(0.0f);
     }
 
+    //copy constructor
+    public Point3f(Point3f point){
+        this.x = point.x;
+        this.y = point.y;
+        this.z = point.z;
+        this.boundary = point.boundary;
+    }
+
     //initializing constructor
     public Point3f(float x, float y, float z) {
         this.setX(x);
