@@ -19,14 +19,14 @@ public class SoundManager {
 
         this.masterVolume = volume;
 
-        //bump.aiff from https://freesound.org/people/timgormly/sounds/170141/
-        //hurt.aiff from https://freesound.org/people/timgormly/sounds/170148/
+        //dash.aiff from https://freesound.org/people/timgormly/sounds/170141/
+        //walk.aiff from https://freesound.org/people/timgormly/sounds/170148/
         //jump.aiff from https://freesound.org/people/timgormly/sounds/170163/
         //bumper.aiff from https://freesound.org/people/timgormly/sounds/170140/
 
         String[] fileLocations = {
-                "res/sounds/bump.aiff",
-                "res/sounds/hurt.aiff",
+                "res/sounds/dash.aiff",
+                "res/sounds/walk.aiff",
                 "res/sounds/jump.aiff",
                 "res/sounds/bumper.aiff"
         };

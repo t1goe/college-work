@@ -190,7 +190,7 @@ public class Model {
         if (dashDirection != Direction.NONE && dashFrames == 0 && dashAvailable) {
             dashFrames = 5;//X frames of no control/gravity to make the dash feel punchy
 
-            soundManager.playFile("res/sounds/bump.aiff", 2);
+            soundManager.playFile("res/sounds/dash.aiff", 2);
 
 
 //            Direction xDirection = Direction.NONE;
@@ -254,8 +254,8 @@ public class Model {
         if (Controller.getInstance().isMoveLeftPressed(Player, levelMap) && dashFrames == 0) {
             if (levelMap.canPlayerMoveLeft(Player)) {
                 Player.accelerate(Direction.LEFT);
+                movingX = true;
             }
-            movingX = true;
 
             Player.setFacingRight(false);
         }
@@ -264,8 +264,8 @@ public class Model {
         if (Controller.getInstance().isMoveRightPressed(Player, levelMap) && dashFrames == 0) {
             if (levelMap.canPlayerMoveRight(Player)) {
                 Player.accelerate(Direction.RIGHT);
+                movingX = true;
             }
-            movingX = true;
 
 
             Player.setFacingRight(true);
@@ -317,7 +317,7 @@ public class Model {
 
         //If player is running play moving sound
         if (movingX && Player.isGrounded() && runningSoundFrames <= 0) {
-            soundManager.playFile("res/sounds/hurt.aiff");
+            soundManager.playFile("res/sounds/walk.aiff", -2);
             runningSoundFrames = 4;
         }
 

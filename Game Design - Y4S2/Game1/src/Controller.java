@@ -65,7 +65,6 @@ public class Controller {
 
             switch (yDirection) {
                 case UP:
-                    System.out.println("up");
                     switch (xDirection) {
                         case LEFT:
                             return Direction.UPLEFT;
@@ -130,7 +129,6 @@ public class Controller {
 
             switch (yDirection) {
                 case UP:
-                    System.out.println("up");
                     switch (xDirection) {
                         case LEFT:
                             return Direction.UPLEFT;
