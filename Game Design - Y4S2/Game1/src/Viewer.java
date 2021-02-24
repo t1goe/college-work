@@ -466,44 +466,36 @@ public class Viewer extends JPanel {
         //TODO REWRITE THIS
 
         //Percentage of the screen to move if the player enters that part of the screen
+        //MAX 0.5 (ie screen follows the player)
         float moveZoneX = (float) 0.4;
         float moveZoneY = (float) 0.4;
 
+        float followSpeed = (float) 0.8;
+
         float playerScreenX = p.getCentre().getX() + l.getOffsetX();
         int levelWidthPx = l.getWidth() * l.getTileSize();
-        int updatedOffsetX = (int) (l.getOffsetX() - p.getVelocity().getX());
 
-        if (playerScreenX > frameWidth * (1 - moveZoneX) && p.isFacingRight()) {//Move right
-            if (-updatedOffsetX < levelWidthPx - frameWidth) {
-                l.setOffsetX((updatedOffsetX));
-            } else {
-                l.setOffsetX(-levelWidthPx + frameWidth);
-            }
-        } else if (playerScreenX < frameWidth * moveZoneX && !p.isFacingRight()) {//Move left
-            if (updatedOffsetX < 0) {
-                l.setOffsetX((updatedOffsetX));
-            } else {
-                l.setOffsetX(0);
-            }
+        if (playerScreenX > frameWidth * (1 - moveZoneX)) {//Too far right
+            int newOffsetX = (int) (l.getOffsetX() - (playerScreenX - frameWidth * (1 - moveZoneX)));
+            l.setOffsetX(Math.max(newOffsetX, frameWidth - levelWidthPx));
+        }
+
+        if (playerScreenX < frameWidth * moveZoneX) {//Too far left
+            int newOffsetX = (int) (l.getOffsetX() - (playerScreenX - frameWidth * moveZoneX));
+            l.setOffsetX(Math.min(newOffsetX, 0));
         }
 
         float playerScreenY = p.getCentre().getY() + l.getOffsetY();
         int levelHeightPx = l.getHeight() * l.getTileSize();
-        int updatedOffsetY = (int) (l.getOffsetY() - p.getVelocity().getY());
 
-        if (playerScreenY > frameHeight * (1 - moveZoneY) && p.getVelocity().getY() > 0) {//Move down
-            if (updatedOffsetY < -levelHeightPx + frameHeight) {
-                l.setOffsetY(-levelHeightPx + frameHeight);
-            } else {
-                l.setOffsetY(updatedOffsetY);
-            }
-        } else if (playerScreenY < frameHeight * moveZoneY && p.getVelocity().getY() < 0) {//Move up
+        if (playerScreenY < frameHeight * moveZoneY) {//Too far up
+            int newOffsetY = (int) (l.getOffsetY() - (playerScreenY - frameHeight * moveZoneY));
+            l.setOffsetY(Math.min(newOffsetY, 0));
+        }
 
-            if ((updatedOffsetY) < 0) {
-                l.setOffsetY(updatedOffsetY);
-            } else {
-                l.setOffsetY(0);
-            }
+        if (playerScreenY > frameHeight * (1 - moveZoneY)) {//Too far down
+            int newOffsetY = (int) (l.getOffsetY() - (playerScreenY - frameHeight * (1 - moveZoneY)));
+            l.setOffsetY(Math.max(newOffsetY, frameHeight - levelHeightPx));
         }
     }
 
@@ -517,7 +509,7 @@ public class Viewer extends JPanel {
                                        int sx1, int sy1, int sx2, int sy2,
                                        ImageObserver observer, Graphics g) {
         if (isInFrame(dx1, dy1, dx2, dy2)) {
-            return g.drawImage(image, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
+            return g.drawImage(image, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer);
         } else {
             return false;
         }
