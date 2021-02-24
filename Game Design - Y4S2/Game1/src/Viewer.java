@@ -52,6 +52,8 @@ public class Viewer extends JPanel {
     private int frameWidth = 0;
     private int frameHeight = 0;
 
+    private final boolean DEBUG_MODE = true;
+
     public Viewer(Model World) {
         this.gameworld = World;
         loadImages();
@@ -229,13 +231,17 @@ public class Viewer extends JPanel {
             playerAlign = 0;
         }
 
-        //Hitbox
-        g.drawRect(x + xOffset, y + yOffset, width, height);
+        //For testing
+        if (DEBUG_MODE) {
+            //Draw hitbox
+            g.drawRect(x + xOffset, y + yOffset, width, height);
 
-        //Velocity lines
-        for (int i = 0; i < points.length; i++) {
-            g.drawLine((int) points[i][0] + xOffset, (int) points[i][1] + yOffset,
-                    (int) (points[i][0] + p.getVelocity().getX()) + xOffset, (int) (points[i][1] + p.getVelocity().getY()) + yOffset);
+
+            //Velocity lines
+            for (int i = 0; i < points.length; i++) {
+                g.drawLine((int) points[i][0] + xOffset, (int) points[i][1] + yOffset,
+                        (int) (points[i][0] + p.getVelocity().getX()) + xOffset, (int) (points[i][1] + p.getVelocity().getY()) + yOffset);
+            }
         }
 
         if (grounded) {
@@ -287,9 +293,6 @@ public class Viewer extends JPanel {
         int mapWidth = l.getWidth();
         int mapHeight = l.getHeight();
 
-//        System.out.println("mapWidth " + mapWidth);
-//        System.out.println("mapHeight " + mapHeight);
-
         for (int i = 0; i < mapHeight; i++) {
             for (int j = 0; j < mapWidth; j++) {
                 drawTile(j, i, l.getOffsetX(), l.getOffsetY(), g);
@@ -307,9 +310,6 @@ public class Viewer extends JPanel {
 
         switch (gameworld.getLevelMap().getTile(x, y).getState()) {
             case BLOCK:
-//                g.setColor(Color.black);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 g.drawImage(myImages.get("res/jungle/jungle_tileset.png"),
                         (x * size) + xOffset - 5, (y * size) + yOffset - 7,
                         (x * size) + xOffset + size + 4, (y * size) + yOffset + size + 7,
@@ -319,9 +319,6 @@ public class Viewer extends JPanel {
 
                 break;
             case SPIKE:
-//                g.setColor(Color.red);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 g.drawImage(myImages.get("res/jungle/spikes.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
@@ -330,9 +327,6 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case ACTIVE_CHECKPOINT:
-//                g.setColor(Color.green);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 g.drawImage(myImages.get("res/jungle/flag_up.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
@@ -341,9 +335,6 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case INACTIVE_CHECKPOINT:
-//                g.setColor(Color.yellow);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 g.drawImage(myImages.get("res/jungle/flag_down.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
@@ -352,24 +343,18 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case KEY:
-//                g.setColor(Color.blue);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 //Calculates an offset position for the key so it hovers slightly.
                 fPos = ((int) ((CurrentAnimationTime + 3) / 2 % floating.length));
 
                 g.drawImage(myImages.get("res/jungle/key.png"),
-                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize  + floating[fPos],
-                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize  + floating[fPos],
+                        (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize + floating[fPos],
+                        (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize + floating[fPos],
                         0, 0,
                         26, 26,
                         null);
 
                 break;
             case KEY_COLLECTED:
-//                g.setColor(Color.lightGray);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 //Calculates an offset position for the key so it hovers slightly.
                 fPos = ((int) ((CurrentAnimationTime + 4) / 2 % floating.length));
 
@@ -381,8 +366,6 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case LOCK:
-//                g.setColor(Color.PINK);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
                 g.drawImage(myImages.get("res/jungle/lock.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
@@ -392,8 +375,6 @@ public class Viewer extends JPanel {
 
                 break;
             case UNLOCKED:
-//                g.setColor(Color.PINK);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
                 g.drawImage(myImages.get("res/jungle/lock_transparent.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
@@ -403,9 +384,6 @@ public class Viewer extends JPanel {
 
                 break;
             case FINISH:
-//                g.setColor(Color.cyan);
-//                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
-
                 int horizontalSpace = 1;
                 int verticalSpace = 5;
 
@@ -420,12 +398,18 @@ public class Viewer extends JPanel {
                         null);
             case EMPTY:
                 break;
+            default:
+                //Sample code used for testing untextured blocks
+                g.setColor(Color.black);
+                g.fillRect((x * size) + xOffset, (y * size) + yOffset, size, size);
         }
 
         //Draw grid
-        g.setColor(Color.BLACK);
-        g.drawRect((x * size) + xOffset, (y * size) + yOffset, size, size);
+        if (DEBUG_MODE) {
+            g.setColor(Color.BLACK);
+            g.drawRect((x * size) + xOffset, (y * size) + yOffset, size, size);
 //        optimisedDrawRect((x * size) + xOffset, (y * size) + yOffset, size, size, g);
+        }
 
 
     }

@@ -271,36 +271,6 @@ public class Model {
             Player.setFacingRight(true);
         }
 
-        //up
-        //No floating allowed so disabled
-//        if (Controller.getInstance().isKeyWPressed() && dashFrames == 0) {
-//            Player.accelerate(Direction.UP);
-//        }
-
-        //down
-        //No fastfalling allowed
-//        if (Controller.getInstance().isKeySPressed() && dashFrames == 0) {
-//            Player.accelerate(Direction.DOWN);
-//        }
-
-        //Space (jump)
-//        if (KeyboardInput.getInstance().isKeySpacePressed() && dashFrames == 0) {
-//            if (Player.isGrounded()) {
-//                soundManager.playFile("res/sounds/jump.aiff");
-//                Player.jump();
-//            }
-//            KeyboardInput.getInstance().setKeySpacePressed(false);
-//        }
-
-//        //Using mouse to jump
-//        if (MouseInput.getInstance().isMouseDown()) {
-//            if (Player.isGrounded()) {
-//                soundManager.playFile("res/sounds/jump.aiff");
-//                Player.jump();
-//            }
-//            KeyboardInput.getInstance().setKeySpacePressed(false);
-//        }
-
         //Using mouse to jump
         if (Controller.getInstance().isJumpPressed()) {
             if (Player.isGrounded()) {
