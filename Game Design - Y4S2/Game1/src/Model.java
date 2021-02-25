@@ -375,6 +375,7 @@ public class Model {
                     checkPoint[1] = temp[1];
                     break;
                 case KEY:
+                    soundManager.playFile("res/sounds/key_collect.wav", -1);
                     levelMap.getTile(temp[0], temp[1]).setState(State.KEY_COLLECTED);
                     levelMap.getKeys().removeIf(i -> i[0] == temp[0] && i[1] == temp[1]);
                     levelMap.getCollectedKeys().add(new int[]{temp[0], temp[1]});
