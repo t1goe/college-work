@@ -1,4 +1,4 @@
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
@@ -76,7 +76,9 @@ public class MainWindow {
         canvas.setFrameWidth(width);
 
 
+
         JButton startMenuButton = new JButton("Start Game");  // start button
+        startMenuButton.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         startMenuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -104,7 +106,7 @@ public class MainWindow {
 
             myPicture = ImageIO.read(winScreen);
             WinScreen = new JLabel(new ImageIcon(myPicture));
-            WinScreen.setBounds(0, 0, 1000, 1000);
+            WinScreen.setBounds(-10, 0, 1000, 1000);
             frame.add(WinScreen);
             WinScreen.setVisible(false);
         } catch (IOException e) {

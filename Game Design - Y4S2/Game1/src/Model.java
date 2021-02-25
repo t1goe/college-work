@@ -388,6 +388,7 @@ public class Model {
                     levelNumber++;
                     if (levelNumber >= levels.length) {
                         //Run out of levels, print YOU WIN
+                        soundManager.playFile("res/sounds/victory.wav", -4);
                         System.out.println("you win");
                         return true;
                     }

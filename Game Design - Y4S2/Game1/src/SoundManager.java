@@ -26,6 +26,7 @@ public class SoundManager {
         //flag.wav from https://freesound.org/people/LittleRobotSoundFactory/sounds/270342/
         //key_collect.wav from https://freesound.org/people/SomeGuy22/sounds/431329/
         //unlock.wav from https://freesound.org/people/Swedger/sounds/170636/
+        //victory.wav from https://freesound.org/people/Mrthenoronha/sounds/518308/
 
         String[] fileLocations = {
                 "res/sounds/dash.aiff",
