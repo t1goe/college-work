@@ -56,6 +56,10 @@ public class Model {
                 "res/levels/lvl2.txt"
         };
 
+//        this.levels = new String[]{
+//                "res/levels/lvl2.txt"
+//        };
+
         //Level the user is on, start level 0 (1)
         this.levelNumber = 0;
 
@@ -89,9 +93,12 @@ public class Model {
     }
 
     // This is the heart of the game , where the model takes in all the inputs ,decides the outcomes and then changes the model accordingly.
-    public void gamelogic() {
+    public boolean gamelogic() {
         // Player Logic first
-        playerLogic();
+        boolean gameEnd  = playerLogic();
+        if(gameEnd){
+            return true;
+        }
         // Enemy Logic next
         enemyLogic();
         // Bullets move next
@@ -99,6 +106,7 @@ public class Model {
         // interactions between objects
         gameLogic();
 
+        return false;
     }
 
     private void gameLogic() {
@@ -169,7 +177,7 @@ public class Model {
 
     }
 
-    private void playerLogic() {
+    private boolean playerLogic() {
 
         // smoother animation is possible if we make a target position  // done but may try to change things for students
 
@@ -251,26 +259,35 @@ public class Model {
         }
 
         //left
-        if (Controller.getInstance().isMoveLeftPressed(Player, levelMap) && dashFrames == 0) {
-            if (levelMap.canPlayerMoveLeft(Player)) {
-                Player.accelerate(Direction.LEFT);
-                movingX = true;
+        try {
+            if (Controller.getInstance().isMoveLeftPressed(Player, levelMap) && dashFrames == 0) {
+                if (levelMap.canPlayerMoveLeft(Player)) {
+                    Player.accelerate(Direction.LEFT);
+                    movingX = true;
+                }
+
+                Player.setFacingRight(false);
             }
 
-            Player.setFacingRight(false);
-        }
+            //right
+            if (Controller.getInstance().isMoveRightPressed(Player, levelMap) && dashFrames == 0) {
+                if (levelMap.canPlayerMoveRight(Player)) {
+                    Player.accelerate(Direction.RIGHT);
+                    movingX = true;
+                }
 
-        //right
-        if (Controller.getInstance().isMoveRightPressed(Player, levelMap) && dashFrames == 0) {
-            if (levelMap.canPlayerMoveRight(Player)) {
-                Player.accelerate(Direction.RIGHT);
-                movingX = true;
+
+                Player.setFacingRight(true);
             }
-
-
-            Player.setFacingRight(true);
+        }catch(ArrayIndexOutOfBoundsException e){
+            //Array out of bounds means player has gone off the map
+            //Shouldn't happen in properly designed levels, but this way if it does, the game keeps running.
+            soundManager.playFile("res/sounds/bumper.aiff", 2);
+            Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
+            Player.setCentre(levelMap.getSpawnLocation());
+            e.printStackTrace();
+            return movingX;
         }
-
         //Jumping
         if (Controller.getInstance().isJumpPressed()) {
             if (Player.isGrounded()) {
@@ -312,11 +329,9 @@ public class Model {
         }catch(ArrayIndexOutOfBoundsException e){
             //Array out of bounds means player has gone off the map
             //Shouldn't happen in properly designed levels, but this way if it does, the game keeps running.
-            soundManager.playFile("res/sounds/bumper.aiff", 2);
-            Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
-            Player.setCentre(levelMap.getSpawnLocation());
+            playerDeath();
             e.printStackTrace();
-            return;
+            return movingX;
         }
 
         //Set grounded
@@ -349,9 +364,7 @@ public class Model {
         for (int[] temp : levelMap.getOccupyingTiles(Player)) {
             switch (levelMap.getTile(temp[0], temp[1]).getState()) {
                 case SPIKE:
-                    soundManager.playFile("res/sounds/bumper.aiff", 2);
-                    Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
-                    Player.setCentre(levelMap.getSpawnLocation());
+                    playerDeath();
                     break tileLoop;
                 case INACTIVE_CHECKPOINT:
                     levelMap.changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
@@ -370,6 +383,7 @@ public class Model {
                     if (levelNumber >= levels.length) {
                         //Run out of levels, print YOU WIN
                         System.out.println("you win");
+                        return true;
                     }
                     loadLevel(levels[levelNumber]);
                     soundManager.playFile("res/sounds/bumper.aiff", 2);
@@ -379,6 +393,13 @@ public class Model {
                 //Level finish animation
             }
         }
+        return false;
+    }
+
+    private void playerDeath(){
+        soundManager.playFile("res/sounds/bumper.aiff", 2);
+        Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
+        Player.setCentre(levelMap.getSpawnLocation());
     }
 
     private void CreateBullet() {
