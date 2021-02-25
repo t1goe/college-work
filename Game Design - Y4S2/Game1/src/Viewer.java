@@ -1,7 +1,4 @@
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.LayoutManager;
+import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
@@ -130,6 +127,8 @@ public class Viewer extends JPanel {
         });
 
         drawLevel(gameworld.getPlayer(), gameworld.getLevelMap(), g);
+
+        drawKeyCount(g);
     }
 
     private void loadImages() {
@@ -502,6 +501,23 @@ public class Viewer extends JPanel {
     private boolean isInFrame(int dx1, int dy1, int dx2, int dy2) {
         return ((0 <= dx1 && dx1 <= frameWidth) || (0 <= dx2 && dx2 <= frameWidth)) && //If either side is within frame and
                 ((0 <= dy1 && dy1 <= frameHeight) || (0 <= dy2 && dy2 <= frameHeight));// If top or bottom is within frame
+    }
+
+    private void drawKeyCount(Graphics g){
+        int collectedKeyCount = gameworld.getLevelMap().getCollectedKeys().size();
+        int totalKeyCount = gameworld.getLevelMap().getKeys().size() + collectedKeyCount;
+
+        if(totalKeyCount == 0){
+            return;
+        }
+        g.setColor(new Color(24, 44, 59));
+        g.fillRect(20, 10, 300, 60);
+
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        g.setColor(Color.white);
+        String keyString =
+                "Keys collected: " + collectedKeyCount + " / " + totalKeyCount;
+        g.drawString(keyString , 30, 50);
     }
 
     private boolean optimisedDrawImage(Image image,
