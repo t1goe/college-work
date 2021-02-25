@@ -94,7 +94,7 @@ public class MainWindow {
 
         //loading background image
         File BackroundToLoad = new File("res/jungle/title2.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
-        File winScreen = new File("res/jungle/victory.png");
+        File winScreen = new File("res/jungle/victory2.png");
         try {
 
             BufferedImage myPicture = ImageIO.read(BackroundToLoad);
@@ -104,7 +104,7 @@ public class MainWindow {
 
             myPicture = ImageIO.read(winScreen);
             WinScreen = new JLabel(new ImageIcon(myPicture));
-            WinScreen.setBounds((width / 2) - (672 / 2), 40, 672, 356);
+            WinScreen.setBounds(0, 0, 1000, 1000);
             frame.add(WinScreen);
             WinScreen.setVisible(false);
         } catch (IOException e) {
