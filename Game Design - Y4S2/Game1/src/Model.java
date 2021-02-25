@@ -367,6 +367,7 @@ public class Model {
                     playerDeath();
                     break tileLoop;
                 case INACTIVE_CHECKPOINT:
+                    soundManager.playFile("res/sounds/flag.wav", -1);
                     levelMap.changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
                     levelMap.getTile(temp[0], temp[1]).setState(State.ACTIVE_CHECKPOINT);
                     checkPoint = levelMap.getCheckPointLocation();

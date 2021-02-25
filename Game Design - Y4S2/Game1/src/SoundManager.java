@@ -28,7 +28,8 @@ public class SoundManager {
                 "res/sounds/dash.aiff",
                 "res/sounds/walk.aiff",
                 "res/sounds/jump.aiff",
-                "res/sounds/bumper.aiff"
+                "res/sounds/bumper.aiff",
+                "res/sounds/flag.wav"
         };
 
         for (String s : fileLocations) {
