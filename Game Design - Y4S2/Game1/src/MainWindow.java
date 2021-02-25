@@ -90,16 +90,16 @@ public class MainWindow {
                 gameState = GameState.PLAY;
             }
         });
-        startMenuButton.setBounds(400, 500, 200, 40);
+        startMenuButton.setBounds(400, 850, 200, 40);
 
         //loading background image
-        File BackroundToLoad = new File("res/jungle/title.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
+        File BackroundToLoad = new File("res/jungle/title2.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
         File winScreen = new File("res/jungle/victory.png");
         try {
 
             BufferedImage myPicture = ImageIO.read(BackroundToLoad);
             BackgroundImageForStartMenu = new JLabel(new ImageIcon(myPicture));
-            BackgroundImageForStartMenu.setBounds((width / 2) - (672 / 2), 40, 672, 356);
+            BackgroundImageForStartMenu.setBounds(-10, 0, 1000, 1000);
             frame.add(BackgroundImageForStartMenu);
 
             myPicture = ImageIO.read(winScreen);

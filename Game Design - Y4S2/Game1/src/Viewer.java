@@ -150,7 +150,7 @@ public class Viewer extends JPanel {
                 "res/jungle/man/midair.png",
                 "res/jungle/background.png",
                 "res/jungle/jungle_tileset.png",
-                "res/jungle/title.png",
+                "res/jungle/title2.png",
                 "res/jungle/key.png",
                 "res/jungle/key_transparent.png",
                 "res/jungle/flag_up.png",
