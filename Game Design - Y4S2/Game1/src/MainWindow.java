@@ -15,7 +15,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import util.GameState;
-import util.UnitTests;
 
 /*
  * Created by Abraham Campbell on 15/01/2020.
@@ -47,17 +46,22 @@ public class MainWindow {
     private static JFrame frame = new JFrame("Jungle Game");   // Change to the name of your game
     private static Model gameworld = new Model();
     private static Viewer canvas = new Viewer(gameworld);
-    private KeyListener Controller = new KeyboardInput();
+
+    private KeyListener keyboardInput = new KeyboardInput();
     private static int TargetFPS = 100;
     private static GameState gameState = GameState.MENU;
     private JLabel BackgroundImageForStartMenu;
+    private static JLabel WinScreen;
 
     private MouseListener mouse = new MouseInput();
     private MouseMotionListener mouseMotion = new MouseInput();
 
+    private static int width = 1000;
+    private static int height = 1000;
+
     public MainWindow() {
-        int width = 1000;
-        int height = 1000;
+//        int width = 1000;
+//        int height = 1000;
         frame.setSize(width, height);  // you can customise this later and adapt it to change on size.
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //If exit // you can modify with your way of quitting , just is a template.
         frame.setLayout(null);
@@ -79,7 +83,7 @@ public class MainWindow {
                 startMenuButton.setVisible(false);
                 BackgroundImageForStartMenu.setVisible(false);
                 canvas.setVisible(true);
-                canvas.addKeyListener(Controller);    //adding the controller to the Canvas
+                canvas.addKeyListener(keyboardInput);    //adding the controller to the Canvas
                 canvas.addMouseListener(mouse);
                 canvas.addMouseMotionListener(mouseMotion);
                 canvas.requestFocusInWindow();   // making sure that the Canvas is in focus so keyboard input will be taking in .
@@ -90,12 +94,19 @@ public class MainWindow {
 
         //loading background image
         File BackroundToLoad = new File("res/jungle/title.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
+        File winScreen = new File("res/jungle/victory.png");
         try {
 
             BufferedImage myPicture = ImageIO.read(BackroundToLoad);
             BackgroundImageForStartMenu = new JLabel(new ImageIcon(myPicture));
             BackgroundImageForStartMenu.setBounds((width / 2) - (672 / 2), 40, 672, 356);
             frame.add(BackgroundImageForStartMenu);
+
+            myPicture = ImageIO.read(winScreen);
+            WinScreen = new JLabel(new ImageIcon(myPicture));
+            WinScreen.setBounds((width / 2) - (672 / 2), 40, 672, 356);
+            frame.add(WinScreen);
+            WinScreen.setVisible(false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,9 +128,17 @@ public class MainWindow {
             while (FrameCheck > System.currentTimeMillis()) {
             }
 
+            boolean gameEnd = false;
             if (gameState == GameState.PLAY) {
-                gameloop();
+                gameEnd = gameloop();
             }
+
+            if (gameEnd) {
+                canvas.setVisible(false);
+                WinScreen.setVisible(true);
+                break;
+            }
+
 
 //            if(Controller.getInstance().isKeyPPressed())
 
@@ -132,14 +151,17 @@ public class MainWindow {
     }
 
     //Basic Model-View-Controller pattern
-    private static void gameloop() {
+    private static boolean gameloop() {
         // GAMELOOP
 
         // controller input  will happen on its own thread
         // So no need to call it explicitly
 
         // model update
-        gameworld.gamelogic();
+        boolean gameEnd = gameworld.gamelogic();
+        if (gameEnd) {
+            return true;
+        }
         // view update
 
         canvas.updateview();
@@ -147,6 +169,8 @@ public class MainWindow {
         // Both these calls could be setup as  a thread but we want to simplify the game logic for you.
         //score update
 //        frame.setTitle("Score =  " + gameworld.getScore());
+
+        return false;
 
 
     }

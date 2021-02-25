@@ -1,5 +1,5 @@
 package util;
 
 public enum GameState {
-    MENU, PLAY, PAUSE;
+    MENU, PLAY, PAUSE, END;
 }
