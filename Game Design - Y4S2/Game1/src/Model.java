@@ -95,8 +95,8 @@ public class Model {
     // This is the heart of the game , where the model takes in all the inputs ,decides the outcomes and then changes the model accordingly.
     public boolean gamelogic() {
         // Player Logic first
-        boolean gameEnd  = playerLogic();
-        if(gameEnd){
+        boolean gameEnd = playerLogic();
+        if (gameEnd) {
             return true;
         }
         // Enemy Logic next
@@ -279,7 +279,7 @@ public class Model {
 
                 Player.setFacingRight(true);
             }
-        }catch(ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             //Array out of bounds means player has gone off the map
             //Shouldn't happen in properly designed levels, but this way if it does, the game keeps running.
             soundManager.playFile("res/sounds/bumper.aiff", 2);
@@ -326,7 +326,7 @@ public class Model {
         CollisionInfo c;
         try {
             c = levelMap.collisionDetection(Player);
-        }catch(ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             //Array out of bounds means player has gone off the map
             //Shouldn't happen in properly designed levels, but this way if it does, the game keeps running.
             playerDeath();
@@ -375,10 +375,14 @@ public class Model {
                     checkPoint[1] = temp[1];
                     break;
                 case KEY:
-                    soundManager.playFile("res/sounds/key_collect.wav", -1);
                     levelMap.getTile(temp[0], temp[1]).setState(State.KEY_COLLECTED);
                     levelMap.getKeys().removeIf(i -> i[0] == temp[0] && i[1] == temp[1]);
                     levelMap.getCollectedKeys().add(new int[]{temp[0], temp[1]});
+                    if (levelMap.getKeys().size() > 0) {
+                        soundManager.playFile("res/sounds/key_collect.wav", -1);
+                    }else{
+                        soundManager.playFile("res/sounds/unlock.wav", 4);
+                    }
                     break;
                 case FINISH:
                     levelNumber++;
@@ -398,7 +402,7 @@ public class Model {
         return false;
     }
 
-    private void playerDeath(){
+    private void playerDeath() {
         soundManager.playFile("res/sounds/bumper.aiff", 2);
         Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
         Player.setCentre(levelMap.getSpawnLocation());

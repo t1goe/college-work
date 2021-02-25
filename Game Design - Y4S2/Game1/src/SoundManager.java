@@ -25,6 +25,7 @@ public class SoundManager {
         //bumper.aiff from https://freesound.org/people/timgormly/sounds/170140/
         //flag.wav from https://freesound.org/people/LittleRobotSoundFactory/sounds/270342/
         //key_collect.wav from https://freesound.org/people/SomeGuy22/sounds/431329/
+        //unlock.wav from https://freesound.org/people/Swedger/sounds/170636/
 
         String[] fileLocations = {
                 "res/sounds/dash.aiff",
@@ -32,7 +33,8 @@ public class SoundManager {
                 "res/sounds/jump.aiff",
                 "res/sounds/bumper.aiff",
                 "res/sounds/flag.wav",
-                "res/sounds/key_collect.wav"
+                "res/sounds/key_collect.wav",
+                "res/sounds/unlock.wav"
         };
 
         for (String s : fileLocations) {
