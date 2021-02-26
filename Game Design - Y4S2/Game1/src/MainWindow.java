@@ -95,8 +95,8 @@ public class MainWindow {
         startMenuButton.setBounds(400, 850, 200, 40);
 
         //loading background image
-        File BackroundToLoad = new File("res/jungle/title2.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
-        File winScreen = new File("res/jungle/victory2.png");
+        File BackroundToLoad = new File("res/textures/title2.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
+        File winScreen = new File("res/textures/victory2.png");
         try {
 
             BufferedImage myPicture = ImageIO.read(BackroundToLoad);

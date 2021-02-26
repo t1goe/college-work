@@ -29,12 +29,6 @@ SOFTWARE.
 public class Model {
 
     private PlayerObject Player;
-    private KeyboardInput controller = KeyboardInput.getInstance();
-    private MouseInput mouse = MouseInput.getInstance();
-    private Controller cont = Controller.getInstance();
-    private CopyOnWriteArrayList<GameObject> EnemiesList = new CopyOnWriteArrayList<GameObject>();
-    private CopyOnWriteArrayList<GameObject> BulletList = new CopyOnWriteArrayList<GameObject>();
-    private int Score = 0;
 
     int dashFrames = 0;
     boolean dashAvailable = false;
@@ -67,7 +61,7 @@ public class Model {
         loadLevel(levels[levelNumber]);
 
         //Player
-        Player = new PlayerObject("res/jungle/man/idle.png",
+        Player = new PlayerObject("res/textures/man/idle.png",
                 42,
                 68,
                 levelMap.getSpawnLocation(),
@@ -76,12 +70,6 @@ public class Model {
                 20f,
                 20,
                 1.5f);
-
-        //Enemies  starting with four
-        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 400), 0, 0)));
-        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 50 + 500), 0, 0)));
-        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 500), 0, 0)));
-        EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 100 + 400), 0, 0)));
 
         //Initialize sound manager
         soundManager = new SoundManager(-15);
@@ -99,82 +87,17 @@ public class Model {
         if (gameEnd) {
             return true;
         }
-        // Enemy Logic next
-        enemyLogic();
-        // Bullets move next
-        bulletLogic();
-        // interactions between objects
+
+        // interactions between player and level
         gameLogic();
 
         return false;
     }
 
     private void gameLogic() {
-
-
-        // this is a way to increment across the array list data structure
-
-
-        //see if they hit anything
-        // using enhanced for-loop style as it makes it alot easier both code wise and reading wise too
-        for (GameObject temp : EnemiesList) {
-            for (GameObject Bullet : BulletList) {
-                if (Math.abs(temp.getCentre().getX() - Bullet.getCentre().getX()) < temp.getWidth()
-                        && Math.abs(temp.getCentre().getY() - Bullet.getCentre().getY()) < temp.getHeight()) {
-                    EnemiesList.remove(temp);
-                    BulletList.remove(Bullet);
-                    Score++;
-                }
-            }
-        }
-
         if (levelMap.getKeys().size() == 0) {
             levelMap.changeAllByType(State.LOCK, State.UNLOCKED);
         }
-
-    }
-
-    private void enemyLogic() {
-        // TODO Auto-generated method stub
-        for (GameObject temp : EnemiesList) {
-            // Move enemies
-
-            temp.getCentre().ApplyVector(new Vector3f(0, -1, 0));
-
-
-            //see if they get to the top of the screen ( remember 0 is the top
-            if (temp.getCentre().getY() == 900.0f)  // current boundary need to pass value to model
-            {
-                EnemiesList.remove(temp);
-
-                // enemies win so score decreased
-                Score--;
-            }
-        }
-
-        if (EnemiesList.size() < 2) {
-            while (EnemiesList.size() < 6) {
-                EnemiesList.add(new GameObject("res/oldTextures/UFO.png", 50, 50, new Point3f(((float) Math.random() * 1000), 0, 0)));
-            }
-        }
-    }
-
-    private void bulletLogic() {
-        // TODO Auto-generated method stub
-        // move bullets
-
-        for (GameObject temp : BulletList) {
-            //check to move them
-
-            temp.getCentre().ApplyVector(new Vector3f(0, 1, 0));
-            //see if they hit anything
-
-            //see if they get to the top of the screen ( remember 0 is the top
-            if (temp.getCentre().getY() == 0) {
-                BulletList.remove(temp);
-            }
-        }
-
     }
 
     private boolean playerLogic() {
@@ -193,16 +116,11 @@ public class Model {
 
         //Logic for the airdash
         float dashSpeed = 50;
-//        if (KeyboardInput.getInstance().isKeyQPressed() && dashFrames == 0 && dashAvailable) {
         Direction dashDirection = Controller.getInstance().isDashPressed(Player, levelMap);
         if (dashDirection != Direction.NONE && dashFrames == 0 && dashAvailable) {
             dashFrames = 5;//X frames of no control/gravity to make the dash feel punchy
 
             soundManager.playFile("res/sounds/dash.aiff", 2);
-
-
-//            Direction xDirection = Direction.NONE;
-//            Direction yDirection = Direction.NONE;
 
             Vector3f dashVelocity = new Vector3f();
 
@@ -232,25 +150,6 @@ public class Model {
                     dashVelocity = new Vector3f(dashSpeed, dashSpeed, 0);
                     break;
             }
-
-
-//            switch (xDirection) {
-//                case RIGHT:
-//                    dashVelocity.setX(dashSpeed);
-//                    break;
-//                case LEFT:
-//                    dashVelocity.setX(-dashSpeed);
-//                    break;
-//            }
-//
-//            switch (yDirection) {
-//                case UP:
-//                    dashVelocity.setY(-dashSpeed);
-//                    break;
-//                case DOWN:
-//                    dashVelocity.setY(dashSpeed);
-//                    break;
-//            }
 
             //If direction has been input alongside dash then do the dash, otherwise nah
             Player.setVelocity(dashVelocity);
@@ -408,26 +307,8 @@ public class Model {
         Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
         Player.setCentre(levelMap.getSpawnLocation());
     }
-
-    private void CreateBullet() {
-        BulletList.add(new GameObject("res/oldTextures/Bullet.png", 32, 64, new Point3f(Player.getCentre().getX(), Player.getCentre().getY(), 0.0f)));
-
-    }
-
     public PlayerObject getPlayer() {
         return Player;
-    }
-
-    public CopyOnWriteArrayList<GameObject> getEnemies() {
-        return EnemiesList;
-    }
-
-    public CopyOnWriteArrayList<GameObject> getBullets() {
-        return BulletList;
-    }
-
-    public int getScore() {
-        return Score;
     }
 
     public LevelMap getLevelMap() {

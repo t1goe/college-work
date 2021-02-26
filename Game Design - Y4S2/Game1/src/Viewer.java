@@ -3,8 +3,6 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -49,7 +47,7 @@ public class Viewer extends JPanel {
     private int frameWidth = 0;
     private int frameHeight = 0;
 
-    private final boolean DEBUG_MODE = true;
+    private final boolean DEBUG_MODE = false;
 
     public Viewer(Model World) {
         this.gameworld = World;
@@ -112,20 +110,6 @@ public class Viewer extends JPanel {
         //Draw player
         drawPlayer(gameworld.getPlayer(), gameworld.getLevelMap(), g);
 
-        //Draw Bullets
-        // change back
-        gameworld.getBullets().forEach((temp) ->
-        {
-            drawBullet((int) temp.getCentre().getX(), (int) temp.getCentre().getY(), (int) temp.getWidth(), (int) temp.getHeight(), temp.getTexture(), g);
-        });
-
-        //Draw Enemies
-        gameworld.getEnemies().forEach((temp) ->
-        {
-            drawEnemies((int) temp.getCentre().getX(), (int) temp.getCentre().getY(), (int) temp.getWidth(), (int) temp.getHeight(), temp.getTexture(), g);
-
-        });
-
         drawLevel(gameworld.getPlayer(), gameworld.getLevelMap(), g);
 
         drawKeyCount(g);
@@ -133,32 +117,28 @@ public class Viewer extends JPanel {
 
     private void loadImages() {
         //All player assets from https://jesse-m.itch.io/jungle-pack (also grass tile/titlescreen)
-
         //Key from https://cheekyinkling.itch.io/shikashis-fantasy-icons-pack
-
         //Flag is homemade
-
         //Spikes and lock (modified) from https://pixelfrog-store.itch.io/pixel-adventure-1
-
         //Goal gem is from https://ma9ici4n.itch.io/gems
 
         String[] imageLocations = {
-                "res/jungle/man/idle.png",
-                "res/jungle/man/run.png",
-                "res/jungle/man/falling.png",
-                "res/jungle/man/rising.png",
-                "res/jungle/man/midair.png",
-                "res/jungle/background.png",
-                "res/jungle/jungle_tileset.png",
-                "res/jungle/title2.png",
-                "res/jungle/key.png",
-                "res/jungle/key_transparent.png",
-                "res/jungle/flag_up.png",
-                "res/jungle/flag_down.png",
-                "res/jungle/spikes.png",
-                "res/jungle/lock.png",
-                "res/jungle/lock_transparent.png",
-                "res/jungle/gem.png"
+                "res/textures/man/idle.png",
+                "res/textures/man/run.png",
+                "res/textures/man/falling.png",
+                "res/textures/man/rising.png",
+                "res/textures/man/midair.png",
+                "res/textures/background.png",
+                "res/textures/jungle_tileset.png",
+                "res/textures/title2.png",
+                "res/textures/key.png",
+                "res/textures/key_transparent.png",
+                "res/textures/flag_up.png",
+                "res/textures/flag_down.png",
+                "res/textures/spikes.png",
+                "res/textures/lock.png",
+                "res/textures/lock_transparent.png",
+                "res/textures/gem.png"
         };
 
         try {
@@ -171,37 +151,8 @@ public class Viewer extends JPanel {
         }
     }
 
-    private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
-        File TextureToLoad = new File(texture);  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
-        try {
-            Image myImage = ImageIO.read(TextureToLoad);
-            //The spirte is 32x32 pixel wide and 4 of them are placed together so we need to grab a different one each time
-            //remember your training :-) computer science everything starts at 0 so 32 pixels gets us to 31
-            int currentPositionInAnimation = ((int) (CurrentAnimationTime % 4) * 32); //slows down animation so every 10 frames we get another frame so every 100ms
-            g.drawImage(myImage, x, y, x + width, y + height, currentPositionInAnimation, 0, currentPositionInAnimation + 31, 32, null);
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
-
     private void drawBackground(Graphics g) {
-        g.drawImage(myImages.get("res/jungle/background.png"), 0, 0, 2000, 1000, 0, 0, 383, 216, null);
-    }
-
-    private void drawBullet(int x, int y, int width, int height, String texture, Graphics g) {
-        File TextureToLoad = new File(texture);  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
-        try {
-            Image myImage = ImageIO.read(TextureToLoad);
-            //64 by 128
-            g.drawImage(myImage, x, y, x + width, y + height, 0, 0, 63, 127, null);
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        g.drawImage(myImages.get("res/textures/background.png"), 0, 0, 2000, 1000, 0, 0, 383, 216, null);
     }
 
     private void drawPlayer(PlayerObject p, LevelMap l, Graphics g) {
@@ -246,7 +197,7 @@ public class Viewer extends JPanel {
         if (grounded) {
             if (Math.abs(xVel) < 4) {//idle
                 int currentPositionInAnimation = ((int) (CurrentAnimationTime % 12)) * 21;
-                g.drawImage(myImages.get("res/jungle/man/idle.png"),
+                g.drawImage(myImages.get("res/textures/man/idle.png"),
                         x + playerAlign + xOffset, y + yOffset,
                         x + trueWidth + playerAlign + xOffset, y + height + yOffset,
                         currentPositionInAnimation, 0,
@@ -254,7 +205,7 @@ public class Viewer extends JPanel {
                         null);
             } else {//running
                 int currentPositionInAnimation = ((int) (CurrentAnimationTime % 8)) * 23;
-                g.drawImage(myImages.get("res/jungle/man/run.png"),
+                g.drawImage(myImages.get("res/textures/man/run.png"),
                         x + playerAlign + xOffset, y + yOffset,
                         x + trueWidth + playerAlign + xOffset, y + height + yOffset,
                         currentPositionInAnimation, 0,
@@ -263,14 +214,14 @@ public class Viewer extends JPanel {
             }
         } else {
             if (yVel > 5) {//falling
-                g.drawImage(myImages.get("res/jungle/man/falling.png"),
+                g.drawImage(myImages.get("res/textures/man/falling.png"),
                         x + playerAlign + xOffset, y + yOffset,
                         x + trueWidth + playerAlign + xOffset, y + height + yOffset,
                         0, 0,
                         21, 34,
                         null);
             } else if (yVel < -5) {//rising
-                g.drawImage(myImages.get("res/jungle/man/rising.png"),
+                g.drawImage(myImages.get("res/textures/man/rising.png"),
                         x + playerAlign + xOffset, y + yOffset,
                         x + trueWidth + playerAlign + xOffset, y + height + yOffset,
                         0, 0,
@@ -278,7 +229,7 @@ public class Viewer extends JPanel {
                         null);
             } else {//Midair
                 int currentPositionInAnimation = ((int) ((CurrentAnimationTime / 4) % 2)) * 21;
-                g.drawImage(myImages.get("res/jungle/man/midair.png"),
+                g.drawImage(myImages.get("res/textures/man/midair.png"),
                         x + playerAlign + xOffset, y + yOffset,
                         x + trueWidth + playerAlign + xOffset, y + height + yOffset,
                         currentPositionInAnimation + 1, 0,
@@ -309,7 +260,7 @@ public class Viewer extends JPanel {
 
         switch (gameworld.getLevelMap().getTile(x, y).getState()) {
             case BLOCK:
-                g.drawImage(myImages.get("res/jungle/jungle_tileset.png"),
+                g.drawImage(myImages.get("res/textures/jungle_tileset.png"),
                         (x * size) + xOffset - 5, (y * size) + yOffset - 7,
                         (x * size) + xOffset + size + 4, (y * size) + yOffset + size + 7,
                         208, 32,
@@ -318,7 +269,7 @@ public class Viewer extends JPanel {
 
                 break;
             case SPIKE:
-                g.drawImage(myImages.get("res/jungle/spikes.png"),
+                g.drawImage(myImages.get("res/textures/spikes.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
                         0, 0,
@@ -326,7 +277,7 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case ACTIVE_CHECKPOINT:
-                g.drawImage(myImages.get("res/jungle/flag_up.png"),
+                g.drawImage(myImages.get("res/textures/flag_up.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
                         0, 0,
@@ -334,7 +285,7 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case INACTIVE_CHECKPOINT:
-                g.drawImage(myImages.get("res/jungle/flag_down.png"),
+                g.drawImage(myImages.get("res/textures/flag_down.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
                         0, 0,
@@ -345,7 +296,7 @@ public class Viewer extends JPanel {
                 //Calculates an offset position for the key so it hovers slightly.
                 fPos = ((int) ((CurrentAnimationTime + 3) / 2 % floating.length));
 
-                g.drawImage(myImages.get("res/jungle/key.png"),
+                g.drawImage(myImages.get("res/textures/key.png"),
                         (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize + floating[fPos],
                         (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize + floating[fPos],
                         0, 0,
@@ -357,7 +308,7 @@ public class Viewer extends JPanel {
                 //Calculates an offset position for the key so it hovers slightly.
                 fPos = ((int) ((CurrentAnimationTime + 4) / 2 % floating.length));
 
-                g.drawImage(myImages.get("res/jungle/key_transparent.png"),
+                g.drawImage(myImages.get("res/textures/key_transparent.png"),
                         (x * size) + xOffset + borderSize, (y * size) + yOffset + borderSize + floating[fPos],
                         (x * size) + xOffset + size - borderSize, (y * size) + yOffset + size - borderSize + floating[fPos],
                         0, 0,
@@ -365,7 +316,7 @@ public class Viewer extends JPanel {
                         null);
                 break;
             case LOCK:
-                g.drawImage(myImages.get("res/jungle/lock.png"),
+                g.drawImage(myImages.get("res/textures/lock.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
                         0, 0,
@@ -374,7 +325,7 @@ public class Viewer extends JPanel {
 
                 break;
             case UNLOCKED:
-                g.drawImage(myImages.get("res/jungle/lock_transparent.png"),
+                g.drawImage(myImages.get("res/textures/lock_transparent.png"),
                         (x * size) + xOffset, (y * size) + yOffset,
                         (x * size) + xOffset + size, (y * size) + yOffset + size,
                         0, 0,
@@ -389,7 +340,7 @@ public class Viewer extends JPanel {
                 //Calculates an offset position for the gem so it hovers slightly.
                 fPos = ((int) ((CurrentAnimationTime / 2) % floating.length));
 
-                g.drawImage(myImages.get("res/jungle/gem.png"),
+                g.drawImage(myImages.get("res/textures/gem.png"),
                         (x * size) + xOffset + horizontalSpace, (y * size) + yOffset + verticalSpace + floating[fPos],
                         (x * size) + xOffset + size - horizontalSpace, (y * size) + yOffset + size - verticalSpace + floating[fPos],
                         0, 0,
