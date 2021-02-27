@@ -37,6 +37,7 @@ public class KeyboardInput implements KeyListener {
 
     private static boolean KeyQPressed = false;
     private static boolean KeyPPressed = false;
+    private static boolean KeyEPressed = false;
 
     private static final KeyboardInput instance = new KeyboardInput();
 
@@ -77,13 +78,13 @@ public class KeyboardInput implements KeyListener {
             case 'p':
                 setKeyPPressed(true);
                 break;
+            case 'e':
+                setKeyEPressed(true);
+                break;
             default:
                 //System.out.println("Controller test:  Unknown key pressed");
                 break;
         }
-
-        // You can implement to keep moving while pressing the key here .
-
     }
 
     @Override
@@ -109,6 +110,9 @@ public class KeyboardInput implements KeyListener {
                 break;
             case 'p':
                 setKeyPPressed(false);
+                break;
+            case 'e':
+                setKeyEPressed(false);
                 break;
             default:
                 //System.out.println("Controller test:  Unknown key pressed");
@@ -172,6 +176,14 @@ public class KeyboardInput implements KeyListener {
 
     public static void setKeyPPressed(boolean keyPPressed) {
         KeyPPressed = keyPPressed;
+    }
+
+    public static boolean isKeyEPressed() {
+        return KeyEPressed;
+    }
+
+    public static void setKeyEPressed(boolean keyEPressed) {
+        KeyEPressed = keyEPressed;
     }
 }
 

@@ -47,7 +47,7 @@ public class Controller {
     public Direction isDashPressed(PlayerObject p, LevelMap l) {
 
         //Keyboard input for dash (takes priority)
-        if (KeyboardInput.getInstance().isKeyQPressed()) {
+        if (KeyboardInput.getInstance().isKeyQPressed() || KeyboardInput.getInstance().isKeyEPressed()) {
 
             Direction xDirection = Direction.NONE;
             Direction yDirection = Direction.NONE;
