@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import util.*;
@@ -45,13 +46,27 @@ public class Model {
     public Model() {
 
         //Ordered list of levels
+
+        //REAL Level track
         this.levels = new String[]{
-                "res/levels/lvl1.txt",
-                "res/levels/lvl2.txt"
+                "res/levels/tutorial.txt",
+                "res/levels/climbing.txt",
+                "res/levels/overthewall.txt",
+                "res/levels/platforming1.txt",
+                "res/levels/platforming2.txt",
+                "res/levels/3keys.txt",
+                "res/levels/end.txt"
         };
 
+        //Demo level track
 //        this.levels = new String[]{
-//                "res/levels/lvl2.txt"
+//                "res/levels/tutorial.txt",
+//                "res/levels/demo.txt"
+//        };
+//
+//        //Test track
+//        this.levels = new String[]{
+//                "res/levels/demo.txt"
 //        };
 
         //Level the user is on, start level 0 (1)
@@ -230,7 +245,7 @@ public class Model {
             //Shouldn't happen in properly designed levels, but this way if it does, the game keeps running.
             playerDeath();
             e.printStackTrace();
-            return movingX;
+            return false;
         }
 
         //Set grounded
@@ -261,42 +276,48 @@ public class Model {
         int[] checkPoint;
         tileLoop:
         for (int[] temp : levelMap.getOccupyingTiles(Player)) {
-            switch (levelMap.getTile(temp[0], temp[1]).getState()) {
-                case SPIKE:
-                    playerDeath();
-                    break tileLoop;
-                case INACTIVE_CHECKPOINT:
-                    soundManager.playFile("res/sounds/flag.wav", -1);
-                    levelMap.changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
-                    levelMap.getTile(temp[0], temp[1]).setState(State.ACTIVE_CHECKPOINT);
-                    checkPoint = levelMap.getCheckPointLocation();
-                    checkPoint[0] = temp[0];
-                    checkPoint[1] = temp[1];
-                    break;
-                case KEY:
-                    levelMap.getTile(temp[0], temp[1]).setState(State.KEY_COLLECTED);
-                    levelMap.getKeys().removeIf(i -> i[0] == temp[0] && i[1] == temp[1]);
-                    levelMap.getCollectedKeys().add(new int[]{temp[0], temp[1]});
-                    if (levelMap.getKeys().size() > 0) {
-                        soundManager.playFile("res/sounds/key_collect.wav", -1);
-                    }else{
-                        soundManager.playFile("res/sounds/unlock.wav", 4);
-                    }
-                    break;
-                case FINISH:
-                    levelNumber++;
-                    if (levelNumber >= levels.length) {
-                        //Run out of levels, print YOU WIN
-                        soundManager.playFile("res/sounds/victory.wav", -4);
-                        System.out.println("you win");
-                        return true;
-                    }
-                    loadLevel(levels[levelNumber]);
-                    soundManager.playFile("res/sounds/bumper.aiff", 2);
-                    Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
-                    Player.setCentre(levelMap.getSpawnLocation());
-                    break tileLoop;
-                //Level finish animation
+            try {
+                switch (levelMap.getTile(temp[0], temp[1]).getState()) {
+                    case SPIKE:
+                        playerDeath();
+                        break tileLoop;
+                    case INACTIVE_CHECKPOINT:
+                        soundManager.playFile("res/sounds/flag.wav", -1);
+                        levelMap.changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
+                        levelMap.getTile(temp[0], temp[1]).setState(State.ACTIVE_CHECKPOINT);
+                        checkPoint = levelMap.getCheckPointLocation();
+                        checkPoint[0] = temp[0];
+                        checkPoint[1] = temp[1];
+                        break;
+                    case KEY:
+                        levelMap.getTile(temp[0], temp[1]).setState(State.KEY_COLLECTED);
+                        levelMap.getKeys().removeIf(i -> i[0] == temp[0] && i[1] == temp[1]);
+                        levelMap.getCollectedKeys().add(new int[]{temp[0], temp[1]});
+                        if (levelMap.getKeys().size() > 0) {
+                            soundManager.playFile("res/sounds/key_collect.wav", -1);
+                        } else {
+                            soundManager.playFile("res/sounds/unlock.wav", 4);
+                        }
+                        break;
+                    case FINISH:
+                        levelNumber++;
+                        if (levelNumber >= levels.length) {
+                            //Run out of levels, print YOU WIN
+                            soundManager.playFile("res/sounds/victory.wav", -4);
+                            System.out.println("you win");
+                            return true;
+                        }
+                        loadLevel(levels[levelNumber]);
+                        soundManager.playFile("res/sounds/bumper.aiff", 2);
+                        Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
+                        Player.setCentre(levelMap.getSpawnLocation());
+                        break tileLoop;
+                    //Level finish animation
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                playerDeath();
+                e.printStackTrace();
+                break;
             }
         }
         return false;
@@ -307,6 +328,7 @@ public class Model {
         Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
         Player.setCentre(levelMap.getSpawnLocation());
     }
+
     public PlayerObject getPlayer() {
         return Player;
     }
