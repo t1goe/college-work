@@ -49,7 +49,6 @@ public class MainWindow {
 
     private KeyListener keyboardInput = new KeyboardInput();
     private static int TargetFPS = 100;
-    private static GameState gameState = GameState.MENU;
     private JLabel BackgroundImageForStartMenu;
     private static JLabel WinScreen;
 
@@ -76,7 +75,6 @@ public class MainWindow {
         canvas.setFrameWidth(width);
 
 
-
         JButton startMenuButton = new JButton("Start Game");  // start button
         startMenuButton.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         startMenuButton.addActionListener(new ActionListener() {
@@ -89,7 +87,7 @@ public class MainWindow {
                 canvas.addMouseListener(mouse);
                 canvas.addMouseMotionListener(mouseMotion);
                 canvas.requestFocusInWindow();   // making sure that the Canvas is in focus so keyboard input will be taking in .
-                gameState = GameState.PLAY;
+                gameworld.setGameState(GameState.PLAY);
             }
         });
         startMenuButton.setBounds(400, 850, 200, 40);
@@ -131,11 +129,23 @@ public class MainWindow {
             }
 
             boolean gameEnd = false;
-            if (gameState == GameState.PLAY) {
-                gameEnd = gameloop();
+            if (gameworld.getGameState() == GameState.PLAY) {
+                gameloop();
             }
 
-            if (gameEnd) {
+            while (gameworld.getGameState() == GameState.PAUSE) {
+                try {
+                    Thread.sleep(10);
+                    if (Controller.getInstance().isPausePressed()) {
+                        gameworld.setGameState(GameState.PLAY);
+                        Controller.getInstance().setPausePressed(false);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (gameworld.getGameState() == GameState.END) {
                 canvas.setVisible(false);
                 WinScreen.setVisible(true);
                 break;
@@ -153,28 +163,17 @@ public class MainWindow {
     }
 
     //Basic Model-View-Controller pattern
-    private static boolean gameloop() {
+    private static void gameloop() {
         // GAMELOOP
 
         // controller input  will happen on its own thread
         // So no need to call it explicitly
 
         // model update
-        boolean gameEnd = gameworld.gamelogic();
-        if (gameEnd) {
-            return true;
-        }
+        gameworld.gamelogic();
+
         // view update
-
         canvas.updateview();
-
-        // Both these calls could be setup as  a thread but we want to simplify the game logic for you.
-        //score update
-//        frame.setTitle("Score =  " + gameworld.getScore());
-
-        return false;
-
-
     }
 
 }

@@ -35,6 +35,14 @@ public class Controller {
                 || KeyboardInput.getInstance().isKeySpacePressed();
     }
 
+    public boolean isPausePressed(){
+        return KeyboardInput.isKeyPPressed();
+    }
+
+    public void setPausePressed(Boolean b){
+        KeyboardInput.setKeyPPressed(b);
+    }
+
     //Returns the direction the player is trying to dash in
     public Direction isDashPressed(PlayerObject p, LevelMap l) {
 

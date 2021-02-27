@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import util.GameState;
 import util.LevelMap;
 import util.PlayerObject;
 
@@ -113,6 +114,8 @@ public class Viewer extends JPanel {
         drawLevel(gameworld.getPlayer(), gameworld.getLevelMap(), g);
 
         drawKeyCount(g);
+
+        drawPause(g);
     }
 
     private void loadImages() {
@@ -469,6 +472,17 @@ public class Viewer extends JPanel {
         String keyString =
                 "Keys collected: " + collectedKeyCount + " / " + totalKeyCount;
         g.drawString(keyString , 30, 50);
+    }
+
+    private void drawPause(Graphics g){
+        if(gameworld.getGameState() == GameState.PAUSE) {
+            g.setColor(new Color(24, 44, 59));
+            g.fillRect(450, 450, 125, 45);
+
+            g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+            g.setColor(Color.white);
+            g.drawString("Paused", 462, 483);
+        }
     }
 
     private boolean optimisedDrawImage(Image image,

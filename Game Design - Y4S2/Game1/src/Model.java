@@ -43,6 +43,8 @@ public class Model {
 
     private SoundManager soundManager;
 
+    private GameState gameState;
+
     public Model() {
 
         //Ordered list of levels
@@ -96,17 +98,17 @@ public class Model {
     }
 
     // This is the heart of the game , where the model takes in all the inputs ,decides the outcomes and then changes the model accordingly.
-    public boolean gamelogic() {
+    public void gamelogic() {
         // Player Logic first
-        boolean gameEnd = playerLogic();
-        if (gameEnd) {
-            return true;
-        }
+        playerLogic();
 
         // interactions between player and level
         gameLogic();
 
-        return false;
+        if(Controller.getInstance().isPausePressed()){
+            gameState = GameState.PAUSE;
+            Controller.getInstance().setPausePressed(false);
+        }
     }
 
     private void gameLogic() {
@@ -115,7 +117,7 @@ public class Model {
         }
     }
 
-    private boolean playerLogic() {
+    private void playerLogic() {
 
         // smoother animation is possible if we make a target position  // done but may try to change things for students
 
@@ -200,7 +202,7 @@ public class Model {
             Player.setVelocity(new Vector3f(0, 0, Player.getVelocity().getZ()));
             Player.setCentre(levelMap.getSpawnLocation());
             e.printStackTrace();
-            return movingX;
+            return;
         }
         //Jumping
         if (Controller.getInstance().isJumpPressed()) {
@@ -245,7 +247,7 @@ public class Model {
             //Shouldn't happen in properly designed levels, but this way if it does, the game keeps running.
             playerDeath();
             e.printStackTrace();
-            return false;
+            return;
         }
 
         //Set grounded
@@ -305,7 +307,8 @@ public class Model {
                             //Run out of levels, print YOU WIN
                             soundManager.playFile("res/sounds/victory.wav", -4);
                             System.out.println("you win");
-                            return true;
+                            gameState = GameState.END;
+                            return;
                         }
                         loadLevel(levels[levelNumber]);
                         soundManager.playFile("res/sounds/bumper.aiff", 2);
@@ -320,7 +323,6 @@ public class Model {
                 break;
             }
         }
-        return false;
     }
 
     private void playerDeath() {
@@ -337,7 +339,13 @@ public class Model {
         return this.levelMap;
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
 
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
 }
 
 

@@ -118,51 +118,41 @@ public class KeyboardInput implements KeyListener {
 
     }
 
-
     public boolean isKeyAPressed() {
         return KeyAPressed;
     }
-
 
     public void setKeyAPressed(boolean keyAPressed) {
         KeyAPressed = keyAPressed;
     }
 
-
     public boolean isKeySPressed() {
         return KeySPressed;
     }
-
 
     public void setKeySPressed(boolean keySPressed) {
         KeySPressed = keySPressed;
     }
 
-
     public boolean isKeyDPressed() {
         return KeyDPressed;
     }
-
 
     public void setKeyDPressed(boolean keyDPressed) {
         KeyDPressed = keyDPressed;
     }
 
-
     public boolean isKeyWPressed() {
         return KeyWPressed;
     }
-
 
     public void setKeyWPressed(boolean keyWPressed) {
         KeyWPressed = keyWPressed;
     }
 
-
     public boolean isKeySpacePressed() {
         return KeySpacePressed;
     }
-
 
     public void setKeySpacePressed(boolean keySpacePressed) {
         KeySpacePressed = keySpacePressed;
