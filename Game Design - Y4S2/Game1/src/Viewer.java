@@ -103,15 +103,15 @@ public class Viewer extends JPanel {
         drawBackground(g);
 
         //If man is offscreen, recenter camera
-        recenterCamera(gameworld.getPlayer(), gameworld.getLevelMap());
+        recenterCamera();
 
         //Update level's x/y offsets
-        moveCamera(gameworld.getPlayer(), gameworld.getLevelMap());
+        moveCamera();
 
         //Draw player
-        drawPlayer(gameworld.getPlayer(), gameworld.getLevelMap(), g);
+        drawPlayer(g);
 
-        drawLevel(gameworld.getPlayer(), gameworld.getLevelMap(), g);
+        drawLevel(g);
 
         drawKeyCount(g);
 
@@ -158,7 +158,10 @@ public class Viewer extends JPanel {
         g.drawImage(myImages.get("res/textures/background.png"), 0, 0, 2000, 1000, 0, 0, 383, 216, null);
     }
 
-    private void drawPlayer(PlayerObject p, LevelMap l, Graphics g) {
+    private void drawPlayer(Graphics g) {
+
+        PlayerObject p = gameworld.getPlayer();
+        LevelMap l = gameworld.getLevelMap();
 
         int x = (int) p.getCentre().getX();
         int y = (int) p.getCentre().getY();
@@ -242,7 +245,9 @@ public class Viewer extends JPanel {
         }
     }
 
-    private void drawLevel(PlayerObject p, LevelMap l, Graphics g) {
+    private void drawLevel(Graphics g) {
+        LevelMap l = gameworld.getLevelMap();
+
         int mapWidth = l.getWidth();
         int mapHeight = l.getHeight();
 
@@ -367,7 +372,10 @@ public class Viewer extends JPanel {
 
     }
 
-    private boolean recenterCamera(PlayerObject p, LevelMap l) {
+    private boolean recenterCamera() {
+        PlayerObject p = gameworld.getPlayer();
+        LevelMap l = gameworld.getLevelMap();
+
         //If off camera, recenter.
         int x = (int) p.getCentre().getX();
         int y = (int) p.getCentre().getY();
@@ -415,15 +423,15 @@ public class Viewer extends JPanel {
         return false;
     }
 
-    private void moveCamera(PlayerObject p, LevelMap l) {
-        //TODO REWRITE THIS
+    private void moveCamera() {
 
         //Percentage of the screen to move if the player enters that part of the screen
         //MAX 0.5 (ie screen follows the player)
         float moveZoneX = (float) 0.4;
         float moveZoneY = (float) 0.4;
 
-        float followSpeed = (float) 0.8;
+        PlayerObject p = gameworld.getPlayer();
+        LevelMap l = gameworld.getLevelMap();
 
         float playerScreenX = p.getCentre().getX() + l.getOffsetX();
         int levelWidthPx = l.getWidth() * l.getTileSize();
@@ -457,11 +465,11 @@ public class Viewer extends JPanel {
                 ((0 <= dy1 && dy1 <= frameHeight) || (0 <= dy2 && dy2 <= frameHeight));// If top or bottom is within frame
     }
 
-    private void drawKeyCount(Graphics g){
+    private void drawKeyCount(Graphics g) {
         int collectedKeyCount = gameworld.getLevelMap().getCollectedKeys().size();
         int totalKeyCount = gameworld.getLevelMap().getKeys().size() + collectedKeyCount;
 
-        if(totalKeyCount == 0){
+        if (totalKeyCount == 0) {
             return;
         }
         g.setColor(new Color(24, 44, 59));
@@ -471,11 +479,11 @@ public class Viewer extends JPanel {
         g.setColor(Color.white);
         String keyString =
                 "Keys collected: " + collectedKeyCount + " / " + totalKeyCount;
-        g.drawString(keyString , 30, 50);
+        g.drawString(keyString, 30, 50);
     }
 
-    private void drawPause(Graphics g){
-        if(gameworld.getGameState() == GameState.PAUSE) {
+    private void drawPause(Graphics g) {
+        if (gameworld.getGameState() == GameState.PAUSE) {
             g.setColor(new Color(24, 44, 59));
             g.fillRect(450, 450, 125, 45);
 

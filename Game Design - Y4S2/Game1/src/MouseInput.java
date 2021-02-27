@@ -12,11 +12,6 @@ public class MouseInput implements MouseListener, MouseMotionListener {
     private static final MouseInput instance = new MouseInput();
 
     MouseInput() {
-//        addMouseListener(this);
-//
-//        setSize(300, 300);
-//        setLayout(null);
-//        setVisible(true);
     }
 
     public static MouseInput getInstance() {
@@ -24,11 +19,6 @@ public class MouseInput implements MouseListener, MouseMotionListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-//        System.out.println("Clicked");
-//        mouseDown = true;
-//        Graphics g = getGraphics();
-//        g.setColor(Color.BLUE);
-//        g.fillOval(e.getX(), e.getY(), 30, 30);
     }
 
     public void mouseEntered(MouseEvent e) {
