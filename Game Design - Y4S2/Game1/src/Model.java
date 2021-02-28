@@ -220,7 +220,7 @@ public class Model {
 
         //If player is running play moving sound
         if (movingX && Player.isGrounded() && runningSoundFrames <= 0) {
-            soundManager.playFile("res/sounds/walk.aiff", -3);
+            soundManager.playFile("res/sounds/walk.aiff", -5);
             runningSoundFrames = 4;
         }
 

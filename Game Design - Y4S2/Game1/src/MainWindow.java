@@ -72,25 +72,6 @@ public class MainWindow {
         canvas.setFrameHeight(height);
         canvas.setFrameWidth(width);
 
-
-        JButton startMenuButton = new JButton("Start Game");  // start button
-        startMenuButton.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        startMenuButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startMenuButton.setVisible(false);
-                BackgroundImageForStartMenu.setVisible(false);
-                canvas.setVisible(true);
-                canvas.addKeyListener(keyboardInput);    //adding the controller to the Canvas
-                canvas.addMouseListener(mouse);
-                canvas.addMouseMotionListener(mouseMotion);
-                canvas.requestFocusInWindow();   // making sure that the Canvas is in focus so keyboard input will be taking in .
-                gameworld.setGameState(GameState.PLAY);
-            }
-        });
-        startMenuButton.setBounds(400, 850, 200, 40);
-        frame.add(startMenuButton);
-
         JButton displayControlsButton = new JButton("Controls");
         displayControlsButton.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         displayControlsButton.addActionListener(new ActionListener() {
@@ -120,6 +101,27 @@ public class MainWindow {
         });
         displayControlsButton.setBounds(800, 860, 100, 30);
         frame.add(displayControlsButton);
+
+
+        JButton startMenuButton = new JButton("Start Game");  // start button
+        startMenuButton.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        startMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startMenuButton.setVisible(false);
+                BackgroundImageForStartMenu.setVisible(false);
+                canvas.setVisible(true);
+                canvas.addKeyListener(keyboardInput);    //adding the controller to the Canvas
+                canvas.addMouseListener(mouse);
+                canvas.addMouseMotionListener(mouseMotion);
+                canvas.requestFocusInWindow();   // making sure that the Canvas is in focus so keyboard input will be taking in .
+                gameworld.setGameState(GameState.PLAY);
+
+                displayControlsButton.setVisible(false);
+            }
+        });
+        startMenuButton.setBounds(400, 850, 200, 40);
+        frame.add(startMenuButton);
 
         //loading background image
         File BackroundToLoad = new File("res/textures/title2.png");
@@ -176,6 +178,7 @@ public class MainWindow {
             if (gameworld.getGameState() == GameState.END) {
                 canvas.setVisible(false);
                 WinScreen.setVisible(true);
+
                 break;
             }
 
