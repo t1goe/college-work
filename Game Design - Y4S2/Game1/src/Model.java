@@ -56,6 +56,7 @@ public class Model {
                 "res/levels/overthewall.txt",
                 "res/levels/platforming1.txt",
                 "res/levels/platforming2.txt",
+                "res/levels/falling.txt",
                 "res/levels/3keys.txt",
                 "res/levels/end.txt"
         };
