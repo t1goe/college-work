@@ -1,3 +1,6 @@
+//Thomas Igoe
+//17372013
+
 import java.awt.event.*;
 
 public class MouseInput implements MouseListener, MouseMotionListener {

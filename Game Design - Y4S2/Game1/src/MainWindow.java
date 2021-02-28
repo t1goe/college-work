@@ -1,3 +1,6 @@
+//Thomas Igoe
+//17372013
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

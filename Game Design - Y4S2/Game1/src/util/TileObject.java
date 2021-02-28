@@ -1,3 +1,6 @@
+//Thomas Igoe
+//17372013
+
 package util;
 
 public class TileObject extends GameObject{

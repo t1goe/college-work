@@ -1,7 +1,9 @@
+//Thomas Igoe
+//17372013
+
 import util.Direction;
 import util.LevelMap;
 import util.PlayerObject;
-import util.Vector3f;
 
 public class Controller {
 

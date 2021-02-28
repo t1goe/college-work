@@ -1,5 +1,7 @@
+//Thomas Igoe
+//17372013
+
 import java.awt.*;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;

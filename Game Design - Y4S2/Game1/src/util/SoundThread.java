@@ -1,3 +1,6 @@
+//Thomas Igoe
+//17372013
+
 package util;
 
 import javax.sound.sampled.AudioInputStream;
