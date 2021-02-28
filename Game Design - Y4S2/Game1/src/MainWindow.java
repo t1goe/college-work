@@ -59,8 +59,6 @@ public class MainWindow {
     private static int height = 1000;
 
     public MainWindow() {
-//        int width = 1000;
-//        int height = 1000;
         frame.setSize(width, height);  // you can customise this later and adapt it to change on size.
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);   //If exit // you can modify with your way of quitting , just is a template.
         frame.setLayout(null);
@@ -91,9 +89,40 @@ public class MainWindow {
             }
         });
         startMenuButton.setBounds(400, 850, 200, 40);
+        frame.add(startMenuButton);
+
+        JButton displayControlsButton = new JButton("Controls");
+        displayControlsButton.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+        displayControlsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame controlFrame = new JFrame("Controls");
+
+                controlFrame.setSize(600, 300);
+                controlFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                controlFrame.setLayout(null);
+                controlFrame.setResizable(false);
+
+                //Keys in controls.png taken from https://gerald-burke.itch.io/geralds-keys
+                File controlImageFile = new File("res/textures/controls.png");
+                BufferedImage controlImage = null;
+                try {
+                    controlImage = ImageIO.read(controlImageFile);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                JLabel controlImageLabel = new JLabel(new ImageIcon(controlImage));
+                controlFrame.add(controlImageLabel);
+                controlImageLabel.setVisible(true);
+                controlImageLabel.setBounds(0, -20, 600, 300);
+                controlFrame.setVisible(true);
+            }
+        });
+        displayControlsButton.setBounds(800, 860, 100, 30);
+        frame.add(displayControlsButton);
 
         //loading background image
-        File BackroundToLoad = new File("res/textures/title2.png");  //should work okay on OSX and Linux but check if you have issues depending your eclipse install or if your running this without an IDE
+        File BackroundToLoad = new File("res/textures/title2.png");
         File winScreen = new File("res/textures/victory2.png");
         try {
 
@@ -111,7 +140,6 @@ public class MainWindow {
             e.printStackTrace();
         }
 
-        frame.add(startMenuButton);
         frame.setVisible(true);
     }
 
