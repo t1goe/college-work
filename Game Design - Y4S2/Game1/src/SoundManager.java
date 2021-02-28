@@ -28,6 +28,8 @@ public class SoundManager {
         //unlock.wav from https://freesound.org/people/Swedger/sounds/170636/
         //victory.wav from https://freesound.org/people/Mrthenoronha/sounds/518308/
 
+
+        //This code is actually unnecessary, but its good to keep track of what sounds are available.
         String[] fileLocations = {
                 "res/sounds/dash.aiff",
                 "res/sounds/walk.aiff",

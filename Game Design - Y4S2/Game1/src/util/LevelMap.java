@@ -338,26 +338,6 @@ public class LevelMap {
 
     }
 
-    public void playerInteraction(PlayerObject p) {
-        for (int[] temp : getOccupyingTiles(p)) {
-            switch (level[temp[0]][temp[1]].getState()) {
-                case SPIKE:
-                    p.setVelocity(new Vector3f(0, 0, p.getVelocity().getZ()));
-                    Point3f tempPoint = level[checkPointLocation[0]][checkPointLocation[1]].getCentre();
-                    tempPoint.setX(tempPoint.getX() + 5);//Change the offsets to put man in the center of the square
-                    tempPoint.setY(tempPoint.getY() - 17);
-                    p.setCentre(tempPoint);
-                    break;
-                case INACTIVE_CHECKPOINT:
-                    changeAllByType(State.ACTIVE_CHECKPOINT, State.INACTIVE_CHECKPOINT);
-                    level[temp[0]][temp[1]].setState(State.ACTIVE_CHECKPOINT);
-                    checkPointLocation[0] = temp[0];
-                    checkPointLocation[1] = temp[1];
-                    break;
-            }
-        }
-    }
-
     public void changeAllByType(State from, State to) {
         for (TileObject[] row : level) {
             for (TileObject t : row) {

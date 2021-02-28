@@ -99,7 +99,6 @@ public class Viewer extends JPanel {
         super.paintComponent(g);
         CurrentAnimationTime++; // runs animation time step
 
-        //Draw background
         drawBackground(g);
 
         //If man is offscreen, recenter camera
@@ -108,7 +107,6 @@ public class Viewer extends JPanel {
         //Update level's x/y offsets
         moveCamera();
 
-        //Draw player
         drawPlayer(g);
 
         drawLevel(g);
@@ -490,35 +488,6 @@ public class Viewer extends JPanel {
             g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
             g.setColor(Color.white);
             g.drawString("Paused", 462, 483);
-        }
-    }
-
-    private boolean optimisedDrawImage(Image image,
-                                       int dx1, int dy1, int dx2, int dy2,
-                                       int sx1, int sy1, int sx2, int sy2,
-                                       ImageObserver observer, Graphics g) {
-        if (isInFrame(dx1, dy1, dx2, dy2)) {
-            return g.drawImage(image, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer);
-        } else {
-            return false;
-        }
-    }
-
-    private void optimisedDrawRect(int x, int y, int width, int height, Graphics g) {
-        if (isInFrame(x, y, x + width, y + height)) {
-            g.drawRect(x, y, height, width);
-        }
-    }
-
-    private void optimisedFillRect(int x, int y, int width, int height, Graphics g) {
-        if (isInFrame(x, y, x + width, y + height)) {
-            g.fillRect(x, y, height, width);
-        }
-    }
-
-    private void optimisedDrawLine(int x1, int y1, int x2, int y2, Graphics g) {
-        if (isInFrame(x1, y1, x2, y2)) {
-            g.fillRect(x1, y1, x2, y2);
         }
     }
 }

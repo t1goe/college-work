@@ -182,9 +182,6 @@ public class MainWindow {
                 break;
             }
 
-
-//            if(Controller.getInstance().isKeyPPressed())
-
             //UNIT test to see if framerate matches
 //            UnitTests.CheckFrameRate(System.currentTimeMillis(), FrameCheck, TargetFPS);
 
@@ -196,9 +193,6 @@ public class MainWindow {
     //Basic Model-View-Controller pattern
     private static void gameloop() {
         // GAMELOOP
-
-        // controller input  will happen on its own thread
-        // So no need to call it explicitly
 
         // model update
         gameworld.gamelogic();

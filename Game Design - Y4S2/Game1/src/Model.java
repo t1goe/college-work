@@ -120,12 +120,6 @@ public class Model {
 
     private void playerLogic() {
 
-        // smoother animation is possible if we make a target position  // done but may try to change things for students
-
-        //check for movement and if you fired a bullet
-
-//        System.out.println(Player.toString());
-
         if (dashFrames > 0) {
             dashFrames--;
         }
