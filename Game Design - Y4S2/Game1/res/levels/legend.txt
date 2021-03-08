@@ -1,0 +1,12 @@
+All letters are not case sensitive.
+
+'B' - Block. Solid object.
+'S' - Spike. Causes player to die, sending them to the active checkpoint.
+'A' - Active checkpoint. Where the player starts, and is sent after touching spikes. (Only set one of these)
+'I' - Inactive checkpoint. Touching this sets it as the active checkpoint and sets the active cp as inactive.
+'k' - Key. Touch to collect. When all are collected, all locks open.
+'C' - Collected key. Does nothing. (Shouldn't be used in levelmaps).
+'L' - Lock. Locked "door". Acts as a block until all keys are collected. Then becomes unlocked (non-solid).
+'U' - Unlocked door. Does nothing. (Shouldn't be used in levelmaps).
+'F' - Finish. The goal of the level. (Unimplemented currently)
+'-' (or anything else) - Empty space.
