@@ -11,14 +11,15 @@
 # from sklearn.metrics import balanced_accuracy_score
 
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 from sklearn import metrics
+from sklearn.datasets import load_digits
 from sklearn.ensemble import BaggingClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, learning_curve, ShuffleSplit
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
-
-from sklearn.preprocessing import OneHotEncoder
 
 # Load data
 census_data = pd.read_csv('us_census_17372013.csv')
@@ -29,8 +30,17 @@ census_data = census_data[(census_data != ' ?').all(axis=1)]
 # Change to categorical
 census_data[' Income-category'] = census_data[' Income-category'].map({' >50K': 1, ' <=50K': 0})
 
+#Remove column
+census_data = census_data.drop(' fnlwgt',axis=1)
+
 # Convert categorical to numerical
 census_data = pd.get_dummies(census_data)
+
+# new_data = pd.dataframe()
+
+# for index, row in census_data.iterrows():
+#     for x in range(row[" fnlwgt"]):
+
 
 ##
 # Q1
@@ -88,7 +98,7 @@ for x in range(1, 11):
     if f1 > dtc_f1:
         dtc_e = x*2
         dtc_f1 = f1
-    print("DTC BAG Report:\n", f1)
+    # print("DTC BAG Report:\n", f1)
 
     # 1NN bagging
     bag = BaggingClassifier(base_estimator=knn, n_estimators=x*2, random_state=0).fit(X_train, y_train)
@@ -98,10 +108,90 @@ for x in range(1, 11):
     if f1 > knn_f1:
         knn_e = x * 2
         knn_f1 = f1
-    print("1NN BAG Report:\n", f1)
+    # print("1NN BAG Report:\n", f1)
 
     # neural bagging
     bag = BaggingClassifier(base_estimator=nn, n_estimators=x*2, random_state=0).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    # print("NN BAG Report:\n", metrics.classification_report(y_test, y_pred))
+    f1 = metrics.f1_score(y_test, y_pred)
+    if f1 > nn_f1:
+        nn_e = x * 2
+        nn_f1 = f1
+    # print("NN BAG Report:\n", f1)
+
+print("\n\n\ndtc")
+print(dtc_f1)
+print(dtc_e)
+
+print("\n1nn")
+print(knn_f1)
+print(knn_e)
+
+print("\nnn")
+print(nn_f1)
+print(nn_e)
+
+print("dtc random sampling 1-50")
+for x in range(1, 50):
+    bag = BaggingClassifier(base_estimator=dtc, n_estimators=dtc_e, random_state=0, max_samples=x*10).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    f1 = metrics.f1_score(y_test, y_pred)
+    print(f1)
+
+print("knn random sampling 1-50")
+for x in range(1, 50):
+    bag = BaggingClassifier(base_estimator=knn, n_estimators=knn_e, random_state=0, max_samples=x*10).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    f1 = metrics.f1_score(y_test, y_pred)
+    print(f1)
+
+print("nn random sampling 1-50")
+for x in range(1, 50):
+    bag = BaggingClassifier(base_estimator=nn, n_estimators=nn_e, random_state=0, max_samples=x*10).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    f1 = metrics.f1_score(y_test, y_pred)
+    print(f1)
+
+
+##
+# Q3
+##
+
+dtc_f1 = 0
+dtc_e = 0
+
+knn_f1 = 0
+knn_e = 0
+
+nn_f1 = 0
+nn_e = 0
+
+
+for x in range(1, 11):
+    print("\n\nEnsemble size:", x*2)
+    # DTC Bagging
+    bag = BaggingClassifier(base_estimator=dtc, n_estimators=x*2, random_state=0, bootstrap_features=True).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    # print("DTC BAG Report:\n", metrics.classification_report(y_test, y_pred))
+    f1 = metrics.f1_score(y_test, y_pred)
+    if f1 > dtc_f1:
+        dtc_e = x*2
+        dtc_f1 = f1
+    print("DTC BAG Report:\n", f1)
+
+    # 1NN bagging
+    bag = BaggingClassifier(base_estimator=knn, n_estimators=x*2, random_state=0, bootstrap_features=True).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    # print("1NN BAG Report:\n", metrics.f1_score(y_test, y_pred))
+    f1 = metrics.f1_score(y_test, y_pred)
+    if f1 > knn_f1:
+        knn_e = x * 2
+        knn_f1 = f1
+    print("1NN BAG Report:\n", f1)
+
+    # neural bagging
+    bag = BaggingClassifier(base_estimator=nn, n_estimators=x*2, random_state=0, bootstrap_features=True).fit(X_train, y_train)
     y_pred = bag.predict(X_test)
     # print("NN BAG Report:\n", metrics.classification_report(y_test, y_pred))
     f1 = metrics.f1_score(y_test, y_pred)
@@ -122,7 +212,27 @@ print("\nnn")
 print(nn_f1)
 print(nn_e)
 
-#
+print("dtc random sampling 1-50")
+for x in range(1, 50):
+    bag = BaggingClassifier(base_estimator=dtc, n_estimators=dtc_e, random_state=0, max_features=x, bootstrap_features=True).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    f1 = metrics.f1_score(y_test, y_pred)
+    print(f1)
+
+print("knn random sampling 1-50")
+for x in range(1, 50):
+    bag = BaggingClassifier(base_estimator=knn, n_estimators=knn_e, random_state=0, max_features=x, bootstrap_features=True).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    f1 = metrics.f1_score(y_test, y_pred)
+    print(f1)
+
+print("nn random sampling 1-50")
+for x in range(1, 50):
+    bag = BaggingClassifier(base_estimator=nn, n_estimators=nn_e, random_state=0, max_features=x, bootstrap_features=True).fit(X_train, y_train)
+    y_pred = bag.predict(X_test)
+    f1 = metrics.f1_score(y_test, y_pred)
+    print(f1)
+
 # print(census_data)
 # print(X)
 # print(Y)
