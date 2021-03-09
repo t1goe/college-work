@@ -54,41 +54,90 @@ def average_individual_lex_complexity(comments):
     return diversity_scores
 
 
+# Builds a corpus of top level comments for a subreddit
 def build_subreddit_corpus(subreddit, reddit):
-    post_limit = 1
+    post_limit = 50
 
     if not os.path.exists(subreddit):
         os.makedirs(subreddit)
 
-    ten = open(subreddit + "/gt10^1.txt", "w")
-    hundred = open(subreddit + "/gt10^2.txt", "w")
-    thousand = open(subreddit + "/gt10^3.txt", "w")
-    tenthousand = open(subreddit + "/gt10^4.txt", "w")
+    negative = open(subreddit + "/negative.txt", "w")
+    one = open(subreddit + "/gt1.txt", "w")
+    ten = open(subreddit + "/gt10.txt", "w")
+    hundred = open(subreddit + "/gt100.txt", "w")
+    thousand = open(subreddit + "/gt1000.txt", "w")
+    tenthousand = open(subreddit + "/gt10000.txt", "w")
     overall = open(subreddit + "/all.txt", "w")
 
     # on the following line you can change top to any of the previously mentioned ways of sorting
     # and the limit to however many posts you would like to extract (here we extract just 10).
     for post in reddit.subreddit(subreddit).top(limit=post_limit):
-
         # this section collects the comments
         for comment in post.comments:
+
             if isinstance(comment, MoreComments):
                 continue
 
-            if comment.score >= 10000:
-                tenthousand.write(decode_emojis(comment.body) + "\n")
-            elif comment.score >= 1000:
-                thousand.write(decode_emojis(comment.body) + "\n")
-            elif comment.score >= 100:
-                hundred.write(decode_emojis(comment.body) + "\n")
-            elif comment.score >= 10:
-                ten.write(decode_emojis(comment.body) + "\n")
+            formatted_comment = decode_emojis(comment.body) + "\n"
+            try:
+                overall.write(formatted_comment)
 
+                if comment.score >= 10000:
+                    tenthousand.write(formatted_comment)
+                elif comment.score >= 1000:
+                    thousand.write(formatted_comment)
+                elif comment.score >= 100:
+                    hundred.write(formatted_comment)
+                elif comment.score >= 10:
+                    ten.write(formatted_comment)
+                elif comment.score >= 1:
+                    one.write(formatted_comment)
+                else:
+                    negative.write(formatted_comment)
+            except UnicodeEncodeError:
+                print("String contains character causing errors:")
+                print(formatted_comment)
+
+            if comment.score < 1:
+                print(comment.body)
+                print(comment.score)
+
+    negative.close()
+    one.close()
     ten.close()
     hundred.close()
     thousand.close()
     tenthousand.close()
     overall.close()
+
+
+def lexical_diversity_summary(sub_directory):
+    if not os.path.exists(sub_directory):
+        print("Subreddit directory " + sub_directory + " does not exist")
+        return
+
+    negative = open(sub_directory + "/negative.txt", "r")
+    one = open(sub_directory + "/gt1.txt", "r")
+    ten = open(sub_directory + "/gt10.txt", "r")
+    hundred = open(sub_directory + "/gt100.txt", "r")
+    thousand = open(sub_directory + "/gt1000.txt", "r")
+    tenthousand = open(sub_directory + "/gt10000.txt", "r")
+    overall = open(sub_directory + "/all.txt", "r")
+
+    print("Lexical diversity of posts w score >10,000:\t" + str(lexical_complexity(nltk.word_tokenize(tenthousand.read()))))
+    print("Lexical diversity of posts w score >1,000:\t" + str(lexical_complexity(nltk.word_tokenize(thousand.read()))))
+    print("Lexical diversity of posts w score >100:\t" + str(lexical_complexity(nltk.word_tokenize(hundred.read()))))
+    print("Lexical diversity of posts w score >10:\t\t" + str(lexical_complexity(nltk.word_tokenize(ten.read()))))
+    print("Lexical diversity of posts w score >1:\t\t" + str(lexical_complexity(nltk.word_tokenize(one.read()))))
+
+    negative.close()
+    one.close()
+    ten.close()
+    hundred.close()
+    thousand.close()
+    tenthousand.close()
+    overall.close()
+
 
 ci = "f2CDXIEJMw9amg"  # your client id
 cs = "dS2I4meWoXMgQ-AtZObOO8C5WM_smw"  # your client secret
@@ -103,7 +152,19 @@ reddit = praw.Reddit(
     user_agent=ua
 )
 
-build_subreddit_corpus(sub, reddit)
+subreddits = [
+    "todayilearned",
+    "funny",
+    "science",
+    "gaming",
+    "leagueoflegends"
+]
+
+# for r in subreddits:
+#     print(r)
+#     build_subreddit_corpus(r, reddit)
+
+lexical_diversity_summary("todayilearned")
 
 # on the following line you can change top to any of the previously mentioned ways of sorting
 # and the limit to however many posts you would like to extract (here we extract just 10).
