@@ -6,6 +6,7 @@ import emoji
 import os
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
+from nltk.stem import PorterStemmer
 
 
 # nltk.download('stopwords')
@@ -61,8 +62,8 @@ def average_individual_lex_complexity(comments):
 
 
 # Builds a corpus of top level comments for a subreddit
-def build_subreddit_corpus(subreddit, reddit):
-    post_limit = 300
+def build_subreddit_corpus(subreddit, reddit, basic=False):
+    post_limit = 100
 
     if not os.path.exists(subreddit):
         os.makedirs(subreddit)
@@ -89,22 +90,25 @@ def build_subreddit_corpus(subreddit, reddit):
             if isinstance(comment, MoreComments):
                 continue
 
+            if comment.body == "[removed]" or comment.body == "[deleted]":
+                continue
+
             formatted_comment = decode_emojis(comment.body) + "\n"
             try:
                 overall.write(formatted_comment)
-
-                if comment.score >= 10000:
-                    tenthousand.write(formatted_comment)
-                elif comment.score >= 1000:
-                    thousand.write(formatted_comment)
-                elif comment.score >= 100:
-                    hundred.write(formatted_comment)
-                elif comment.score >= 10:
-                    ten.write(formatted_comment)
-                elif comment.score >= 1:
-                    one.write(formatted_comment)
-                else:
-                    negative.write(formatted_comment)
+                if not basic:
+                    if comment.score >= 10000:
+                        tenthousand.write(formatted_comment)
+                    elif comment.score >= 1000:
+                        thousand.write(formatted_comment)
+                    elif comment.score >= 100:
+                        hundred.write(formatted_comment)
+                    elif comment.score >= 10:
+                        ten.write(formatted_comment)
+                    elif comment.score >= 1:
+                        one.write(formatted_comment)
+                    else:
+                        negative.write(formatted_comment)
             except UnicodeEncodeError:
                 print("String contains character causing errors:")
                 print(formatted_comment)
@@ -118,9 +122,9 @@ def build_subreddit_corpus(subreddit, reddit):
     overall.close()
 
 
-# Shows the score distribution of comments in
+# Shows the score distribution of comments in "subreddit"
 def score_distribution(subreddit, reddit):
-    post_limit = 300
+    post_limit = 200
 
     count = 0
     scores = [0] * 1000
@@ -147,7 +151,7 @@ def score_distribution(subreddit, reddit):
 
 
 # Summarises the lexical diversity of a sub at various scores
-def lexical_diversity_summary(sub_directory):
+def lexical_diversity_summary(sub_directory, complex_tokenization=False, complex_output=False):
     if not os.path.exists(sub_directory):
         print("Subreddit directory " + sub_directory + " does not exist")
         return
@@ -160,21 +164,37 @@ def lexical_diversity_summary(sub_directory):
     tenthousand = open(sub_directory + "/gt10000.txt", "r", encoding="utf8")
     overall = open(sub_directory + "/all.txt", "r", encoding="utf8")
 
-    sample_size = len(custom_tokenize(tenthousand.read()))
-    tenthousand = open(sub_directory + "/gt10000.txt", "r", encoding="utf8")
+    tenthousand_tokens = custom_tokenize(tenthousand.read())
+    sample_size = len(tenthousand_tokens)
 
-    print("Lexical diversity of all comments:\t" +
-          str(lexical_complexity(custom_tokenize(overall.read())[:sample_size])))
-    print("Lexical diversity of posts w score >10,000:\t" +
-          str(lexical_complexity(custom_tokenize(tenthousand.read())[:sample_size])))
-    print("Lexical diversity of posts w score >1,000:\t" +
-          str(lexical_complexity(custom_tokenize(thousand.read())[:sample_size])))
-    print("Lexical diversity of posts w score >100:\t" +
-          str(lexical_complexity(custom_tokenize(hundred.read())[:sample_size])))
-    print("Lexical diversity of posts w score >10:\t\t" +
-          str(lexical_complexity(custom_tokenize(ten.read())[:sample_size])))
-    print("Lexical diversity of posts w score >1:\t\t" +
-          str(lexical_complexity(custom_tokenize(one.read())[:sample_size])))
+    if complex_tokenization:
+        print("Lexical diversity of all comments:\t" +
+              str(lexical_complexity(custom_tokenize_plus(overall.read())[:sample_size])))
+        if complex_output:
+            print("Lexical diversity of posts w score >10,000:\t" +
+                  str(lexical_complexity(tenthousand_tokens[:sample_size])))
+            print("Lexical diversity of posts w score >1,000:\t" +
+                  str(lexical_complexity(custom_tokenize_plus(thousand.read())[:sample_size])))
+            print("Lexical diversity of posts w score >100:\t" +
+                  str(lexical_complexity(custom_tokenize_plus(hundred.read())[:sample_size])))
+            print("Lexical diversity of posts w score >10:\t\t" +
+                  str(lexical_complexity(custom_tokenize_plus(ten.read())[:sample_size])))
+            print("Lexical diversity of posts w score >1:\t\t" +
+                  str(lexical_complexity(custom_tokenize_plus(one.read())[:sample_size])))
+    else:
+        print("Lexical diversity of all comments:\t" +
+              str(lexical_complexity(custom_tokenize(overall.read())[:sample_size])))
+        if complex_output:
+            print("Lexical diversity of posts w score >10,000:\t" +
+                  str(lexical_complexity(tenthousand_tokens[:sample_size])))
+            print("Lexical diversity of posts w score >1,000:\t" +
+                  str(lexical_complexity(custom_tokenize(thousand.read())[:sample_size])))
+            print("Lexical diversity of posts w score >100:\t" +
+                  str(lexical_complexity(custom_tokenize(hundred.read())[:sample_size])))
+            print("Lexical diversity of posts w score >10:\t\t" +
+                  str(lexical_complexity(custom_tokenize(ten.read())[:sample_size])))
+            print("Lexical diversity of posts w score >1:\t\t" +
+                  str(lexical_complexity(custom_tokenize(one.read())[:sample_size])))
 
     negative.close()
     one.close()
@@ -192,6 +212,14 @@ def custom_tokenize(text):
     no_punct = [t for t in lowercase if t.isalnum()]
     # no_stop = [t for t in no_punct if t not in stopwords.words('english')]
     return no_punct
+
+
+# Stemming and remove stopwords
+def custom_tokenize_plus(text):
+    tokens = custom_tokenize(text)
+    no_stop = [t for t in tokens if t not in stopwords.words('english')]
+    porter = PorterStemmer()
+    return [porter.stem(w) for w in no_stop]
 
 
 # Get the Q most common ngrams of a text
@@ -265,14 +293,30 @@ subreddits = [
     "leagueoflegends"
 ]
 
-# for r in subreddits:
-#     print(r)
-#     build_subreddit_corpus(r, reddit)
+sub2 = [
+    "askscience",
+    "books",
+    "nottheonion",
+    "upliftingnews",
+    "history",
+    "rainbow6",
+    "politics"
+]
+
+sub3 = [
+    "memes",
+    "me_irl"
+]
+
+for r in sub2:
+    print(r)
+    build_subreddit_corpus(r, reddit, basic=True)
+    print()
 
 # build_subreddit_corpus("funny", reddit)
 
-common_ngram_summary("todayilearned")
-# lexical_diversity_summary("todayilearned")
+# common_ngram_summary("todayilearned")
+# lexical_diversity_summary("todayilearned", complex_tokenization=False, complex_output=True)
 # score_distribution("todayilearned", reddit)
 
 # on the following line you can change top to any of the previously mentioned ways of sorting
