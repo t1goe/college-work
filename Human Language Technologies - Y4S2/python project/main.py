@@ -4,6 +4,11 @@ import nltk
 from nltk.util import ngrams
 import emoji
 import os
+from nltk.corpus import stopwords
+import matplotlib.pyplot as plt
+
+
+# nltk.download('stopwords')
 
 
 # Remove all emojis from string
@@ -57,7 +62,7 @@ def average_individual_lex_complexity(comments):
 
 # Builds a corpus of top level comments for a subreddit
 def build_subreddit_corpus(subreddit, reddit):
-    post_limit = 50
+    post_limit = 300
 
     if not os.path.exists(subreddit):
         os.makedirs(subreddit)
@@ -72,7 +77,12 @@ def build_subreddit_corpus(subreddit, reddit):
 
     # on the following line you can change top to any of the previously mentioned ways of sorting
     # and the limit to however many posts you would like to extract (here we extract just 10).
+
+    count = 0
     for post in reddit.subreddit(subreddit).top(limit=post_limit):
+        count = count + 1
+        print("Working on post " + str(count) + "/" + str(post_limit) + " in " + subreddit)
+
         # this section collects the comments
         for comment in post.comments:
 
@@ -99,10 +109,6 @@ def build_subreddit_corpus(subreddit, reddit):
                 print("String contains character causing errors:")
                 print(formatted_comment)
 
-            if comment.score < 1:
-                print(comment.body)
-                print(comment.score)
-
     negative.close()
     one.close()
     ten.close()
@@ -110,6 +116,34 @@ def build_subreddit_corpus(subreddit, reddit):
     thousand.close()
     tenthousand.close()
     overall.close()
+
+
+# Shows the score distribution of comments in
+def score_distribution(subreddit, reddit):
+    post_limit = 300
+
+    count = 0
+    scores = [0] * 1000
+    for post in reddit.subreddit(subreddit).top(limit=post_limit):
+        count = count + 1
+        print("Working on post " + str(count) + "/" + str(post_limit) + " in " + subreddit)
+
+        # this section collects the comments
+        for comment in post.comments:
+
+            if isinstance(comment, MoreComments):
+                continue
+
+            a = 100
+
+            scores[int(comment.score / a)] = scores[int(comment.score / a)] + 1
+
+    x_axis = range(len(scores))
+    y_axis = scores
+    # print(x_axis)
+    # print(y_axis)
+    plt.bar(x_axis, y_axis, color='red')
+    plt.show()
 
 
 # Summarises the lexical diversity of a sub at various scores
@@ -118,20 +152,29 @@ def lexical_diversity_summary(sub_directory):
         print("Subreddit directory " + sub_directory + " does not exist")
         return
 
-    negative = open(sub_directory + "/negative.txt", "r")
-    one = open(sub_directory + "/gt1.txt", "r")
-    ten = open(sub_directory + "/gt10.txt", "r")
-    hundred = open(sub_directory + "/gt100.txt", "r")
-    thousand = open(sub_directory + "/gt1000.txt", "r")
-    tenthousand = open(sub_directory + "/gt10000.txt", "r")
-    overall = open(sub_directory + "/all.txt", "r")
+    negative = open(sub_directory + "/negative.txt", "r", encoding="utf8")
+    one = open(sub_directory + "/gt1.txt", "r", encoding="utf8")
+    ten = open(sub_directory + "/gt10.txt", "r", encoding="utf8")
+    hundred = open(sub_directory + "/gt100.txt", "r", encoding="utf8")
+    thousand = open(sub_directory + "/gt1000.txt", "r", encoding="utf8")
+    tenthousand = open(sub_directory + "/gt10000.txt", "r", encoding="utf8")
+    overall = open(sub_directory + "/all.txt", "r", encoding="utf8")
 
-    print("Lexical diversity of posts w score >10,000:\t" + str(
-        lexical_complexity(nltk.word_tokenize(tenthousand.read()))))
-    print("Lexical diversity of posts w score >1,000:\t" + str(lexical_complexity(nltk.word_tokenize(thousand.read()))))
-    print("Lexical diversity of posts w score >100:\t" + str(lexical_complexity(nltk.word_tokenize(hundred.read()))))
-    print("Lexical diversity of posts w score >10:\t\t" + str(lexical_complexity(nltk.word_tokenize(ten.read()))))
-    print("Lexical diversity of posts w score >1:\t\t" + str(lexical_complexity(nltk.word_tokenize(one.read()))))
+    sample_size = len(custom_tokenize(tenthousand.read()))
+    tenthousand = open(sub_directory + "/gt10000.txt", "r", encoding="utf8")
+
+    print("Lexical diversity of all comments:\t" +
+          str(lexical_complexity(custom_tokenize(overall.read())[:sample_size])))
+    print("Lexical diversity of posts w score >10,000:\t" +
+          str(lexical_complexity(custom_tokenize(tenthousand.read())[:sample_size])))
+    print("Lexical diversity of posts w score >1,000:\t" +
+          str(lexical_complexity(custom_tokenize(thousand.read())[:sample_size])))
+    print("Lexical diversity of posts w score >100:\t" +
+          str(lexical_complexity(custom_tokenize(hundred.read())[:sample_size])))
+    print("Lexical diversity of posts w score >10:\t\t" +
+          str(lexical_complexity(custom_tokenize(ten.read())[:sample_size])))
+    print("Lexical diversity of posts w score >1:\t\t" +
+          str(lexical_complexity(custom_tokenize(one.read())[:sample_size])))
 
     negative.close()
     one.close()
@@ -141,20 +184,24 @@ def lexical_diversity_summary(sub_directory):
     tenthousand.close()
     overall.close()
 
+
 # Tokenize the words while doing preprocessing.
 def custom_tokenize(text):
     tokens = nltk.word_tokenize(text)
     lowercase = [t.lower() for t in tokens]
     no_punct = [t for t in lowercase if t.isalnum()]
+    # no_stop = [t for t in no_punct if t not in stopwords.words('english')]
     return no_punct
 
 
+# Get the Q most common ngrams of a text
 def common_ngrams(text, n, q):
     tokens = custom_tokenize(text)
     gram_fd = nltk.FreqDist(nltk.ngrams(tokens, n))
     return gram_fd.most_common(q)
 
 
+# Summarize the common n-grams of a subreddit at different scores
 def common_ngram_summary(sub_directory):
     if not os.path.exists(sub_directory):
         print("Subreddit directory " + sub_directory + " does not exist")
@@ -163,16 +210,16 @@ def common_ngram_summary(sub_directory):
     ngram_min = 1
     ngram_max = 4
 
-    ngram_quantity = 20
+    ngram_quantity = 40
 
     for x in range(ngram_min, ngram_max + 1):
-        negative = open(sub_directory + "/negative.txt", "r")
-        one = open(sub_directory + "/gt1.txt", "r")
-        ten = open(sub_directory + "/gt10.txt", "r")
-        hundred = open(sub_directory + "/gt100.txt", "r")
-        thousand = open(sub_directory + "/gt1000.txt", "r")
-        tenthousand = open(sub_directory + "/gt10000.txt", "r")
-        overall = open(sub_directory + "/all.txt", "r")
+        negative = open(sub_directory + "/negative.txt", "r", encoding="utf8")
+        one = open(sub_directory + "/gt1.txt", "r", encoding="utf8")
+        ten = open(sub_directory + "/gt10.txt", "r", encoding="utf8")
+        hundred = open(sub_directory + "/gt100.txt", "r", encoding="utf8")
+        thousand = open(sub_directory + "/gt1000.txt", "r", encoding="utf8")
+        tenthousand = open(sub_directory + "/gt10000.txt", "r", encoding="utf8")
+        overall = open(sub_directory + "/all.txt", "r", encoding="utf8")
 
         print("Most common " + str(x) + "-grams of all posts:\t" +
               str(common_ngrams(overall.read(), x, ngram_quantity)))
@@ -218,11 +265,15 @@ subreddits = [
     "leagueoflegends"
 ]
 
-for r in subreddits:
-    print(r)
-    build_subreddit_corpus(r, reddit)
-#
-# common_ngram_summary("todayilearned")
+# for r in subreddits:
+#     print(r)
+#     build_subreddit_corpus(r, reddit)
+
+# build_subreddit_corpus("funny", reddit)
+
+common_ngram_summary("todayilearned")
+# lexical_diversity_summary("todayilearned")
+# score_distribution("todayilearned", reddit)
 
 # on the following line you can change top to any of the previously mentioned ways of sorting
 # and the limit to however many posts you would like to extract (here we extract just 10).
