@@ -1,0 +1,11 @@
+~~HIGH~~
+
+~~MID~~
+menus (volume, level select etc)
+Dash VFX
+Level transitions
+
+~~LOW~~
+Optimise collisions by only checking 4/6
+Optimise
+Parallax background
