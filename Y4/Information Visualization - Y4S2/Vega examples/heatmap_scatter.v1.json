@@ -1,0 +1,44 @@
+  {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/London2012Vega.csv",
+    "format": {
+      "type": "csv"
+      }
+    },
+    "transform": [
+      {"filter": "datum.Weight > 0"},
+      {"filter": "datum.Height > 0"},
+      {"filter": "datum.Weight < 200"}
+    ],
+    "mark":"rect",
+    "encoding":{
+      "x":{
+        "field":"Weight",
+        "type":"quantitative",
+        "bin":{"maxbins": 100},
+        "scale":{"zero":false},
+        "axis":{"title":"Weight"}
+      },
+      "y":{
+        "field":"Height",
+        "type":"quantitative",
+        "bin":{"maxbins": 100},
+        "scale":{"zero":false},
+        "axis":{"title":"Height"}
+      },
+      "color":{
+        "aggregate":"count",
+        "type":"quantitative",
+        "legend":{
+          "title":"Number of Athletes"
+        }
+      }
+    },
+    "title":{
+        "text":"Olympic Athemelte Height v Weight",
+        "anchor":"middle"
+    },
+    "width":500,
+    "height":500
+  }

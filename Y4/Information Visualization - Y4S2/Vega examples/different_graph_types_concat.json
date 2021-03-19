@@ -1,0 +1,58 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/London2012Vega.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {"filter": "datum.Weight > 0"},
+    {"filter": "datum.Sport == 'Swimming'"}
+  ],
+  "spacing": 5,
+  "bounds": "flush",
+  "vconcat":[
+    {
+      "mark": "bar",
+      "width":250,
+      "encoding": {
+        "x": {
+          "field": "Weight",
+          "type": "quantitative",
+          "bin": {"maxbins": 30},
+          "scale": {
+            "domain": [38,115], "nice":false
+          },
+          "axis":null
+        },
+        "y": {
+          "aggregate": "count",
+          "type": "quantitative",
+          "stack": null,
+          "axis":{"title":"Number of Athletes"}
+        }
+      }
+    },
+    {
+      "mark": "tick",
+      "width":250,
+      "encoding": {
+        "x": {
+          "field": "Weight",
+          "type": "quantitative",
+          "scale": {
+                "domain": [38,115], "nice":false
+          }
+        },
+        "tooltip":{"field":"Name", "type": "nominal"},
+        "opacity":{"value":0.3}
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": "transparent"
+    }
+  }
+}
