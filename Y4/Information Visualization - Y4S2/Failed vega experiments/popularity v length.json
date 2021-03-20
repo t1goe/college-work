@@ -1,0 +1,34 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+  "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv",
+  "format": {
+    "type": "csv"
+    }
+  },
+  "transform": [{"filter": "datum.track_popularity > 0"}],
+  "mark":"circle",
+  "encoding":{
+    "x":{
+      "field":"duration_ms",
+      "type":"quantitative"
+    },
+    "y":{
+      "field":"track_popularity",
+      "type":"quantitative"
+    },
+    "color":{
+      "field":"playlist_genre",
+      "type":"nominal"
+    },
+    "tooltip":{
+      "field":"track_name","type":"nominal"
+    }
+  },
+  "title":{
+      "text":"Popularity vs duration",
+      "anchor":"middle"
+  },
+  "width":500,
+  "height":500
+}

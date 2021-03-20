@@ -1,0 +1,45 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [ 
+    {"filter":"datum.instrumentalness>0"},
+    {"filter":"datum.instrumentalness<1"}
+  ],
+  "layer":[
+    {
+      "mark": "tick",
+      "encoding": {
+        "y": {
+          "field": "playlist_genre",
+          "type": "nominal"
+        },
+        "x": {
+          "field":  "instrumentalness",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "mark": "circle",
+      "encoding": {
+        "y": {
+          "field": "playlist_genre",
+          "type": "nominal"
+        },
+        "x": {
+          "field":  "instrumentalness",
+          "type": "quantitative",
+          "aggregate": "mean"
+        },
+        "color": {
+          "value": "red"
+        }
+      }
+    }
+  ]
+}
