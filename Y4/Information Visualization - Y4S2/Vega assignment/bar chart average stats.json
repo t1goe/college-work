@@ -1,0 +1,82 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv",
+    "format": {"type": "csv"}
+  },
+  "title": {
+    "text": "Average stats for each genre compared",
+    "anchor": "start",
+    "fontSize": 26,
+    "offset":20
+  },
+  "config": {
+    "legend": {
+      "titleFontSize":20,
+      "labelFontSize":15,
+      "orient": "bottom"
+    },
+    "axis":{
+      "titleFontSize":14,
+      "labelFontSize":12
+    }
+  },
+  "transform": [
+    {
+      "calculate": 
+      "datum.duration_ms / 1000",
+      "as": "duration_seconds"
+    },
+    {
+      "calculate": 
+      "10 - (-datum.loudness)",
+      "as": "volume"
+    },
+    {"filter": "datum.speechiness > 0"},
+    {"filter": "datum.acousticness > 0"},
+    {"filter": "datum.instrumentalness > 0"},
+    {"filter": "datum.duration_seconds > 0"}
+
+  ],
+  "repeat":{
+    "column":[
+      "volume",
+      "speechiness",
+      "acousticness",
+      "instrumentalness",
+      "duration_seconds"
+    ]
+  },
+  "spec":{
+    "height":250,
+    "width":250,
+    "mark":"bar",
+    "encoding":{
+      "x":{
+        "field":{"repeat": "column"},
+        "type":"quantitative",
+        "aggregate":"mean"
+      },
+      "y":{
+        "field":"playlist_genre",
+        "type":"nominal",
+        "sort":{
+          "op":"mean",
+          "field":{"repeat": "column"},
+          "order":"descending"
+        },
+        "axis":{
+          "title":"Genres"
+        }
+      },
+      "color":{
+        "field":"playlist_genre",
+        "type":"nominal",
+        "legend":{
+          "title":"Genres"
+        }
+      }
+    }
+  }
+}
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+  "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv",
+  "format": {
+    "type": "csv"
+    }
+  },
+  "title": {
+    "text": "Perfomance vesus age heatmap",
+    "anchor": "start",
+    "fontSize": 26,
+    "offset":20
+  },
+  "config": {
+    "legend": {
+      "titleFontSize":15,
+      "labelFontSize":10
+    },
+    "axis":{
+      "titleFontSize":14,
+      "labelFontSize":12
+    }
+  },
+  "transform": [
+    {"filter": "datum.age > 11"},
+    {"filter": "datum.best3squat_kg > 0"},
+    {"filter": "datum.best3bench_kg > 0"},
+    {"filter": "datum.best3deadlift_kg > 0"},
+    {"calculate":"datum.best3squat_kg ", "as": "Best Squat (kg)"},
+    {"calculate":"datum.best3bench_kg ", "as": "Best Bench (kg)"},
+    {"calculate":"datum.best3deadlift_kg ", "as": "Best Deadlift (kg)"}
+  ],
+  "repeat": {"column": ["Best Squat (kg)","Best Bench (kg)", "Best Deadlift (kg)"]},
+  "spec": {
+    "width":300,
+    "height":300,
+    "mark":"rect",
+    "encoding":{
+      "x":{
+        "field":"age",
+        "bin":{"maxbins": 50},
+        "scale":{"zero":true},
+        "type":"quantitative",
+        "title":"Age"
+      },
+      "y":{
+        "field":{"repeat": "column"},
+        "type":"quantitative",
+        "bin":{"maxbins": 50},
+        "scale":{"zero":true}
+      },
+      "color":{
+        "aggregate":"count",
+        "type":"quantitative",
+        "legend":{
+          "title":"Number of Participants"
+        },
+        "scale":{
+          "scheme":"Viridis",
+          "reverse":true
+        }
+      }
+    }
+  }
+}

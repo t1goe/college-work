@@ -1,0 +1,49 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {"filter": "datum.speechiness < 0.5"},
+    {"filter": "datum.instrumentalness > 0"}
+  ],
+  "repeat": {
+    "column": [
+	"danceability",
+	"energy",
+	"key",
+	"speechiness",
+	"acousticness",
+	"instrumentalness",
+	"liveness",
+	"valence",
+	"tempo",
+	"duration_ms"
+	]
+  },
+  "spec": {
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": {"repeat": "column"},
+        "type": "quantitative",
+	    	"bin":{"maxbins": 15},
+        "scale": {"zero": false}
+      },
+      "y": {
+        "aggregate":"count",
+        "type": "quantitative"
+      },
+      "color": {
+        "aggregate":"count",
+        "type":"quantitative",
+        "legend":{
+          "title":"Number of songs"
+        }
+      }
+    }
+  }
+}

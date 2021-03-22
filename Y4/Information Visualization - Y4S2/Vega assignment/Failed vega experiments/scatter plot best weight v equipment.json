@@ -1,0 +1,44 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {"filter":"datum.best3bench_kg>0"}
+  ],
+  "layer":[
+    {
+      "mark": "tick",
+      "encoding": {
+        "y": {
+          "field": "equipment",
+          "type": "nominal"
+        },
+        "x": {
+          "field":  "best3bench_kg",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "mark": "circle",
+      "encoding": {
+        "y": {
+          "field": "equipment",
+          "type": "nominal"
+        },
+        "x": {
+          "field":  "best3bench_kg",
+          "type": "quantitative",
+          "aggregate": "median"
+        },
+        "color": {
+          "value": "red"
+        }
+      }
+    }
+  ]
+}

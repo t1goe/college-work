@@ -1,0 +1,145 @@
+<html>
+<head>
+    <title> Thomas Igoe - Vega assignment 1/3</title>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+   <style>
+       body {
+             font-family: sans-serif;
+           }
+    
+           .vega-actions a {
+             padding: 0.2em;
+           }
+    </style>
+</head>
+<body>
+    <table style="width: 850px;" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Thomas Igoe</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">17372013</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-08" target="_blank" rel="noopener">International Powerlifting Dataset</a>.</p>
+    <p>The dataset in question is from OpenPowerlifting and contains the information about participants in their powerlifting competitions. </p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">Is there a significant difference between men and women’s performance in powerlifting, and does this difference vary across different types of lifts (deadlift vs squats)?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+    <div align="center"><b> </b><br/><br/></div>
+  <div id="vis" align="center"></div>
+  <script type="text/javascript">
+    var yourVlSpec =  {
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "title": {
+    "text": "Performance of male vs female across different types of lift",
+    "anchor": "start",
+    "fontSize": 26,
+    "offset":20
+  },
+  "config": {
+    "legend": {
+      
+      "titleFontSize":20,
+      "labelFontSize":15,
+      "orient": "bottom"
+    },
+    "axis":{
+      "titleFontSize":14,
+      "labelFontSize":12
+    }
+  },
+  "transform": [
+    {"filter": "datum.best3squat_kg > 0"},
+    {"filter": "datum.best3bench_kg > 0"},
+    {"filter": "datum.best3deadlift_kg > 0"},
+    {"calculate":"datum.best3squat_kg ", "as": "Best Squat (kg)"},
+    {"calculate":"datum.best3bench_kg ", "as": "Best Bench (kg)"},
+    {"calculate":"datum.best3deadlift_kg ", "as": "Best Deadlift (kg)"}
+  ],
+  "repeat": {"column": ["Best Squat (kg)","Best Bench (kg)", "Best Deadlift (kg)"]},
+  "spec":{
+    "height":250,
+    "width":250,
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": {"repeat": "column"},
+        "type": "quantitative",
+        "bin": {"maxbins": 60}
+      },
+      "y": {
+        "aggregate": "count",
+        "type": "quantitative",
+        "stack": null,
+        "title":"Number of participants"
+      },
+      "color":{
+        "field":"sex",
+        "type":"nominal",
+        "scale": {"range": ["#8101FA", "#00C7A9"]},
+        "legend":{
+          "title":"Sex",
+          "direction":"vertical"
+        }    
+      },
+      "opacity": {"value": 0.5}
+    }
+  }
+}
+
+
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">These bar charts display the binned, best performance of the entries across the three types of lifts (squat, bench, and deadlift). The graphs have the performance of men and women superimposed over one another to make direct comparisons easier.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;">The size of the women’s graph is smaller across all 3 events, indicating that less women participate in these events, or that the events allow for less entants. Either way, men are clearly in the majority across all 3 types.
+<br><br>
+The peaks of the male graphs are also higher. Approximately 100kg across each of the 3 types (however, in the bench, the peak for men and women is almost identical, although women still fall off faster than men). Both tails of the male graphs also start/stop around 100kg higher than their female counterparts (with some deviation due to the smaller sample size).
+<br><br>
+Interestingly however, the shape of each of these graphs are almost identical (especially deadlift and squat), if you simply moved the male graph down by 100kg and reduced the size. The deadlift graph is roughly symmetrical for both males and females, the squat is slightly positively skewed, and the bench graph has a very distinct positive skew. This is interesting as it shows that each of the different lift types have different weight “ceilings” compared to the averages for those types.
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;"> I have used a histogram as it is an effective way of demonstrating the mode, and distribution of weights participants achieve in these competitions. I also chose to use an alternative colour scheme to the <a href="https://blog.datawrapper.de/gendercolor/">typical pink/blue to avoid gender stereotypes.</a> The color scheme chosen is high contrast, making it easier for colorblind users, and is very far from the traditional pink/blue, meaning users must consult the legend to correctly identify the genders (rather than making an assumption which may be incorrect).
+<br><br>
+I considered using a 1 dimensional heatmap, however this made it more difficult to compare the performance of men versus women. The data in the histogram can be seen as very distinctly different, however in the heatmap, it was often difficult to tell the difference in number of participants at each of their respective peaks. Alternatively, the histogram displays the exact number of participants in each bin very distinctly. The histogram also makes it easier to compare the total number of participants of each gender (by comparing the total area under each of the graphs.
+</td></tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">Firstly I removed any data with weights less than or equal to 0. As stated in the documentation, some events may use negative values “to report the lowest weight the lifter attempted and failed”. The number of these wasn’t significant enough to have an impact on the shape of the graph, however the graph would have to extend into negative values to accommodate these entries. To avoid confusion I removed these.
+<br><br>
+I also used calculate as a hacky way to rename each of the measures I was analysing. The variable name “best3squat” may be informative, but does not read well.
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

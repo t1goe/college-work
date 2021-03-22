@@ -1,0 +1,170 @@
+<html>
+<head>
+    <title>Thomas Igoe - Vega assignment 3/3</title>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+ <style>
+       body {
+             font-family: sans-serif;
+           }
+    
+           .vega-actions a {
+             padding: 0.2em;
+           }
+    </style>
+</head>
+<body>
+    <table style="width: 850px" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Thomas Igoe</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">17372013</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md" target="_blank" rel="noopener">Spotify song stats</a>.</p>
+    <p>The dataset in question contains attributes about a number of songs on spotify. These include identifying information such as track_name and track_artist, factual information about the song such as key and tempo, as well as more subjective information such as “danceability” and “energy”.</p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">Are there any strong trends for the different genres averages in any of the supplied metrics?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+  <div id="vis" class="container"></div>
+  <script type="text/javascript">
+    var yourVlSpec =  {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv",
+    "format": {"type": "csv"}
+  },
+  "title": {
+    "text": "Average stats for each genre compared",
+    "anchor": "start",
+    "fontSize": 26,
+    "offset":20
+  },
+  "config": {
+    "legend": {
+      "titleFontSize":20,
+      "labelFontSize":15,
+      "orient": "bottom"
+    },
+    "axis":{
+      "titleFontSize":14,
+      "labelFontSize":12
+    }
+  },
+  "transform": [
+    {
+      "calculate": 
+      "datum.duration_ms / 1000",
+      "as": "duration_seconds"
+    },
+    {
+      "calculate": 
+      "10 - (-datum.loudness)",
+      "as": "volume"
+    },
+    {"filter": "datum.speechiness > 0"},
+    {"filter": "datum.acousticness > 0"},
+    {"filter": "datum.instrumentalness > 0"},
+    {"filter": "datum.duration_seconds > 0"}
+
+  ],
+  "repeat":{
+    "column":[
+      "volume",
+      "speechiness",
+      "acousticness",
+      "instrumentalness",
+      "duration_seconds"
+    ]
+  },
+  "spec":{
+    "height":250,
+    "width":250,
+    "mark":"bar",
+    "encoding":{
+      "x":{
+        "field":{"repeat": "column"},
+        "type":"quantitative",
+        "aggregate":"mean"
+      },
+      "y":{
+        "field":"playlist_genre",
+        "type":"nominal",
+        "sort":{
+          "op":"mean",
+          "field":{"repeat": "column"},
+          "order":"descending"
+        },
+        "axis":{
+          "title":"Genres"
+        }
+      },
+      "color":{
+        "field":"playlist_genre",
+        "type":"nominal",
+        "legend":{
+          "title":"Genres"
+        }
+      }
+    }
+  }
+}
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">These bar charts each represent a different metric in the dataset (speechiness etc). Each bar chart graphs the mean of that metric for each genre in the dataset (rap, pop etc). Each genre in the dataset has an associated color which remains the same throughout the different charts.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;">Most of the best and worst of each category are to be expected. 
+<br><br>
+For volume (inverted loudness), EDM is the highest, which makes logical sense for music intended to be played at nightclubs and raves (large venues with powerful sound systems). R&B is the lowest, which tends to be a more understated genre (as also seen by it’s acousticness score).
+<br><br>
+For speechiness, rap scores considerably higher than any other genre. This is also unsurprising given the high focus of fast talking and wordplay in the genre. Rock being the lowest was surprising, as I would have assumed that EDM (which is often mostly if not entirely instrumental) would be the lowest.
+<br><br>
+Acousticness is also unsurprising. R&B and rap score the highest, with their strong ties to acoustic instruments EDM scores the lowest (it is <b>electronic</b> dance music after all).
+<br><br>
+Instumentalness is interesting, while EDM is to be expected as the highest, both r&b and rap’s positions to me were surprising. I would have expected rap to be the lowest, as songs can consist of entirely spoken word with little to no instrumental aspects, however here it is second highest. Meanwhile r&b is the lowest by a decent margin.
+<br><br>
+I was expecting duration to be somewhat similar, across all genres. This is reflected in the graph, as it is the least varied out of all the graphs shown. However there is still a significant difference, with the longest genre (rock) being on average, one full minute longer than the shortest (rap).
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;">I have used bar charts to display the data as it is useful for displaying the order of each of the quantitative variables. I initially tried to display the entire dataset with a series of superimposed histogram, as well as a 1-dimensional heatmap. However both had issues which made them unclear. The distribution of the stats for most songs was quite similar, which made comparing heat maps or histograms side-to-side quite difficult. Even on the same scale, heatmaps were often very similar. And with six different genres being analysed, superimposing histograms on top of one another was too visually busy to be readable.
+<br><br>
+I chose to make the bars colored to make it easier to track how a specific genre performs in the different metrics (it being easier to scan for red in a visualization rather than check all the labels). However because of the number of genres and the constantly changing ordering of each of the genres, it is still necessary to label each bar. (I also experimented with adding other metrics such as median, however it resulted in the graphs being unnecessarily complicated). The color scheme is vibrant which will also hopefully show up well for colorblind users, without being too visually busy.
+<br><br>
+I found that placing the different graphs horizontally (as columns) rather than vertically is better. If the graphs were placed vertically, a user could make the incorrect assumption that all graphs are on the same numerical scale when they are not. The differently ordered colors hopefully will make it obvious that the genres are in a different order from graph to graph.
+</td>
+</tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">I converted duration_ms to duration_seconds for improved readability, as well as converting loudness to a positive scale to make it more intuitive. I did this by adding 10 to each value.
+<br><br>
+I also filtered any songs with stats of 0. Many of the song’s stats were replaced with 0s if the song could not be correctly quantified. I did not apply this to loudness, as 0 is a valid value for loudness.
+<br><br>
+Finally I limited my data exploration to what I deemed to be the most interesting stats (acousticness, instrumentalness etc).
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<html>
+<head>
+    <title> Thomas Igoe - Vega assignment 2/3</title>
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+   <style>
+       body {
+             font-family: sans-serif;
+           }
+    
+           .vega-actions a {
+             padding: 0.2em;
+           }
+    </style>
+</head>
+<body>
+    <table style="width: 850px;" cellspacing="5" cellpadding="5">
+    <tbody>
+    <tr>
+    <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+    <td style="vertical-align: top;">Thomas Igoe</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Student Number:</strong></td>
+    <td style="vertical-align: top;">17372013</td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+    <td style="vertical-align: top;">
+    <p><a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-08" target="_blank" rel="noopener">International Powerlifting Dataset</a>.</p>
+    <p>The dataset in question is from OpenPowerlifting and contains the information about participants in their powerlifting competitions. </p>
+    </td>
+    </tr>
+    <tr>
+    <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+    <td style="vertical-align: top;">How is performance in the different categories affected by the participants’ age?</td>
+    </tr>
+    </tbody>
+    </table>
+    <hr />
+    <div align="center"><b> </b><br/><br/></div>
+  <div id="vis" align="center"></div>
+  <script type="text/javascript">
+    var yourVlSpec =  
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+  "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv",
+  "format": {
+    "type": "csv"
+    }
+  },
+  "title": {
+    "text": "Perfomance vesus age heatmap",
+    "anchor": "start",
+    "fontSize": 26,
+    "offset":20
+  },
+  "config": {
+    "legend": {
+      "titleFontSize":15,
+      "labelFontSize":10
+    },
+    "axis":{
+      "titleFontSize":14,
+      "labelFontSize":12
+    }
+  },
+  "transform": [
+    {"filter": "datum.age > 11"},
+    {"filter": "datum.best3squat_kg > 0"},
+    {"filter": "datum.best3bench_kg > 0"},
+    {"filter": "datum.best3deadlift_kg > 0"},
+    {"calculate":"datum.best3squat_kg ", "as": "Best Squat (kg)"},
+    {"calculate":"datum.best3bench_kg ", "as": "Best Bench (kg)"},
+    {"calculate":"datum.best3deadlift_kg ", "as": "Best Deadlift (kg)"}
+  ],
+  "repeat": {"column": ["Best Squat (kg)","Best Bench (kg)", "Best Deadlift (kg)"]},
+  "spec": {
+    "width":300,
+    "height":300,
+    "mark":"rect",
+    "encoding":{
+      "x":{
+        "field":"age",
+        "bin":{"maxbins": 50},
+        "scale":{"zero":true},
+        "type":"quantitative",
+        "title":"Age"
+      },
+      "y":{
+        "field":{"repeat": "column"},
+        "type":"quantitative",
+        "bin":{"maxbins": 50},
+        "scale":{"zero":true}
+      },
+      "color":{
+        "aggregate":"count",
+        "type":"quantitative",
+        "legend":{
+          "title":"Number of Participants"
+        },
+        "scale":{
+          "scheme":"Viridis",
+          "reverse":true
+        }
+      }
+    }
+  }
+}
+
+
+        vegaEmbed("#vis", yourVlSpec);
+  </script>
+    <hr />
+<table style="width: 850px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+<td style="vertical-align: top;">This is a heatmap displaying the number of records at each kg bracket by age.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Insight:</strong></td>
+<td style="vertical-align: top;">The graphs are roughly similar in shape and location of hotspots, and the difference between the different types of lift are not a large amount. Comparison of the different lift types’ weights is better visualized in the previous question (performance of males and females across different types of lift).
+<br><br>
+The most interesting part of this visualization is the greatest hotspot, from ages 16-24. This shows us that this is the most popular age to powerlift at, and could be seen as the easiest age to start weightlifting at.
+<br><br>
+The peak of the graph however is more centered around ages 25-35. This indicates that this is the age where powerlifters are at their “prime”, and have the greatest physical capabilities (outside of external factors).
+<br><br>
+The graph however tapers off as it reaches the higher ages, both in the range of weights being lifted, as well as the heat in that part of the map. This is interesting as it proves that people’s physical abilities reduce as they grow older. Which also leads to people stopping competition as they grow older.
+<br><br>
+This is also shown by the bottom of the heatmap, which is roughly curved upwards. I interpret this as people starting out powerlifting, who are starting with less weight, which goes up as they develop physically. This then recedes as they age, as indicated by the top of the graph.
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><strong>Design considerations</strong></td>
+<td style="vertical-align: top;"> I chose to use heatmaps to demonstrate this, as it is a good way of demonstrating two quantitative variables. I initially considered a scatter plot which had 2 main advantages. One was its ability to use tooltips to allow users to view the names (or other information) of outliers in the dataset. It was through this that I discovered ‘<a href="https://www.bbc.com/news/av/magazine-35505803">Svend Stensgaard</a>’,  a 93 year old powerlifter(<a href="https://www.openpowerlifting.org/u/svendstensgaard">profile</a>). The other main advantage of the scatter plot is that I was able to more clearly demonstrate the difference between male and female performance at different ages (with different coloured points). However due to the massive overplotting issue, and that I already explored gender differences in performance in my previous question, I chose to go with a heatmap, which was better able to demonstrate hotspots, solving the overplotting issue quite easily.
+<br><br>
+I chose to use 3 graphs to represent each of the different lift types, as conglomerating them onto one singular chart did not respect the different average weights in each type, and resulted in a more homogenous graph.
+<br><br>
+I also set the scale to start at 0 for both axes. This ensured that comparison between each graph is more fair and intuitive. It did not cost much space on the graph as both values (age and weight) start near zero.
+<br><br>
+Finally I changed the default color scheme for the heatmap. The default color scheme’s colour for low values was too close to white, making it hard to see even for non color blind users. This could be argued as a positive, as the color scheme I have selected with it’s more vibrant low value colors may imply that the value is higher than it actually is. However I feel that being able to see the full extent of the graph easily and get a more accurate picture of where outliers lie is more important.
+</td></tr>
+<tr>
+<td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+<td style="vertical-align: top;">My data transformation was similar to the previous visualization.
+<br><br>
+I removed any data with weights less than or equal to 0. As stated in the documentation, some events may use negative values “to report the lowest weight the lifter attempted and failed”. The number of these wasn’t significant enough to have an impact on the shape of the graph, however the graph would have to extend into negative values to accommodate these entries. To avoid confusion I removed these.
+<br><br>
+I also used calculate as a hacky way to rename each of the measures I was analysing. The variable name “best3squat” may be informative, but does not read well.
+<br><br>
+Although unique to this visualization, I also removed ages &lt;= 11. Some ages were 0, presumably an error in the dataset. There were also some ages listed as 0.5, and 10.5. After finding the users that those ages were associated with, I have determined that they were mistakes as well.
+</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+  "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv",
+  "format": {
+    "type": "csv"
+    }
+  },
+  "transform": [
+    {"filter": "datum.age > 0"}, 
+    {"filter": "datum.best3squat_kg > 0"}    
+  ],
+  "mark":"circle",
+  "encoding":{
+    "x":{
+      "field":"age",
+      "type":"quantitative"
+    },
+    "y":{
+      "field":"best3squat_kg",
+      "type":"quantitative",
+      "scale":{"zero":false}
+    },
+    "color":{
+      "field":"sex",
+      "type":"nominal"
+    },
+    "tooltip":[
+	{"field":"name","type":"nominal"},
+	{"field":"age","type":"quantitative"}
+    ],
+    "opacity": {"value": 0.5}
+  },
+  "title":{
+      "text":"Olympic Athemelte Height v Weight",
+      "anchor":"middle"
+  },
+  "width":600,
+  "height":500
+}

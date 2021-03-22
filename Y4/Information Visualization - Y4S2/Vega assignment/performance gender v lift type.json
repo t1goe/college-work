@@ -1,0 +1,64 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "title": {
+    "text": "Performance of male vs female across different types of lift",
+    "anchor": "start",
+    "fontSize": 26,
+    "offset":20
+  },
+  "config": {
+    "legend": {
+      
+      "titleFontSize":20,
+      "labelFontSize":15,
+      "orient": "bottom"
+    },
+    "axis":{
+      "titleFontSize":14,
+      "labelFontSize":12
+    }
+  },
+  "transform": [
+    {"filter": "datum.best3squat_kg > 0"},
+    {"filter": "datum.best3bench_kg > 0"},
+    {"filter": "datum.best3deadlift_kg > 0"},
+    {"calculate":"datum.best3squat_kg ", "as": "Best Squat (kg)"},
+    {"calculate":"datum.best3bench_kg ", "as": "Best Bench (kg)"},
+    {"calculate":"datum.best3deadlift_kg ", "as": "Best Deadlift (kg)"}
+  ],
+  "repeat": {"column": ["Best Squat (kg)","Best Bench (kg)", "Best Deadlift (kg)"]},
+  "spec":{
+    "height":250,
+    "width":250,
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": {"repeat": "column"},
+        "type": "quantitative",
+        "bin": {"maxbins": 60}
+      },
+      "y": {
+        "aggregate": "count",
+        "type": "quantitative",
+        "stack": null,
+        "title":"Number of participants"
+      },
+      "color":{
+        "field":"sex",
+        "type":"nominal",
+        "scale": {"range": ["#8101FA", "#00C7A9"]},
+        "legend":{
+          "title":"Sex",
+          "direction":"vertical"
+        }    
+      },
+      "opacity": {"value": 0.5}
+    }
+  }
+}
