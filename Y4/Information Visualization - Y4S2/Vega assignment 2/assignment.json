@@ -1,65 +1,106 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-  "width": 600,
-  "height": 900,
-  "projection": {
-    "type": "conicConformal"
+  "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
   },
-  
-  "layer": [
+  "vconcat":[
     {
-      "data": {
-        "url": 
-          "https://gist.githubusercontent.com/carsonfarmer/9791524/raw/b27ca0d78d46a84664fe7ef709eed4f7621f7a25/irish-counties-segmentized.topojson",
-        "format": {
-          "type": "topojson",
-          "feature": "counties"
+      "hconcat":[
+        {
+          "width": 600,
+          "height": 900,
+          "projection": {
+            "type": "conicConformal"
+          },
+          "layer": [
+            {
+              "data": {
+                "url": 
+                  "https://gist.githubusercontent.com/carsonfarmer/9791524/raw/b27ca0d78d46a84664fe7ef709eed4f7621f7a25/irish-counties-segmentized.topojson",
+                "format": {
+                  "type": "topojson",
+                  "feature": "counties"
+                }
+              },
+              "mark": {
+                "type": "geoshape",
+                "stroke": "white",
+                "fill":"#ccc"
+              }
+            },
+            {
+              "data": {
+                "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
+              },
+              "mark": "circle",
+              "encoding": {
+                "longitude": {
+                  "field": "Longitude",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "Latitude",
+                  "type": "quantitative"
+                },
+                "color":{"field":"Type", "type":"nominal"},
+                "size": {"value": 30},
+                "opacity": {"value": 1},
+                "tooltip": [
+                  {"field": "Name", "type": "nominal"},
+                  {"field": "Type", "type": "nominal"},
+                  {"field": "Telephone", "type": "nominal"}
+                ],
+                "href": {"field": "Url", "type": "nominal"}
+              }
+            }
+          ]
+        },
+        {
+          "data": {
+                "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
+          },
+          "mark": "bar",
+          "width":200,
+          "height":900,
+          "encoding": {
+            "x": {
+              "aggregate": "count",
+              "type": "quantitative"
+            },
+            "y": {
+              "field": "AddressRegion",
+              "type": "nominal",
+              "sort":"-x"
+            },
+            "color":{
+              "field":"Type", "type":"nominal"
+            }
+          }
         }
-      },
-      "transform": [{
-        "lookup": "id",
-        "from": {
-          "data": {"url": "https://raw.githubusercontent.com/colmr/vis_class/master/IrishCountyPopulations.csv"},
-          "key": "County",
-          "fields": ["Population"]
-        }
-      }],
-      "mark": {
-        "type": "geoshape",
-        "stroke": "white",
-        "fill":"#ccc"
-      }
-
+      ]
     },
     {
       "data": {
-      "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
+        "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
       },
-      "mark": "circle",
+      "mark": "tick",
+      "width":900,
+      "height":50,
       "encoding": {
-        "longitude": {
-          "field": "Longitude",
+        "x": {
+          "field": "Capacity",
           "type": "quantitative"
         },
-        "latitude": {
-          "field": "Latitude",
-          "type": "quantitative"
-        },
-        "color":{"field":"Type", "type":"nominal"},
-        "size": {"value": 20},
-        "opacity": {"value": 1},
-        "tooltip": [
-          {"field": "Name", "type": "nominal"},
-          {"field": "Type", "type": "nominal"},
-          {"field": "Telephone", "type": "nominal"}
-        ],
-        "href": {"field": "Url", "type": "nominal"}
+        "color":{"field":"Type", "type": "nominal"}
       }
     }
   ],
   "config": {
     "legend": {
       "orient":"top-left"
+    },
+    "tick": {
+      "thickness": 1
     }
   }
 }
