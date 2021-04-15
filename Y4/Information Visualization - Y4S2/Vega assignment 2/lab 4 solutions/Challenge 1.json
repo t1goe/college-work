@@ -1,0 +1,82 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "width": 600,
+  "height": 900,
+  "projection": {
+        "type": "conicConformal"
+      },
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Ireland_custom_topjson.json",
+        "format": {
+          "type": "topojson",
+          "feature": "IRL_adm1"
+        }
+      },
+      "transform": [{
+    "lookup": "id",
+    "from": {
+      "data": {"url": "https://raw.githubusercontent.com/colmr/vis_class/master/IrishCountyPopulations.csv"},
+      "key": "County",
+      "fields": ["Population"]
+    }
+  }],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white",
+        "fill":"#ccc"
+      }
+
+    },
+    {
+      "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/StationDetails.csv"
+  },
+  "transform": [
+    {"calculate": "datum.CloseYear != ''", "as": "closed"}
+      ],
+  "mark": "circle",
+  "encoding": {
+    "longitude": {
+      "field": "Longitude",
+      "type": "quantitative"
+    },
+    "latitude": {
+      "field": "Latitude",
+      "type": "quantitative"
+    },
+    "color":{"field":"Height", "type":"quantitative",  "scale":{"scheme":"yellowgreen"}},
+    "size": {"value": 20},
+        "opacity": {"value": 1},
+
+    "tooltip": {"field": "name", "type": "nominal"}
+  }},
+  {
+      "data": {
+        "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Counties__OSi_National_Placenames_Gazetteer.csv",  "format": {
+      "type": "csv"
+    }
+      },
+      "mark": {"type":"text", "dx":12, "fontStyle":"bold"},
+      "encoding": {
+        "longitude": {
+          "field": "X",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "Y",
+          "type": "quantitative"
+        },
+        "text":{"field": "County", "type":"nominal"},
+        "size": {"value": 13}
+      }
+    }
+  ],
+  "config": {
+    "legend": {
+      "orient":"top-left"
+    }
+ }
+
+}

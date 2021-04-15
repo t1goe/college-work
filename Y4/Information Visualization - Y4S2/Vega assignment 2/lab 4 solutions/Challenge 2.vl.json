@@ -1,0 +1,134 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Ireland_custom_topjson.json",
+    "format": {
+      "type": "topojson",
+      "feature": "IRL_adm1"
+    }
+  },
+  "title": {
+    "text": "County Population 2016",
+    "fontSize": 28
+  },
+  "transform": [
+    {
+      "lookup": "id",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/colmr/vis_class/master/IrishCountyPopulations.csv"
+        },
+        "key": "County",
+        "fields": [
+          "Population"
+        ]
+      }
+    }
+  ],
+  "width": 600,
+  "height": 900,
+  "projection": {
+    "type": "conicConformal"
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white",
+        "fill": "#ddd"
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Counties__OSi_National_Placenames_Gazetteer.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "lookup": "Alternative_Name",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/colmr/vis_class/master/IrishCountyPopulations.csv"
+            },
+            "key": "County",
+            "fields": [
+              "Population"
+            ]
+          }
+        }
+      ],
+      "mark": "circle",
+      "encoding": {
+        "longitude": {
+          "field": "X",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "Y",
+          "type": "quantitative"
+        },
+        "color": {
+          "value": "gold"
+        },
+        "size": {
+          "field": "Population",
+          "type": "quantitative",
+          "scale": {
+            "range": [
+              0,
+              2500
+            ]
+          },
+          "legend": {
+            "values": [
+              100000,
+              500000,
+              1000000
+            ],
+            "titleFontSize": 20,
+            "labelFontSize": 15
+          }
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Counties__OSi_National_Placenames_Gazetteer.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "mark": {
+        "type": "text",
+        "dx": 10,
+        "dy": -15,
+        "fontStyle": "bold"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "X",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "Y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "County",
+          "type": "nominal"
+        },
+        "size": {
+          "value": 12
+        }
+      }
+    }
+  ],
+  "config": {
+    "legend": {
+      "orient": "top-left",
+      "symbolLimit": 5
+    }
+  }
+}
