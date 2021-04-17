@@ -1,5 +1,5 @@
 {
-  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "data": {
     "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
   },
@@ -29,9 +29,7 @@
               }
             },
             {
-              "data": {
-                "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
-              },
+              
               "mark": "circle",
               "encoding": {
                 "longitude": {
@@ -44,7 +42,6 @@
                 },
                 "color":{"field":"Type", "type":"nominal"},
                 "size": {"value": 30},
-                "opacity": {"value": 1},
                 "tooltip": [
                   {"field": "Name", "type": "nominal"},
                   {"field": "Type", "type": "nominal"},
@@ -56,9 +53,7 @@
           ]
         },
         {
-          "data": {
-                "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
-          },
+          
           "mark": "bar",
           "width":200,
           "height":900,
@@ -80,9 +75,6 @@
       ]
     },
     {
-      "data": {
-        "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
-      },
       "mark": "tick",
       "width":900,
       "height":50,
