@@ -56,7 +56,15 @@
                 ],
                 "href": {"field": "Url", "type": "nominal"},
                 "opacity": {
-                  "condition": {"param": "leg_select", "value": 1},
+                  "condition": {
+                    "test":{
+                      "and":[
+                        {"param": "leg_select"},
+                        {"param": "bar_select"}
+                      ]
+                    },
+                    "value": 1 
+                  },
                   "value": 0.2
                 }
               }
@@ -64,7 +72,14 @@
           ]
         },
         {
-          
+          "params": [{
+            "name": "bar_select",
+            "select": {
+              "type": "point",
+              "encodings": ["y"],
+              "fields": ["AddressRegion"]
+             }
+          }],
           "mark": "bar",
           "width":200,
           "height":900,
@@ -78,8 +93,13 @@
               "type": "nominal",
               "sort":"-x"
             },
-            "color":{
-              "field":"Type", "type":"nominal"
+            "color": {
+              "condition": {
+                "param": "bar_select",
+                "field":"Type",
+                "type":"nominal"
+              },
+              "value": "lightgray"
             }
           }
         }
