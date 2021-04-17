@@ -9,7 +9,7 @@
       "hconcat":[
         {
           "width": 600,
-          "height": 900,
+          "height": 750,
           "projection": {
             "type": "conicConformal"
           },
@@ -81,9 +81,13 @@
               "fields": ["AddressRegion"]
              }
           }],
+          "transform": [
+            {"filter": {"param": "tick_select"}},
+            {"filter": {"param": "leg_select"}}
+          ],
           "mark": "bar",
           "width":200,
-          "height":900,
+          "height":750,
           "encoding": {
             "x": {
               "aggregate": "count",
@@ -129,6 +133,18 @@
             "type": "nominal"
           },
           "value": "lightgray"
+        },
+        "opacity":{
+          "condition": {
+            "test":{
+              "and":[
+                {"param": "leg_select"},
+                {"param": "bar_select"}
+              ]
+            },
+            "value": 1 
+          },
+          "value": 0
         }
       }
     }
