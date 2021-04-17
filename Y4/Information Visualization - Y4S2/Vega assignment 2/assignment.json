@@ -60,12 +60,13 @@
                     "test":{
                       "and":[
                         {"param": "leg_select"},
-                        {"param": "bar_select"}
+                        {"param": "bar_select"},
+                        {"param": "tick_select"}
                       ]
                     },
                     "value": 1 
                   },
-                  "value": 0.2
+                  "value": 0
                 }
               }
             }
@@ -106,6 +107,13 @@
       ]
     },
     {
+      "params": [{
+        "name": "tick_select",
+        "select": {
+          "type":"interval",
+          "encodings": ["x"]
+          }
+      }],
       "mark": "tick",
       "width":900,
       "height":50,
@@ -114,7 +122,14 @@
           "field": "Capacity",
           "type": "quantitative"
         },
-        "color":{"field":"Type", "type": "nominal"}
+        "color":{
+          "condition":{
+            "param":"tick_select",
+            "field":"Type",
+            "type": "nominal"
+          },
+          "value": "lightgray"
+        }
       }
     }
   ],
