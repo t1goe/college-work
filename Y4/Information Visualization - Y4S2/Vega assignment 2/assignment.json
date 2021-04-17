@@ -3,7 +3,7 @@
   "data": {
     "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
   },
-  
+  "title":"Exploring Irish Accommodations",
   "vconcat":[
     {
       "hconcat":[
@@ -47,8 +47,14 @@
                   "field": "Latitude",
                   "type": "quantitative"
                 },
-                "color":{"field":"Type", "type":"nominal"},
-                "size": {"value": 30},
+                "color":{
+                  "field":"Type",
+                  "type":"nominal",
+                  "scale":{
+                    "range": ["#E69F00", "#009E73", "#CC79A7", "#0072B2", "#56B4E9"]
+                  }
+                },
+                "size": {"value": 32},
                 "tooltip": [
                   {"field": "Name", "type": "nominal"},
                   {"field": "Type", "type": "nominal"},
@@ -90,21 +96,26 @@
           "height":750,
           "encoding": {
             "x": {
+              "title":"Total Accommodations",
               "aggregate": "count",
               "type": "quantitative"
             },
             "y": {
+              "title":null,
               "field": "AddressRegion",
               "type": "nominal",
               "sort":"-x"
             },
             "color": {
-              "condition": {
-                "param": "bar_select",
                 "field":"Type",
                 "type":"nominal"
+            },
+            "opacity":{
+              "condition": {
+                "param": "bar_select",
+                "value":1
               },
-              "value": "lightgray"
+              "value":0.3
             }
           }
         }
@@ -155,6 +166,11 @@
     },
     "tick": {
       "thickness": 1
+    },
+    "title": {
+      "fontSize":30,
+      "anchor":"middle"
     }
   }
 }
+
