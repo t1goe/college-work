@@ -30,6 +30,8 @@
               }
             },
             {
+              
+              "description":"I note that the legend is not deselcting correctly, changing the config to orient the legend 'left' instead of 'top-left' is a workaround for this bug",
               "params":[
                 {
                   "name": "leg_select",
@@ -37,6 +39,7 @@
                   "bind": "legend"
                 }
               ],
+              
               "mark": "circle",
               "encoding": {
                 "longitude": {
@@ -162,7 +165,8 @@
   ],
   "config": {
     "legend": {
-      "orient":"top-left"
+      "orient":"top-left",
+      "description":"I note that the legend does not deselect the legend correctly. Changing this to (left) is a workaround, allowing it to work correctly, but making it not in the correct position."
     },
     "tick": {
       "thickness": 1
