@@ -3,6 +3,7 @@
   "data": {
     "url": "https://raw.githubusercontent.com/colmr/vis_class/master/FakeAccomodationDetails.csv"
   },
+  
   "vconcat":[
     {
       "hconcat":[
@@ -29,7 +30,13 @@
               }
             },
             {
-              
+              "params":[
+                {
+                  "name": "leg_select",
+                  "select": {"type": "point", "fields": ["Type"]},
+                  "bind": "legend"
+                }
+              ],
               "mark": "circle",
               "encoding": {
                 "longitude": {
@@ -47,7 +54,11 @@
                   {"field": "Type", "type": "nominal"},
                   {"field": "Telephone", "type": "nominal"}
                 ],
-                "href": {"field": "Url", "type": "nominal"}
+                "href": {"field": "Url", "type": "nominal"},
+                "opacity": {
+                  "condition": {"param": "leg_select", "value": 1},
+                  "value": 0.2
+                }
               }
             }
           ]
